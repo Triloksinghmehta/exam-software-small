@@ -6,13 +6,12 @@ Browser (React + TypeScript, Vite)          Supabase (project sehspievdmlwlltrbz
  ├─ Admin app    ──tables (RLS)───────────▶  Postgres: tables + security rules
  │               ──rpc(get_paper, save…)──▶  Postgres functions (timing, scoring)
  └─ shared/generator.ts (admin preview)      Edge Functions (Deno):
-                 ──start-attempt──────────▶   start-attempt   (makes the paper with generator.ts)
-                 ──admin-create-students──▶   admin-create-students (CSV + single add)
-                 ──admin-reset-password───▶   admin-reset-password
+                 ──start-attempt──────────▶   start-attempt   (G5: makes the paper with generator.ts)
+                 ──admin-students─────────▶   admin-students (create single/CSV batch of 50, reset password)
                                               pg_cron: finalize_expired every minute
 ```
 
-- **Stack:** React 18 + TypeScript + Vite, React Router, TanStack Query, Tailwind CSS, Supabase JS. Tests: Vitest (generator, units), Playwright (end-to-end), SQL dry-run scripts (security).
+- **Stack:** React 19 + TypeScript + Vite, React Router, Tailwind CSS, Supabase JS, PapaParse (CSV). (TanStack Query dropped: plain fetch-on-load is enough.) Tests: Vitest (generator, units), Playwright (end-to-end), SQL dry-run scripts (security).
 - **Question generator:** one TypeScript file used by both the start-attempt function (real papers) and the admin preview. Answers are computed with whole numbers scaled for decimals, so there are no floating-point mistakes.
 - **No secrets in the browser:** only the public key goes to the browser. The service key lives in the Edge Function settings.
 - **Hosting:** the frontend is a static site (Vercel or Netlify, to be decided at G7).
