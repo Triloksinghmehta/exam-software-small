@@ -92,16 +92,14 @@ export function Logo({ size = 36 }: { size?: number }) {
 export function Centered({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
     <main className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
-      <aside className="relative hidden overflow-hidden bg-indigo-800 text-white lg:flex lg:flex-col lg:justify-between lg:p-14">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-[#fec64b]/90 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -left-20 h-[28rem] w-[28rem] rounded-full bg-[#ff8b70]/80 blur-3xl" />
-        <div className="pointer-events-none absolute left-1/3 top-1/2 h-72 w-72 rounded-full bg-[#70c498]/70 blur-3xl" />
-        <div className="relative flex items-center gap-3"><Logo size={48} /><b className="font-display text-2xl font-medium">ERPLI</b></div>
-        <div className="relative max-w-md">
-          <h2 className="font-display text-5xl font-medium leading-tight">Learn. Practise. Excel.</h2>
-          <p className="mt-5 text-lg text-white/80">Your online examination portal. Sharpen your speed and accuracy, one paper at a time.</p>
+      <aside className="relative hidden overflow-hidden bg-slate-100 lg:block">
+        <img src="/hero.webp" alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/85 via-indigo-900/20 to-transparent" />
+        <div className="absolute left-12 top-10 flex items-center gap-3 rounded-full bg-white/85 py-1.5 pl-1.5 pr-5 shadow-sm backdrop-blur"><Logo size={36} /><b className="font-display text-lg font-medium text-indigo-800">ERPLI</b></div>
+        <div className="absolute inset-x-12 bottom-12 max-w-lg text-white">
+          <h2 className="font-display text-5xl font-medium leading-tight">Learn. Practise. <span className="text-brass-400">Excel.</span></h2>
+          <p className="mt-4 text-lg text-white/85">Your online examination portal. Sharpen your speed and accuracy, one paper at a time.</p>
         </div>
-        <p className="relative text-xs uppercase tracking-[0.18em] text-white/60">ERPLI Examination Portal</p>
       </aside>
       <div className="grid place-items-center px-4 py-10">
         <div className="w-full max-w-sm">
