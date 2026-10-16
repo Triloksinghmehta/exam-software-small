@@ -57,8 +57,8 @@ export default function Students() {
       </div>
       {editing && <StudentForm student={editing === "new" ? null : editing} onDone={(c) => { setEditing(null); if (c) setShown(c); reload(); }} />}
       <div className="mb-3 flex flex-wrap gap-2">
-        <input aria-label="Search" className="min-w-48 flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-3 shadow-sm" placeholder="Search name or ID" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select aria-label="Level" className="rounded-xl border border-slate-300 bg-white px-3.5 py-3 shadow-sm" value={level} onChange={(e) => setLevel(e.target.value)}>
+        <input aria-label="Search" className="min-w-48 flex-1 rounded-md border border-slate-300 bg-white px-3.5 py-3" placeholder="Search name or ID" value={q} onChange={(e) => setQ(e.target.value)} />
+        <select aria-label="Level" className="rounded-md border border-slate-300 bg-white px-3.5 py-3" value={level} onChange={(e) => setLevel(e.target.value)}>
           <option value="">All levels</option>
           {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
         </select>

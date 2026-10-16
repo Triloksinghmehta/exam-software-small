@@ -44,12 +44,12 @@ export default function ExamInstructions() {
 
   return (
     <Page title={exam.name}>
-      {practice && <p className="-mt-3 mb-4 rounded-lg bg-yellow-300 px-3 py-2 text-center font-bold">PRACTICE: does not count in your result</p>}
+      {practice && <p className="-mt-3 mb-4 rounded-lg bg-brass-400 px-3 py-2 text-center font-bold">PRACTICE: does not count in your result</p>}
       <ErrorBox>{error}</ErrorBox>
       <Card className="mb-4">
         <div className="grid grid-cols-2 gap-3 text-center">
           {[[qs, "Questions"], [`${exam.duration_minutes} min`, "Time"], [qs, "Marks"], [0, "Minus marks"]].map(([v, l]) => (
-            <div key={l} className="rounded-xl border border-slate-200 p-3"><b className="block text-2xl">{v}</b>{l}</div>
+            <div key={l} className="rounded-md border border-slate-200 p-3"><b className="block text-2xl">{v}</b>{l}</div>
           ))}
         </div>
       </Card>

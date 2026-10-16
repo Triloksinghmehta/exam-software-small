@@ -40,7 +40,7 @@ export default function Exams() {
       ) : <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{rows.map((e) => {
         const s = examState(e);
         return (
-          <Link key={e.id} to={`/admin/exams/${e.id}/results`} className="block rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md">
+          <Link key={e.id} to={`/admin/exams/${e.id}/results`} className="block rounded-lg border border-slate-200/80 bg-white p-5 transition hover:border-indigo-300">
             <div className="mb-3 flex items-start justify-between gap-2">
               <b className="text-lg leading-snug">{e.name}</b>
               <Badge tone={s.tone}>{s.label}</Badge>

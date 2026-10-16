@@ -90,7 +90,7 @@ export function RulesEditor({ rules, onChange, locked }: { rules: Rule[]; onChan
       </div>
       <div className="mt-3"><ErrorBox>{error}</ErrorBox></div>
       {preview && (
-        <div className="mt-3 rounded-xl border border-slate-200 p-3">
+        <div className="mt-3 rounded-md border border-slate-200 p-3">
           <div className="mb-2 flex justify-between"><b>Sample paper (each student gets different numbers)</b><button type="button" className="text-indigo-700 underline" onClick={() => setPreview(null)}>Hide</button></div>
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {preview.map((q, i) => (

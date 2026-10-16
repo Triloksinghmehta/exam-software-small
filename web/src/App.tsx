@@ -21,13 +21,13 @@ import ExamResults from "./pages/admin/ExamResults";
 import Leaderboard from "./pages/Leaderboard";
 
 // Route guards: UI convenience only — the database (RLS) is what actually protects data.
-function StudentOnly({ children }: { children: ReactNode }) {
+function StudentOnly({ children, bare }: { children: ReactNode; bare?: boolean }) {
   const { loading, session, role, student } = useAuth();
   const path = useLocation().pathname;
   if (loading) return <p className="p-6">Loading…</p>;
   if (!session || role !== "student" || !student) return <Navigate to={role === "admin" ? "/admin" : "/login"} replace />;
   if (student.must_change_password && path !== "/change-password") return <Navigate to="/change-password" replace />;
-  return <StudentShell>{children}</StudentShell>;
+  return bare ? children : <StudentShell>{children}</StudentShell>; // bare = exam screen: no site header, nothing to click away to
 }
 
 function AdminOnly({ children }: { children: ReactNode }) {
@@ -46,7 +46,7 @@ export default function App() {
           <Route path="/change-password" element={<StudentOnly><ChangePassword /></StudentOnly>} />
           <Route path="/" element={<StudentOnly><StudentHome /></StudentOnly>} />
           <Route path="/exam/:id" element={<StudentOnly><ExamInstructions /></StudentOnly>} />
-          <Route path="/attempt/:id" element={<StudentOnly><ExamAttempt /></StudentOnly>} />
+          <Route path="/attempt/:id" element={<StudentOnly bare><ExamAttempt /></StudentOnly>} />
           <Route path="/result/:id" element={<StudentOnly><ResultPage /></StudentOnly>} />
           <Route path="/leaderboard/:id" element={<StudentOnly><Leaderboard /></StudentOnly>} />
           <Route path="/results" element={<StudentOnly><MyResults /></StudentOnly>} />

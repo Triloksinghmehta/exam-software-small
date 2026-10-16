@@ -21,8 +21,8 @@ function ExamCard({ e, attempts }: { e: Exam; attempts: Attempt[] }) {
   if (open) action = <LinkButton to={`/attempt/${open.id}`} className="w-full">Continue</LinkButton>;
   else if (isOpen && left > 0) action = <LinkButton to={`/exam/${e.id}`} className="w-full">{practice ? "Practice" : "Start exam"}</LinkButton>;
   else if (done.length) action = <LinkButton to={`/result/${done[0].id}`} variant="secondary" className="w-full">View result ({done[0].correct}/{done[0].total})</LinkButton>;
-  else if (now < Date.parse(e.starts_at)) action = <span className="block w-full rounded-xl bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">Opens {when(e.starts_at)}</span>;
-  else action = <span className="block w-full rounded-xl bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">{practice ? "Closed" : "Missed"}</span>;
+  else if (now < Date.parse(e.starts_at)) action = <span className="block w-full rounded-md bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">Opens {when(e.starts_at)}</span>;
+  else action = <span className="block w-full rounded-md bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">{practice ? "Closed" : "Missed"}</span>;
 
   return (
     <Card className="flex flex-col">
@@ -67,7 +67,7 @@ export default function StudentHome() {
   const first = student.full_name.split(" ")[0];
   const section = (title: string, list: Exam[], empty?: string) => (
     <section className="mb-8">
-      <h2 className="mb-3 text-lg font-bold">{title}</h2>
+      <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500">{title}</h2>
       {list.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.map((e) => <ExamCard key={e.id} e={e} attempts={attempts} />)}</div>
         : empty && <Card><p className="text-slate-500">{empty}</p></Card>}
     </section>

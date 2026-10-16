@@ -81,7 +81,7 @@ export default function ImportStudents() {
           <div className="flex flex-wrap gap-2">
             <Button disabled={!result.created.length} onClick={() => download("login-list.csv", toCsv([["student_id", "name", "password"], ...result.created.map((c) => [c.student_code, c.full_name, c.password])]))}>Download login list</Button>
             {result.failed.length > 0 && <Button variant="secondary" onClick={() => download("not-added.csv", badCsv(result.failed))}>Download rows not added</Button>}
-            <Link to="/admin/students" className="rounded-xl border-2 border-indigo-600 px-4 py-3 font-semibold text-indigo-700">Go to students</Link>
+            <Link to="/admin/students" className="rounded-md border-2 border-indigo-600 px-4 py-3 font-semibold text-indigo-700">Go to students</Link>
           </div>
         </Card>
       </Page>

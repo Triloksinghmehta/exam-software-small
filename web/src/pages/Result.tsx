@@ -32,7 +32,7 @@ export default function ResultPage() {
   if (!r) return <Page title="Result"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading…</p>}<Link className="text-indigo-700 underline" to="/">Back to home</Link></Page>;
   return (
     <Page title={r.exam_name}>
-      {r.mode === "practice" && <p className="-mt-3 mb-4 rounded-lg bg-yellow-300 px-3 py-2 text-center font-bold">PRACTICE result</p>}
+      {r.mode === "practice" && <p className="-mt-3 mb-4 rounded-lg bg-brass-400 px-3 py-2 text-center font-bold">PRACTICE result</p>}
       <Card className="mb-4 text-center">
         <p className="text-4xl font-bold">{r.correct} / {r.total}</p>
         <p className="text-xl text-slate-600">{r.percent}%</p>
@@ -62,8 +62,8 @@ export default function ResultPage() {
           );
         })}
       </div>
-      {r.leaderboard_available && examId && <Link to={`/leaderboard/${examId}`} className="mt-6 block rounded-xl border-2 border-indigo-600 px-4 py-3 text-center text-lg font-semibold text-indigo-700">See leaderboard</Link>}
-      <Link to="/" className="mt-4 block rounded-xl bg-indigo-600 px-4 py-3 text-center text-lg font-semibold text-white">Back to home</Link>
+      {r.leaderboard_available && examId && <Link to={`/leaderboard/${examId}`} className="mt-6 block rounded-md border-2 border-indigo-600 px-4 py-3 text-center text-lg font-semibold text-indigo-700">See leaderboard</Link>}
+      <Link to="/" className="mt-4 block rounded-md bg-indigo-600 px-4 py-3 text-center text-lg font-semibold text-white">Back to home</Link>
     </Page>
   );
 }

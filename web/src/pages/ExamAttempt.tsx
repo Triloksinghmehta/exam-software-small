@@ -139,10 +139,10 @@ export default function ExamAttempt() {
 
   return (
     <div className={ac?.ac_block_copy ? "select-none" : ""}>
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white shadow-sm">
-        {practice && <p className="bg-amber-300 py-1 text-center text-xs font-bold tracking-widest text-amber-950">PRACTICE</p>}
+      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
+        {practice && <p className="bg-brass-400 py-1 text-center text-xs font-bold tracking-widest text-slate-900">PRACTICE</p>}
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-2">
-          <b className={`flex items-center gap-2 rounded-xl px-3 py-1.5 font-mono text-2xl ${left !== null && left < 60000 ? "bg-red-100 text-red-700" : "bg-indigo-50 text-indigo-700"}`} aria-live="off" aria-label="Time left"><Icon name="clock" className="h-5 w-5" />{left === null ? "--:--" : mmss(left)}</b>
+          <b className={`flex items-center gap-2 rounded-md px-3 py-1.5 font-mono text-2xl ${left !== null && left < 60000 ? "bg-red-100 text-red-700" : "bg-indigo-50 text-indigo-700"}`} aria-live="off" aria-label="Time left"><Icon name="clock" className="h-5 w-5" />{left === null ? "--:--" : mmss(left)}</b>
           <span className="hidden text-slate-600 sm:inline">{answered} / {total} done</span>
           <span className="h-2 w-24 overflow-hidden rounded-full bg-slate-200" aria-hidden="true"><span className="block h-full rounded-full bg-indigo-600 transition-all" style={{ width: `${(100 * answered) / total}%` }} /></span>
           <span className={`ml-auto flex items-center gap-1.5 text-sm ${save === "offline" ? "text-red-600" : save === "saving" ? "text-slate-500" : "text-emerald-700"}`} role="status">
