@@ -6,6 +6,7 @@ import { friendly, supabase } from "../lib/supabase";
 import type { Prompt } from "../../../supabase/functions/_shared/generator";
 
 type Result = {
+  leaderboard_available: boolean;
   exam_name: string; mode: string; status: string; total: number; answered: number; correct: number; wrong: number; skipped: number;
   percent: number; started_at: string; submitted_at: string; time_taken_seconds: number;
   questions: { position: number; prompt: Prompt; answer: number | null; correct_answer: number; result: "correct" | "wrong" | "skipped" }[];
@@ -17,9 +18,11 @@ const MARK = { correct: ["✓", "text-green-700"], wrong: ["✗", "text-red-700"
 export default function ResultPage() {
   const { id } = useParams();
   const [r, setR] = useState<Result | null>(null);
+  const [examId, setExamId] = useState("");
   const [error, setError] = useState("");
   useEffect(() => {
     supabase.rpc("get_result", { p_attempt: id }).then(({ data, error }) => (error ? setError(friendly(error)) : setR(data)));
+    supabase.from("attempts").select("exam_id").eq("id", id).maybeSingle().then(({ data }) => setExamId(data?.exam_id ?? ""));
   }, [id]);
 
   if (!r) return <Page title="Result"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading…</p>}<Link className="text-blue-700 underline" to="/">Back to home</Link></Page>;
@@ -55,7 +58,8 @@ export default function ResultPage() {
           );
         })}
       </div>
-      <Link to="/" className="mt-6 block rounded-xl bg-blue-600 px-4 py-3 text-center text-lg font-semibold text-white">Back to home</Link>
+      {r.leaderboard_available && examId && <Link to={`/leaderboard/${examId}`} className="mt-6 block rounded-xl border-2 border-blue-600 px-4 py-3 text-center text-lg font-semibold text-blue-700">See leaderboard</Link>}
+      <Link to="/" className="mt-4 block rounded-xl bg-blue-600 px-4 py-3 text-center text-lg font-semibold text-white">Back to home</Link>
     </Page>
   );
 }

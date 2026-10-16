@@ -9,8 +9,8 @@ Each gate ends with your manual approval. No gate starts before the previous is 
 | G2 | Database, security rules, question/scoring spec | database-schema.md, auth-rls-matrix.md, first migrations | ✅ approved + applied 2026-10-16 |
 | G3 | Students: login, add/edit, CSV import | working admin student pages | ✅ approved 2026-10-17 |
 | G4 | Question generator + exam creation | sample papers per level, generator tests | ✅ approved 2026-10-17 |
-| G5 | Taking exams: practice + official, timer, autosave, results | working student flow | 🟨 built + tested, waiting for your review |
-| G6 | Results, leaderboard, export, phone/tablet/desktop testing | test report | ⬜ |
+| G5 | Taking exams: practice + official, timer, autosave, results | working student flow | ✅ approved 2026-10-17 |
+| G6 | Results, leaderboard, export, phone/tablet/desktop testing | test report | 🟨 built; load test + real-device tests still to do |
 | G7 | Security check, docs, handoff bundle, release tag — **Phase 1 STOP** | handoff/phase1-v1.0.0/ | ⬜ |
 | P2 | Phase 2 in new project (only after your approval) | — | ⬜ |
 
@@ -27,3 +27,4 @@ Simple and straightforward: big buttons, one main action per screen, plain words
 - 2026-10-16 — G3 built: student login + forced password change, admin login, students list/add/edit/disable/reset, CSV import, settings. Tested in browser (see docs/qa-test-cases.md).
 - 2026-10-17 — **G3 APPROVED**; code pushed to GitHub (private). G4 built: question generator (10 operations, friends/direct, BODMAS, exact decimals), exams list/create/edit/publish/close, level default rules editor, sample paper preview. 35 generator tests pass (10,000 questions per rule).
 - 2026-10-17 — **G4 APPROVED**. G5 built: start-attempt Edge Function, student home (exams/practice/tries), instructions + Are you ready, exam screen (server timer, autosave every 2 s + offline queue, resume after refresh, submit/auto-submit), result with per-question review, My results, anti-cheat (fullscreen, leave-screen log, copy/paste block, one login). Tested end to end.
+- 2026-10-17 — **G5 APPROVED**. G6 built: admin results table (with absent students and left-screen counts), CSV download, leaderboard with show-to-students switch, student leaderboard page. Fixed bug: database error messages showed as [object Object].

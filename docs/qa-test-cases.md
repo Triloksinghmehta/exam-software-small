@@ -56,3 +56,15 @@ Test data left in dev database: exam "Test Level 3 Exam" (open ~2 days), used fo
 | 11 | Phone width: no sideways scroll on exam screen | ✅ |
 
 Not yet tested: real offline (network unplugged) — code queues answers in browser storage and resends; full-screen on a real phone (automation can't grant it); iPhone Safari has no full-screen (exam still works). To check at G6 on real devices.
+
+## G6: Results & leaderboard (2026-10-17)
+| # | Test | Result |
+|---|---|---|
+| 1 | Admin results table: both students, score, wrong/skipped, time, status, left-screen count (3×, 1×) | ✅ |
+| 2 | Leaderboard ranks 18/20 above 2/20; tie rule is in the database function (tested in G2) | ✅ |
+| 3 | Switch ON → student sees "See leaderboard" on result and the ranking | ✅ |
+| 4 | Switch OFF → student sees "The leaderboard is not available." | ✅ |
+| 5 | Bug found & fixed: database errors displayed as "[object Object]" | ✅ fixed |
+
+Test data note: the second attempt (SAI260002, 18/20) was inserted directly in the database to test ranking.
+Still to do before G7: CSV download opened in Excel; 10,000-row CSV import; load test (500 students at once); real phone/tablet test; real network-off test; absent-student label after an exam closes.

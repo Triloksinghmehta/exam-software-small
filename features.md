@@ -13,7 +13,7 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done (tested) · ⏸ wait
 | F06 | Submit + auto-submit at time end | G5 | ✅ |
 | F07 | Result: total, answered, correct, wrong, skipped, %, time, per-question review | G5 | ✅ |
 | F08 | Practice mode (same screen, "PRACTICE" label, separate history) | G5 | ✅ |
-| F09 | Leaderboard view (only when admin approves) | G6 | ⬜ |
+| F09 | Leaderboard view (only when admin approves) | G6 | ✅ |
 | F10 | Anti-cheat: fullscreen, tab-switch log, no copy/paste, one session | G5 | ✅ |
 | **Admin** ||||
 | F11 | Admin login + overview | G3 | ✅ (exam tiles in G4) |
@@ -23,9 +23,9 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done (tested) · ⏸ wait
 | F15 | Question rules editor + preview sample paper | G4 | ✅ |
 | F16 | Create exam: level, official/practice, rules, duration, validity (≤5 days), attempts | G4 | ✅ |
 | F17 | Publish / close exam | G4 | ✅ |
-| F18 | Results per exam + CSV export | G6 | ⬜ |
-| F19 | Leaderboard + "show to students" switch | G6 | ⬜ |
-| F20 | Anti-cheat log per attempt | G6 | ⬜ |
+| F18 | Results per exam + CSV export | G6 | ✅ |
+| F19 | Leaderboard + "show to students" switch | G6 | ✅ |
+| F20 | Anti-cheat log per attempt | G6 | ✅ |
 | F24 | Settings: Student ID start + anti-cheat switches | G3 | ✅ |
 | **System** ||||
 | F21 | Server-side question generation + scoring | G4/G5 | ✅ |

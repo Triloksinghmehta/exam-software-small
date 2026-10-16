@@ -47,7 +47,7 @@ export default function Exams() {
       ) : rows.map((e) => {
         const s = examState(e);
         return (
-          <Link key={e.id} to={`/admin/exams/${e.id}`} className="mb-3 block rounded-2xl bg-white p-4 shadow-sm hover:ring-2 hover:ring-blue-300">
+          <Link key={e.id} to={`/admin/exams/${e.id}/results`} className="mb-3 block rounded-2xl bg-white p-4 shadow-sm hover:ring-2 hover:ring-blue-300">
             <div className="flex items-center justify-between gap-2">
               <b className="text-lg">{e.name}</b>
               <span className={`rounded-full px-3 py-1 text-sm ${s.cls}`}>{s.label}</span>

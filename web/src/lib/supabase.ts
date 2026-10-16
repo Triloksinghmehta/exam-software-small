@@ -21,7 +21,8 @@ const MESSAGES: Record<string, string> = {
   PAPER_NOT_READY: "Your paper is still being made. Please try again.",
 };
 export const friendly = (e: unknown) => {
-  const m = e instanceof Error ? e.message : String(e);
+  // Supabase errors are plain objects ({message}), not Error instances
+  const m = e instanceof Error ? e.message : typeof e === "object" && e && "message" in e ? String((e as { message: unknown }).message) : String(e);
   return Object.entries(MESSAGES).find(([k]) => m.includes(k))?.[1] ?? (m === "Failed to fetch" ? "Can't connect. Check internet." : m);
 };
 
