@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Button, Centered, ErrorBox, Field } from "../components/ui";
@@ -41,6 +42,7 @@ export default function StudentLogin() {
           <Field label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
           <Button className="w-full" disabled={busy}>{busy ? "Logging in…" : "Login"}</Button>
         </form>
+        <p className="mt-5 border-t border-slate-200 pt-4 text-center text-sm text-slate-500">Are you an admin? <Link to="/admin/login" className="font-semibold text-indigo-600 hover:underline">Log in as admin</Link></p>
     </Centered>
   );
 }

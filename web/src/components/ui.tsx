@@ -85,7 +85,7 @@ export function Segmented<T extends string>({ options, value, onChange }: { opti
 
 // ---- brand mark (placeholder ERPLI logo; swap public/logo.png later) ----
 export function Logo({ size = 36 }: { size?: number }) {
-  return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 rounded-lg bg-white object-contain" />;
+  return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 object-contain" />;
 }
 
 // Login-style pages: framed hero image (lg+) beside the form
