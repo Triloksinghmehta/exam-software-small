@@ -94,7 +94,7 @@ export function Centered({ title, subtitle, children }: { title: string; subtitl
     <main className="grid min-h-screen place-items-center px-4 py-10">
       <div className="w-full max-w-sm">
         <div className="mb-8 flex flex-col items-center text-center">
-          <Logo size={44} />
+          <Logo size={96} />
           <h1 className="font-display mt-5 text-3xl font-medium">{title}</h1>
           {subtitle && <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>}
         </div>
@@ -144,7 +144,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen md:flex">
       <aside className="hidden w-60 shrink-0 flex-col bg-indigo-700 md:sticky md:top-0 md:flex md:h-screen">
         <div className="flex items-center gap-3 px-5 pb-8 pt-6">
-          <Logo />
+          <Logo size={52} />
           <div><b className="font-display block text-[17px] font-medium leading-tight text-white">ERPLI</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-400">Examination Portal</span></div>
         </div>
         <p className="mb-2 px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Manage</p>
@@ -159,7 +159,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="min-w-0 flex-1">
         <header className="sticky top-0 z-10 bg-indigo-700 md:hidden">
           <div className="flex items-center justify-between px-4 py-3">
-            <b className="font-display flex items-center gap-3 font-medium text-white"><Logo size={30} />ERPLI</b>
+            <b className="font-display flex items-center gap-3 font-medium text-white"><Logo size={40} />ERPLI</b>
             <button aria-label="Log out" onClick={() => supabase.auth.signOut()} className="p-2 text-slate-300"><Icon name="logout" /></button>
           </div>
           <nav className="flex gap-1 overflow-x-auto px-3">
@@ -180,7 +180,7 @@ export function StudentShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-8">
-          <Link to="/" className="font-display flex items-center gap-3 text-lg font-medium"><Logo size={32} /><span className="hidden sm:inline">ERPLI</span></Link>
+          <Link to="/" className="font-display flex items-center gap-3 text-lg font-medium"><Logo size={44} /><span className="hidden sm:inline">ERPLI</span></Link>
           <div className="ml-auto flex items-center gap-3">
             <div className="text-right leading-tight"><b className="block text-sm font-medium">{student?.full_name}</b><span className="text-xs text-slate-500">{student?.student_code} · Level {student?.level}</span></div>
             <span className="grid h-9 w-9 place-items-center rounded-full bg-indigo-600 text-xs font-semibold text-white">{initials}</span>
