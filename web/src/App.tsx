@@ -5,6 +5,10 @@ import { AdminBar } from "./components/ui";
 import StudentLogin from "./pages/StudentLogin";
 import ChangePassword from "./pages/ChangePassword";
 import StudentHome from "./pages/StudentHome";
+import ExamInstructions from "./pages/ExamInstructions";
+import ExamAttempt from "./pages/ExamAttempt";
+import ResultPage from "./pages/Result";
+import MyResults from "./pages/MyResults";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminHome from "./pages/admin/AdminHome";
 import Students from "./pages/admin/Students";
@@ -39,6 +43,10 @@ export default function App() {
           <Route path="/login" element={<StudentLogin />} />
           <Route path="/change-password" element={<StudentOnly><ChangePassword /></StudentOnly>} />
           <Route path="/" element={<StudentOnly><StudentHome /></StudentOnly>} />
+          <Route path="/exam/:id" element={<StudentOnly><ExamInstructions /></StudentOnly>} />
+          <Route path="/attempt/:id" element={<StudentOnly><ExamAttempt /></StudentOnly>} />
+          <Route path="/result/:id" element={<StudentOnly><ResultPage /></StudentOnly>} />
+          <Route path="/results" element={<StudentOnly><MyResults /></StudentOnly>} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminOnly><AdminHome /></AdminOnly>} />
           <Route path="/admin/students" element={<AdminOnly><Students /></AdminOnly>} />

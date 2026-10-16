@@ -6,7 +6,7 @@ Browser (React + TypeScript, Vite)          Supabase (project sehspievdmlwlltrbz
  ├─ Admin app    ──tables (RLS)───────────▶  Postgres: tables + security rules
  │               ──rpc(get_paper, save…)──▶  Postgres functions (timing, scoring)
  └─ shared/generator.ts (admin preview)      Edge Functions (Deno):
-                 ──start-attempt──────────▶   start-attempt   (G5: makes the paper with generator.ts)
+                 ──start-attempt──────────▶   start-attempt   (makes the student's paper once with generator.ts)
                  ──admin-students─────────▶   admin-students (create single/CSV batch of 50, reset password)
                                               pg_cron: finalize_expired every minute
 ```

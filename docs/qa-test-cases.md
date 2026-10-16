@@ -39,3 +39,20 @@ Not yet tested: a 10,000-row CSV (performance, planned for G6), and disabling a 
 | 10 | Levels page: Level 1 preview uses friends; invalid rows blocked | ✅ |
 
 Test data left in dev database: exam "Test Level 3 Exam" (open ~2 days), used for G5.
+
+## G5: Taking exams (2026-10-17, Chrome desktop + 375 px phone)
+| # | Test | Result |
+|---|---|---|
+| 1 | Home lists level-3 official exam (Start) + practice (3 tries left) | ✅ |
+| 2 | Instructions → I'm ready → "Are you ready?" → Start → paper made on server (20 / 4 questions) | ✅ |
+| 3 | Answers autosave ("✓ Saved"); refresh keeps answers and the timer keeps counting (00:45 after refresh) | ✅ |
+| 4 | 1-minute practice: time over → auto-submitted, result 2 correct / 1 wrong / 1 skipped, matches hand check (BODMAS 44+5−8÷4×7 = 35; 23.25+92.10−65.70 = 49.65) | ✅ |
+| 5 | Enter and Tab move to next answer; letters typed are ignored | ✅ |
+| 6 | Submit popup shows "You left 18 questions empty"; manual submit → "Submitted by you" | ✅ |
+| 7 | Leaving the screen → warning shown + recorded in database (leave_count 1, event left_screen) | ✅ |
+| 8 | Paste blocked on the exam screen | ✅ |
+| 9 | After official submit, Home shows "View result", direct start-attempt call → NO_TRIES_LEFT | ✅ |
+| 10 | Practice tries count down (3 → 2 → 1); last result link shown | ✅ |
+| 11 | Phone width: no sideways scroll on exam screen | ✅ |
+
+Not yet tested: real offline (network unplugged) — code queues answers in browser storage and resends; full-screen on a real phone (automation can't grant it); iPhone Safari has no full-screen (exam still works). To check at G6 on real devices.
