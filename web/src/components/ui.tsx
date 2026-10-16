@@ -88,22 +88,36 @@ export function Logo({ size = 36 }: { size?: number }) {
   return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 rounded-lg bg-white object-contain" />;
 }
 
-// Login-style pages
+// Login-style pages: brand panel (lg+) beside the form
 export function Centered({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
-    <main className="grid min-h-screen place-items-center px-4 py-10">
-      <div className="w-full max-w-sm">
-        <div className="mb-8 flex flex-col items-center text-center">
-          <Logo size={96} />
-          <h1 className="font-display mt-5 text-3xl font-medium">{title}</h1>
-          {subtitle && <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>}
+    <main className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
+      <aside className="relative hidden overflow-hidden bg-indigo-800 text-white lg:flex lg:flex-col lg:justify-between lg:p-14">
+        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-[#fec64b]/90 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -left-20 h-[28rem] w-[28rem] rounded-full bg-[#ff8b70]/80 blur-3xl" />
+        <div className="pointer-events-none absolute left-1/3 top-1/2 h-72 w-72 rounded-full bg-[#70c498]/70 blur-3xl" />
+        <div className="relative flex items-center gap-3"><Logo size={48} /><b className="font-display text-2xl font-medium">ERPLI</b></div>
+        <div className="relative max-w-md">
+          <h2 className="font-display text-5xl font-medium leading-tight">Learn. Practise. Excel.</h2>
+          <p className="mt-5 text-lg text-white/80">Your online examination portal. Sharpen your speed and accuracy, one paper at a time.</p>
         </div>
-        <Card className="p-6">{children}</Card>
-        <p className="mt-6 text-center text-xs tracking-wide text-slate-400">ERPLI EXAMINATION PORTAL</p>
+        <p className="relative text-xs uppercase tracking-[0.18em] text-white/60">ERPLI Examination Portal</p>
+      </aside>
+      <div className="grid place-items-center px-4 py-10">
+        <div className="w-full max-w-sm">
+          <div className="mb-8 flex flex-col items-center text-center">
+            <Logo size={72} />
+            <h1 className="font-display mt-5 text-3xl font-medium">{title}</h1>
+            {subtitle && <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>}
+          </div>
+          <Card className="p-6">{children}</Card>
+          <p className="mt-6 text-center text-xs tracking-wide text-slate-400 lg:hidden">ERPLI EXAMINATION PORTAL</p>
+        </div>
       </div>
     </main>
   );
 }
+
 
 // ---- icons (inline SVG, no extra library) ----
 const PATHS: Record<string, string> = {
