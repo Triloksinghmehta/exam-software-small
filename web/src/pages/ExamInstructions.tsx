@@ -38,7 +38,7 @@ export default function ExamInstructions() {
     }
   }
 
-  if (!exam) return <Page title="Exam"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading…</p>}<Link className="text-blue-700 underline" to="/">Back to home</Link></Page>;
+  if (!exam) return <Page title="Exam"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading…</p>}<Link className="text-indigo-700 underline" to="/">Back to home</Link></Page>;
   const qs = (exam.rules as { quantity: number }[]).reduce((s, r) => s + r.quantity, 0);
   const practice = exam.mode === "practice";
 
@@ -64,7 +64,7 @@ export default function ExamInstructions() {
         </ul>
       </Card>
       <Button className="w-full" onClick={() => setReady(true)}>I'm ready</Button>
-      <Link to="/" className="mt-4 block text-center text-blue-700 underline">Back to home</Link>
+      <Link to="/" className="mt-4 block text-center text-indigo-700 underline">Back to home</Link>
 
       {ready && (
         <div role="dialog" aria-modal="true" className="fixed inset-0 z-10 flex items-center justify-center bg-black/50 p-4">

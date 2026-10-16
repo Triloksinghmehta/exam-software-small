@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Card, ErrorBox, Page, download, toCsv } from "../../components/ui";
+import { Button, Card, ErrorBox, Page, Segmented, download, toCsv } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 import { when, type Exam } from "./Exams";
 
@@ -57,18 +57,14 @@ export default function ExamResults() {
     download(`${exam!.name}-results.csv`, toCsv([["student_id", "name", "father_name", "try", "status", "correct", "wrong", "skipped", "total", "percent", "time_mm:ss", "started_at", "submitted_at", "left_screen_times"], ...rows, ...gone]));
   }
 
-  const tabBtn = (t: typeof tab, label: string) => (
-    <button onClick={() => setTab(t)} className={`rounded-xl px-4 py-3 font-semibold ${tab === t ? "bg-blue-600 text-white" : "border-2 border-blue-600 bg-white text-blue-700"}`}>{label}</button>
-  );
   const th = "p-3";
 
   return (
     <Page title={exam?.name ?? "Results"} wide>
       <ErrorBox>{error}</ErrorBox>
-      {exam && <p className="-mt-3 mb-4 text-slate-600">Level {exam.level} · {when(exam.starts_at)} → {when(exam.ends_at)} · <Link className="text-blue-700 underline" to={`/admin/exams/${exam.id}`}>Edit exam</Link></p>}
+      {exam && <p className="-mt-3 mb-4 text-slate-600">Level {exam.level} · {when(exam.starts_at)} to {when(exam.ends_at)} · <Link className="text-indigo-700 underline" to={`/admin/exams/${exam.id}`}>Edit exam</Link></p>}
       <div className="mb-4 flex flex-wrap gap-2">
-        {tabBtn("results", "Results")}
-        {exam?.mode === "official" && tabBtn("board", "Leaderboard")}
+        <Segmented value={tab} onChange={setTab} options={exam?.mode === "official" ? [["results", "Results"], ["board", "Leaderboard"]] : [["results", "Results"]]} />
         <Button variant="secondary" className="ml-auto" disabled={!attempts.length} onClick={exportCsv}>Download CSV</Button>
       </div>
 
@@ -115,7 +111,7 @@ export default function ExamResults() {
                 </tbody>
               </table>
             </Card>}
-          <p className="mt-2 text-sm text-slate-600">Ties: more correct → less time → earlier submit. Same everything = same rank. Best try counts.</p>
+          <p className="mt-2 text-sm text-slate-600">Ties: more correct first, then less time, then earlier submit. Same on all = same rank. Best try counts.</p>
         </>
       )}
     </Page>

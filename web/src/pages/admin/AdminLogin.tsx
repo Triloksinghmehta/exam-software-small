@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import { Button, Card, ErrorBox, Field, Page } from "../../components/ui";
+import { Button, Centered, ErrorBox, Field } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 import { useAuth } from "../../lib/auth";
 
@@ -32,15 +32,13 @@ export default function AdminLogin() {
   }
 
   return (
-    <Page title="Admin Login">
-      <Card>
+    <Centered title="Admin login" subtitle="Manage students and exams">
         <form onSubmit={submit}>
           <ErrorBox>{error}</ErrorBox>
           <Field label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" required />
           <Field label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
           <Button className="w-full" disabled={busy}>{busy ? "Logging in…" : "Login"}</Button>
         </form>
-      </Card>
-    </Page>
+    </Centered>
   );
 }

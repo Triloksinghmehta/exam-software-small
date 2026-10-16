@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Button, Card, ErrorBox } from "../components/ui";
+import { Button, Card, ErrorBox, Icon } from "../components/ui";
 import { QuestionView } from "../components/QuestionView";
 import { friendly, supabase } from "../lib/supabase";
 import type { Prompt } from "../../../supabase/functions/_shared/generator";
@@ -140,16 +140,18 @@ export default function ExamAttempt() {
   return (
     <div className={ac?.ac_block_copy ? "select-none" : ""}>
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white shadow-sm">
-        {practice && <p className="bg-yellow-300 py-1 text-center text-sm font-bold">PRACTICE</p>}
+        {practice && <p className="bg-amber-300 py-1 text-center text-xs font-bold tracking-widest text-amber-950">PRACTICE</p>}
         <div className="mx-auto flex max-w-3xl items-center gap-3 px-4 py-2">
-          <b className={`font-mono text-2xl ${left !== null && left < 60000 ? "text-red-600" : ""}`} aria-live="off" aria-label="Time left">{left === null ? "--:--" : mmss(left)}</b>
-          <span className="text-slate-600">{answered} / {total} done</span>
-          <span className={`ml-auto text-sm ${save === "offline" ? "text-red-600" : save === "saving" ? "text-slate-500" : "text-green-700"}`} role="status">
-            {save === "saved" ? "✓ Saved" : save === "saving" ? "Saving…" : "⚠ Offline – answers kept"}
+          <b className={`flex items-center gap-2 rounded-xl px-3 py-1.5 font-mono text-2xl ${left !== null && left < 60000 ? "bg-red-100 text-red-700" : "bg-indigo-50 text-indigo-700"}`} aria-live="off" aria-label="Time left"><Icon name="clock" className="h-5 w-5" />{left === null ? "--:--" : mmss(left)}</b>
+          <span className="hidden text-slate-600 sm:inline">{answered} / {total} done</span>
+          <span className="h-2 w-24 overflow-hidden rounded-full bg-slate-200" aria-hidden="true"><span className="block h-full rounded-full bg-indigo-600 transition-all" style={{ width: `${(100 * answered) / total}%` }} /></span>
+          <span className={`ml-auto flex items-center gap-1.5 text-sm ${save === "offline" ? "text-red-600" : save === "saving" ? "text-slate-500" : "text-emerald-700"}`} role="status">
+            <Icon name={save === "offline" ? "alert" : save === "saving" ? "clock" : "check"} className="h-4 w-4" />
+            {save === "saved" ? "Saved" : save === "saving" ? "Saving…" : "Offline, answers kept"}
           </span>
           <Button onClick={() => setConfirmSubmit(true)}>Submit</Button>
         </div>
-        {warning && <p className="bg-red-50 px-4 py-2 text-center text-red-800" role="alert">{warning}
+        {warning && <p className="flex flex-wrap items-center justify-center gap-2 bg-red-50 px-4 py-2 text-center text-sm text-red-800" role="alert"><Icon name="alert" className="h-4 w-4" />{warning}
           {ac?.ac_fullscreen && !document.fullscreenElement && <button className="ml-2 underline" onClick={() => document.documentElement.requestFullscreen?.().catch(() => {})}>Go back to full screen</button>}
           <button className="ml-2 underline" onClick={() => setWarning("")}>OK</button></p>}
       </header>
@@ -161,7 +163,7 @@ export default function ExamAttempt() {
             <span className="mb-2 text-sm text-slate-500">Q{q.position}</span>
             <div className="mb-3 self-end text-right"><QuestionView prompt={q.prompt} /></div>
             <input id={`ans-${i}`} aria-label={`Answer for question ${q.position}`} inputMode="decimal" autoComplete="off"
-              className="mt-auto w-full rounded-lg border-2 border-blue-600 px-3 py-3 text-xl" placeholder="Answer"
+              className="mt-auto w-full rounded-lg border-2 border-indigo-600 px-3 py-3 text-xl" placeholder="Answer"
               value={values[q.position] ?? ""} onChange={(e) => change(q.position, e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); next(i); } }} onBlur={() => flush()} />
           </Card>

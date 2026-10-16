@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, ErrorBox, Page } from "../components/ui";
+import { Badge, Button, Card, ErrorBox, Icon, LinkButton, Page } from "../components/ui";
 import { friendly, supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 import { when, type Exam } from "./admin/Exams";
 
 type Attempt = { id: string; exam_id: string; status: string; correct: number | null; total: number | null; submitted_at: string | null };
-
-const btn = "mt-3 block w-full rounded-xl px-4 py-3 text-center text-lg font-semibold";
-const primary = `${btn} bg-blue-600 text-white hover:bg-blue-700`;
-const secondary = `${btn} border-2 border-blue-600 text-blue-700`;
-const disabled = `${btn} bg-slate-200 text-slate-500`;
 
 function ExamCard({ e, attempts }: { e: Exam; attempts: Attempt[] }) {
   const mine = attempts.filter((a) => a.exam_id === e.id);
@@ -20,24 +15,28 @@ function ExamCard({ e, attempts }: { e: Exam; attempts: Attempt[] }) {
   const now = Date.now();
   const isOpen = e.status === "published" && now >= Date.parse(e.starts_at) && now <= Date.parse(e.ends_at);
   const qs = (e.rules as { quantity: number }[]).reduce((s, r) => s + r.quantity, 0);
+  const practice = e.mode === "practice";
 
   let action;
-  if (open) action = <Link className={primary} to={`/attempt/${open.id}`}>Continue</Link>;
-  else if (isOpen && left > 0) action = <Link className={primary} to={`/exam/${e.id}`}>{e.mode === "practice" ? "Practice" : "Start"}</Link>;
-  else if (done.length) action = <Link className={secondary} to={`/result/${done[0].id}`}>View result ({done[0].correct}/{done[0].total})</Link>;
-  else if (now < Date.parse(e.starts_at)) action = <span className={disabled}>Opens {when(e.starts_at)}</span>;
-  else action = <span className={disabled}>{e.mode === "official" ? "Missed" : "Closed"}</span>;
+  if (open) action = <LinkButton to={`/attempt/${open.id}`} className="w-full">Continue</LinkButton>;
+  else if (isOpen && left > 0) action = <LinkButton to={`/exam/${e.id}`} className="w-full">{practice ? "Practice" : "Start exam"}</LinkButton>;
+  else if (done.length) action = <LinkButton to={`/result/${done[0].id}`} variant="secondary" className="w-full">View result ({done[0].correct}/{done[0].total})</LinkButton>;
+  else if (now < Date.parse(e.starts_at)) action = <span className="block w-full rounded-xl bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">Opens {when(e.starts_at)}</span>;
+  else action = <span className="block w-full rounded-xl bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">{practice ? "Closed" : "Missed"}</span>;
 
   return (
-    <Card className="mb-3">
-      <div className="flex items-start justify-between gap-2">
-        <b className="text-lg">{e.name}</b>
-        {e.mode === "practice" && <span className="rounded-full bg-yellow-300 px-2 py-0.5 text-xs font-bold">PRACTICE</span>}
+    <Card className="flex flex-col">
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <b className="text-lg leading-snug">{e.name}</b>
+        <Badge tone={practice ? "amber" : "indigo"}>{practice ? "Practice" : "Exam"}</Badge>
       </div>
-      <p className="text-slate-600">{qs} questions · {e.duration_minutes} min{isOpen && <> · open till {when(e.ends_at)}</>}</p>
-      {e.mode === "practice" && isOpen && !open && <p className="text-sm text-slate-500">{Math.max(0, left)} {left === 1 ? "try" : "tries"} left</p>}
-      {done.length > 0 && (open || (isOpen && left > 0)) && <Link className="mt-2 inline-block text-blue-700 underline" to={`/result/${done[0].id}`}>Last result: {done[0].correct}/{done[0].total}</Link>}
-      {action}
+      <ul className="mb-4 space-y-1 text-sm text-slate-600">
+        <li className="flex items-center gap-2"><Icon name="exams" className="h-4 w-4" />{qs} questions</li>
+        <li className="flex items-center gap-2"><Icon name="clock" className="h-4 w-4" />{e.duration_minutes} minutes{isOpen && <> · open till {when(e.ends_at)}</>}</li>
+        {practice && isOpen && !open && <li className="text-slate-500">{Math.max(0, left)} {left === 1 ? "try" : "tries"} left</li>}
+      </ul>
+      {done.length > 0 && (open || (isOpen && left > 0)) && <Link className="mb-3 text-sm text-indigo-700 underline" to={`/result/${done[0].id}`}>Last result: {done[0].correct}/{done[0].total}</Link>}
+      <div className="mt-auto">{action}</div>
     </Card>
   );
 }
@@ -65,28 +64,21 @@ export default function StudentHome() {
   const recent = (exams ?? []).filter((e) => Date.parse(e.ends_at) > Date.now() - 30 * 86400000 || attempts.some((a) => a.exam_id === e.id));
   const official = recent.filter((e) => e.mode === "official");
   const practice = recent.filter((e) => e.mode === "practice");
+  const first = student.full_name.split(" ")[0];
+  const section = (title: string, list: Exam[], empty?: string) => (
+    <section className="mb-8">
+      <h2 className="mb-3 text-lg font-bold">{title}</h2>
+      {list.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.map((e) => <ExamCard key={e.id} e={e} attempts={attempts} />)}</div>
+        : empty && <Card><p className="text-slate-500">{empty}</p></Card>}
+    </section>
+  );
 
   return (
-    <Page title="Home">
-      <Card className="mb-4">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <b className="text-lg">{student.full_name}</b>
-            <p className="text-slate-600">{student.student_code} · Level {student.level}</p>
-          </div>
-          <Button variant="secondary" onClick={() => supabase.auth.signOut()}>Logout</Button>
-        </div>
-      </Card>
+    <Page title={`Hi, ${first}`} wide actions={<LinkButton to="/results" variant="secondary">My results</LinkButton>}>
       {error && <><ErrorBox>{error}</ErrorBox><Button variant="secondary" className="mb-4" onClick={load}>Try again</Button></>}
-      {exams === null && !error ? <p>Loading…</p> : <>
-        <h2 className="mb-2 text-xl font-bold">Exams</h2>
-        {official.length ? official.map((e) => <ExamCard key={e.id} e={e} attempts={attempts} />)
-          : <Card className="mb-3"><p className="text-slate-600">No exams right now. Your teacher will add one.</p></Card>}
-        {practice.length > 0 && <>
-          <h2 className="mb-2 mt-6 text-xl font-bold">Practice</h2>
-          {practice.map((e) => <ExamCard key={e.id} e={e} attempts={attempts} />)}
-        </>}
-        <Link to="/results" className="mt-6 block text-center text-blue-700 underline">My results</Link>
+      {exams === null && !error ? <p className="text-slate-500">Loading…</p> : <>
+        {section("Exams", official, "No exams right now. Your teacher will add one.")}
+        {practice.length > 0 && section("Practice", practice)}
       </>}
     </Page>
   );

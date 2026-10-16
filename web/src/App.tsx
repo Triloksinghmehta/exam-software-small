@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth";
-import { AdminBar } from "./components/ui";
+import { AdminShell, StudentShell } from "./components/ui";
 import StudentLogin from "./pages/StudentLogin";
 import ChangePassword from "./pages/ChangePassword";
 import StudentHome from "./pages/StudentHome";
@@ -27,14 +27,14 @@ function StudentOnly({ children }: { children: ReactNode }) {
   if (loading) return <p className="p-6">Loading…</p>;
   if (!session || role !== "student" || !student) return <Navigate to={role === "admin" ? "/admin" : "/login"} replace />;
   if (student.must_change_password && path !== "/change-password") return <Navigate to="/change-password" replace />;
-  return children;
+  return <StudentShell>{children}</StudentShell>;
 }
 
 function AdminOnly({ children }: { children: ReactNode }) {
   const { loading, session, role } = useAuth();
   if (loading) return <p className="p-6">Loading…</p>;
   if (!session || role !== "admin") return <Navigate to="/admin/login" replace />;
-  return <><AdminBar />{children}</>;
+  return <AdminShell>{children}</AdminShell>;
 }
 
 export default function App() {

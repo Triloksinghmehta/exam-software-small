@@ -79,3 +79,9 @@ Still to do before G7: CSV download opened in Excel; 10,000-row CSV import; load
 | 5 | Load test rolled back; dev database back to 3 students / 2 exams | ✅ |
 
 Not covered: network/Edge Function/browser load, real devices, empty-project rebuild. See handoff 12.
+
+## UI redesign + bug found (2026-10-17)
+| # | Test | Result |
+|---|---|---|
+| 1 | New look (sidebar admin dashboard, stat cards, badges, student top bar, timer chip + progress bar); no emoji (icons only) | ✅ checked desktop + phone width |
+| 2 | Bug: when an exam's rules can't make a paper, the student's attempt stayed open with the clock running and a try used. Fixed in `start-attempt` v2: empty attempt deleted, clear message shown | ✅ proven (0 attempts left after failed start) |

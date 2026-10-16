@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Button, Card, ErrorBox, Field, Page } from "../../components/ui";
+import { Badge, Button, Card, ErrorBox, Field, Page } from "../../components/ui";
 import { RulesEditor, rulesError } from "../../components/RulesEditor";
 import { friendly, supabase } from "../../lib/supabase";
 import { GENERATOR_VERSION, type Rule } from "../../../../supabase/functions/_shared/generator";
@@ -87,9 +87,9 @@ export default function ExamEditor() {
   const state = exam && examState(exam);
   return (
     <Page title={isNew ? "Create exam" : exam?.name ?? "Exam"} wide>
-      {state && <p className="-mt-3 mb-4"><span className={`rounded-full px-3 py-1 text-sm ${state.cls}`}>{state.label}</span>
+      {state && <p className="-mt-3 mb-4"><Badge tone={state.tone}>{state.label}</Badge>
         {locked && <span className="ml-2 text-slate-600">{started} student{started > 1 ? "s have" : " has"} started. Rules are locked.</span>}</p>}
-      {exam && <Link className="-mt-2 mb-4 inline-block text-blue-700 underline" to={`/admin/exams/${exam.id}/results`}>View results and leaderboard</Link>}
+      {exam && <Link className="-mt-2 mb-4 inline-block text-indigo-700 underline" to={`/admin/exams/${exam.id}/results`}>View results and leaderboard</Link>}
       <ErrorBox>{error}</ErrorBox>
       <Card className="mb-4">
         <div className="grid gap-x-4 sm:grid-cols-2">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Card, ErrorBox, Page } from "../components/ui";
+import { Card, ErrorBox, Icon, Page } from "../components/ui";
 import { QuestionView } from "../components/QuestionView";
 import { friendly, supabase } from "../lib/supabase";
 import type { Prompt } from "../../../supabase/functions/_shared/generator";
@@ -13,7 +13,11 @@ type Result = {
 };
 const time = (s: number) => `${Math.floor(s / 60)} min ${s % 60} sec`;
 const clock = (iso: string) => new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
-const MARK = { correct: ["✓", "text-green-700"], wrong: ["✗", "text-red-700"], skipped: ["–", "text-slate-500"] } as const;
+const MARK = {
+  correct: ["check", "text-emerald-700", "bg-emerald-100"],
+  wrong: ["x", "text-red-700", "bg-red-100"],
+  skipped: ["minus", "text-slate-500", "bg-slate-100"],
+} as const;
 
 export default function ResultPage() {
   const { id } = useParams();
@@ -25,7 +29,7 @@ export default function ResultPage() {
     supabase.from("attempts").select("exam_id").eq("id", id).maybeSingle().then(({ data }) => setExamId(data?.exam_id ?? ""));
   }, [id]);
 
-  if (!r) return <Page title="Result"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading…</p>}<Link className="text-blue-700 underline" to="/">Back to home</Link></Page>;
+  if (!r) return <Page title="Result"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading…</p>}<Link className="text-indigo-700 underline" to="/">Back to home</Link></Page>;
   return (
     <Page title={r.exam_name}>
       {r.mode === "practice" && <p className="-mt-3 mb-4 rounded-lg bg-yellow-300 px-3 py-2 text-center font-bold">PRACTICE result</p>}
@@ -47,10 +51,10 @@ export default function ResultPage() {
       <h2 className="mb-2 text-xl font-bold">Your answers</h2>
       <div className="grid gap-3 sm:grid-cols-2">
         {r.questions.map((q) => {
-          const [icon, cls] = MARK[q.result];
+          const [icon, cls, bg] = MARK[q.result];
           return (
             <Card key={q.position}>
-              <div className="flex justify-between"><span className="text-sm text-slate-500">Q{q.position}</span><b className={`text-xl ${cls}`} aria-label={q.result}>{icon}</b></div>
+              <div className="flex justify-between"><span className="text-sm text-slate-500">Q{q.position}</span><span className={`grid h-7 w-7 place-items-center rounded-full ${bg} ${cls}`} role="img" aria-label={q.result}><Icon name={icon} className="h-4 w-4" /></span></div>
               <div className="my-2 text-right"><QuestionView prompt={q.prompt} /></div>
               <p>Your answer: <b className={cls}>{q.answer ?? "—"}</b></p>
               {q.result !== "correct" && <p>Correct answer: <b className="text-green-700">{q.correct_answer}</b></p>}
@@ -58,8 +62,8 @@ export default function ResultPage() {
           );
         })}
       </div>
-      {r.leaderboard_available && examId && <Link to={`/leaderboard/${examId}`} className="mt-6 block rounded-xl border-2 border-blue-600 px-4 py-3 text-center text-lg font-semibold text-blue-700">See leaderboard</Link>}
-      <Link to="/" className="mt-4 block rounded-xl bg-blue-600 px-4 py-3 text-center text-lg font-semibold text-white">Back to home</Link>
+      {r.leaderboard_available && examId && <Link to={`/leaderboard/${examId}`} className="mt-6 block rounded-xl border-2 border-indigo-600 px-4 py-3 text-center text-lg font-semibold text-indigo-700">See leaderboard</Link>}
+      <Link to="/" className="mt-4 block rounded-xl bg-indigo-600 px-4 py-3 text-center text-lg font-semibold text-white">Back to home</Link>
     </Page>
   );
 }

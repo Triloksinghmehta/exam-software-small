@@ -30,6 +30,6 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done (tested) · ⏸ wait
 | **System** ||||
 | F21 | Server-side question generation + scoring | G4/G5 | ✅ |
 | F22 | Security rules (RLS) + tests | G2+ | 🟨 applied; tested G2 + G3 |
-| F23 | Handoff bundle + tag `phase1-approved-v1.0.0` | G7 | ⬜ |
+| F23 | Handoff bundle + tag `phase1-approved-v1.0.0` | G7 | 🟨 bundle done; tag after sign-off |
 
 **Phase 2 (not now):** organizations/franchises, payments, coupons, commissions, WhatsApp/email, certificates.

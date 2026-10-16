@@ -33,6 +33,8 @@ Deno.serve(async (req) => {
     try {
       paper = generatePaper(exam!.rules as Rule[]);
     } catch (e) {
+      // No paper = nothing to take. Remove the empty attempt so the student keeps their try and no clock runs.
+      await db.from("attempts").delete().eq("id", attempt.id);
       return json({ error: e instanceof RuleError ? "PAPER_RULES_INVALID" : String(e) }, 500);
     }
     // One insert = all or nothing. A parallel request may win the race (primary key); that's fine.

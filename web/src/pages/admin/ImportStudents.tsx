@@ -81,7 +81,7 @@ export default function ImportStudents() {
           <div className="flex flex-wrap gap-2">
             <Button disabled={!result.created.length} onClick={() => download("login-list.csv", toCsv([["student_id", "name", "password"], ...result.created.map((c) => [c.student_code, c.full_name, c.password])]))}>Download login list</Button>
             {result.failed.length > 0 && <Button variant="secondary" onClick={() => download("not-added.csv", badCsv(result.failed))}>Download rows not added</Button>}
-            <Link to="/admin/students" className="rounded-xl border-2 border-blue-600 px-4 py-3 font-semibold text-blue-700">Go to students</Link>
+            <Link to="/admin/students" className="rounded-xl border-2 border-indigo-600 px-4 py-3 font-semibold text-indigo-700">Go to students</Link>
           </div>
         </Card>
       </Page>
@@ -92,7 +92,7 @@ export default function ImportStudents() {
     <Page title="Upload students (CSV)" wide>
       <ErrorBox>{error}</ErrorBox>
       <Card className="mb-4">
-        <p className="mb-3">1. <button className="text-blue-700 underline" onClick={() => download("students-template.csv",
+        <p className="mb-3">1. <button className="text-indigo-700 underline" onClick={() => download("students-template.csv",
           toCsv([[...CSV_HEADERS], ["Riya Sharma", "Rakesh Sharma", "04-05-2015", "3"]]))}>Download template</button>. Columns: name, father's name, date of birth (DD-MM-YYYY), level (0 to 8).</p>
         <label className="block">
           <span className="block mb-2">2. Choose your file</span>

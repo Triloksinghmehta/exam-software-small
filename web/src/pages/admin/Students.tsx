@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { Button, Card, ErrorBox, Field, Page, download, toCsv } from "../../components/ui";
+import { Badge, Button, Card, ErrorBox, Field, LinkButton, Page, download, toCsv } from "../../components/ui";
 import { adminStudents, friendly, supabase } from "../../lib/supabase";
 import type { Student } from "../../lib/auth";
 import { checkRow } from "../../../../supabase/functions/_shared/student-row";
@@ -50,21 +50,21 @@ export default function Students() {
       )}
       <div className="mb-4 flex flex-wrap gap-2">
         <Button onClick={() => setEditing("new")}>Add student</Button>
-        <Link to="/admin/students/import" className="rounded-xl bg-blue-600 px-4 py-3 font-semibold text-white hover:bg-blue-700">Upload CSV</Link>
+        <LinkButton to="/admin/students/import">Upload CSV</LinkButton>
         <Button variant="secondary" disabled={!rows.length} onClick={() => download("students.csv", toCsv([
           ["student_id", "full_name", "father_name", "dob", "level", "status"],
           ...rows.map((s) => [s.student_code, s.full_name, s.father_name, fmtDob(s.dob), s.level, s.status])]))}>Download list</Button>
       </div>
       {editing && <StudentForm student={editing === "new" ? null : editing} onDone={(c) => { setEditing(null); if (c) setShown(c); reload(); }} />}
       <div className="mb-3 flex flex-wrap gap-2">
-        <input aria-label="Search" className="flex-1 min-w-48 rounded-lg border border-slate-300 bg-white px-3 py-3" placeholder="Search name or ID" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select aria-label="Level" className="rounded-lg border border-slate-300 bg-white px-3 py-3" value={level} onChange={(e) => setLevel(e.target.value)}>
+        <input aria-label="Search" className="min-w-48 flex-1 rounded-xl border border-slate-300 bg-white px-3.5 py-3 shadow-sm" placeholder="Search name or ID" value={q} onChange={(e) => setQ(e.target.value)} />
+        <select aria-label="Level" className="rounded-xl border border-slate-300 bg-white px-3.5 py-3 shadow-sm" value={level} onChange={(e) => setLevel(e.target.value)}>
           <option value="">All levels</option>
           {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
         </select>
       </div>
       {list === null ? <p>Loading…</p> : list.length === 0 ? (
-        <Card><p>No students yet. <Link className="text-blue-700 underline" to="/admin/students/import">Upload a CSV</Link> to add many at once.</p></Card>
+        <Card><p>No students yet. <Link className="text-indigo-700 underline" to="/admin/students/import">Upload a CSV</Link> to add many at once.</p></Card>
       ) : (
         <Card className="overflow-x-auto p-0">
           <table className="w-full text-left text-sm">
@@ -77,11 +77,11 @@ export default function Students() {
                   <td className="p-3">{s.father_name}</td>
                   <td className="p-3">{fmtDob(s.dob)}</td>
                   <td className="p-3">{s.level}</td>
-                  <td className={`p-3 ${s.status === "active" ? "text-green-700" : "text-red-700"}`}>{s.status === "active" ? "Active" : "Disabled"}</td>
-                  <td className="p-3 whitespace-nowrap space-x-3">
-                    <button className="text-blue-700 underline" onClick={() => setEditing(s)}>Edit</button>
-                    <button className="text-blue-700 underline" onClick={() => reset(s)}>Reset password</button>
-                    <button className="text-red-700 underline" onClick={() => toggle(s)}>{s.status === "active" ? "Disable" : "Enable"}</button>
+                  <td className="p-3"><Badge tone={s.status === "active" ? "green" : "red"}>{s.status === "active" ? "Active" : "Disabled"}</Badge></td>
+                  <td className="p-3 whitespace-nowrap text-right">
+                    <button className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-50" onClick={() => setEditing(s)}>Edit</button>
+                    <button className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100" onClick={() => reset(s)}>Reset password</button>
+                    <button className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50" onClick={() => toggle(s)}>{s.status === "active" ? "Disable" : "Enable"}</button>
                   </td>
                 </tr>
               ))}

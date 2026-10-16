@@ -24,14 +24,14 @@ export default function Leaderboard() {
           <table className="w-full text-left">
             <thead className="bg-slate-50"><tr><th className="p-3">#</th><th className="p-3">Name</th><th className="p-3">Score</th><th className="p-3">Time</th></tr></thead>
             <tbody>{rows.map((r) => (
-              <tr key={r.student_code} className={`border-t border-slate-100 ${r.student_code === student?.student_code ? "bg-blue-50 font-bold" : ""}`}>
+              <tr key={r.student_code} className={`border-t border-slate-100 ${r.student_code === student?.student_code ? "bg-indigo-50 font-bold" : ""}`}>
                 <td className="p-3">{r.rank}</td><td className="p-3">{r.full_name}</td><td className="p-3">{r.correct}/{r.total}</td>
                 <td className="p-3">{Math.floor(r.time_taken_seconds / 60)}:{String(r.time_taken_seconds % 60).padStart(2, "0")}</td>
               </tr>))}</tbody>
           </table>
         </Card>
       )}
-      <Link to="/" className="mt-6 block text-center text-blue-700 underline">Back to home</Link>
+      <Link to="/" className="mt-6 block text-center text-indigo-700 underline">Back to home</Link>
     </Page>
   );
 }
