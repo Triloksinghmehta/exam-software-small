@@ -1,0 +1,77 @@
+{
+ "release": "phase1 v1.0.0-rc",
+ "supabase_project_ref_dev": "sehspievdmlwlltrbztl",
+ "postgres": "17",
+ "migrations": [
+  "supabase/migrations/20261016000001_schema.sql",
+  "supabase/migrations/20261016000002_rls.sql",
+  "supabase/migrations/20261016000003_exam_functions.sql",
+  "supabase/migrations/20261016000004_levels_and_cron.sql",
+  "supabase/migrations/20261016000005_grace_search_path.sql",
+  "supabase/migrations/20261016000006_next_student_code.sql",
+  "supabase/migrations/20261017000007_g7_hardening.sql"
+ ],
+ "edge_functions": [
+  "admin-students",
+  "start-attempt"
+ ],
+ "cron_jobs": [
+  "finalize-expired-attempts (* * * * *)"
+ ],
+ "tables": [
+  "settings",
+  "profiles",
+  "levels",
+  "student_code_counters",
+  "students",
+  "exams",
+  "attempts",
+  "attempt_questions",
+  "attempt_events",
+  "audit_events"
+ ],
+ "env_var_names": [
+  "VITE_SUPABASE_URL",
+  "VITE_SUPABASE_ANON_KEY",
+  "VITE_STUDENT_EMAIL_DOMAIN",
+  "STUDENT_EMAIL_DOMAIN",
+  "SUPABASE_URL",
+  "SUPABASE_ANON_KEY",
+  "SUPABASE_SERVICE_ROLE_KEY"
+ ],
+ "storage_buckets": [],
+ "note": "No secrets and no user data in this bundle.",
+ "sha256": {
+  ".env.example": "336a605ba7b50786888b2b0c1cdbbba474cf0d2fb830e60ecce67d2fa28d94a3",
+  "00_READ_ME_FIRST.md": "9badc85d194dfecb8495ffef58a7f46fc9eddaaaeba0a79afe5061a03873e993",
+  "01_PRODUCT_REQUIREMENTS.md": "d12f8eb74f8c5f26b8ea4666fe909db6d11df9e31b76857919891162758dac0e",
+  "02_DECISION_LOG.md": "0d2dfe9520bc8354c1ad5b5a79ed41fc019af819e45a69ebea8272241d77f984",
+  "03_ARCHITECTURE.md": "211552f1dce64c45617f21178c86efbfee7de1788d2ff824f5f5797826a86c31",
+  "04_UI_ROUTES_AND_FLOWS.md": "a93c590428960bb7f54d29490813bc5993a1ebb76de365d0bec749e7fd48fc02",
+  "05_DATABASE_SCHEMA.md": "6ed309024d6d97ef25bbaee5135ff0f4e400474b4d285be89c73a09087dc88a7",
+  "06_RLS_AND_ROLE_MATRIX.md": "1b89e8f84cd663b08f99403611279451505a23afb091332f44833274d7a5f513",
+  "07_AUTH_CREDENTIAL_STRATEGY.md": "21ad920b441ee886d4e6a164fe3099a9727cc614bdcefde1940afe229b40379f",
+  "08_EDGE_FUNCTIONS_AND_APIS.md": "27ddb7af4fdf06c04b088a203e246ea754132ca4562e69f16c301ddbbce4ebfa",
+  "09_QUESTION_GENERATOR_SPEC.md": "773915a09309f41ec55dda026b7f298a4d9d3d6a0bc2edffef31ab0ab4461bd7",
+  "10_EXAM_LIFECYCLE_AND_SCORING.md": "37deb4572dfb4d4ede5ddf0b93bfc6340038922122e8a6611e95e6024de8afe7",
+  "11_TEST_REPORT.md": "63664b07d0e4ad229f91e71b251b71085277bc287c5eddd6c054c99ec9882c2b",
+  "12_KNOWN_ISSUES_AND_BACKLOG.md": "22c7d4cf285f3f6d966f7245e95c4bc51240f554761be7e443693baa7b88fa17",
+  "13_PHASE2_ARCHITECTURE_RFC.md": "43da56fa17ef46490da932945a388a1ecd48f6378b7d31e2be57a5768b1b7ef2",
+  "14_PHASE2_MIGRATION_RUNBOOK.md": "0fba83fe50436f2b377524cea2b4068dee682e9b93472438aee7d88d05acdab7",
+  "15_OPERATIONS_DEPLOYMENT.md": "e00e3718804312e521c0f68f8d954abb58aae53b5e26d3fa7453553986734cf9",
+  "16_CHANGELOG_AND_RELEASE.md": "b0f0f66eb111308a90ebfe9cd384ad55a90dc7a59f3982dac1cfa5053480cbd0",
+  "supabase/functions/admin-students/index.ts": "8370a7bac873ca669eade6232e58527186ebb7a1df1411951f7f98a15dc0f427",
+  "supabase/functions/start-attempt/index.ts": "8a9658998dbd355ba361a75b874822c1781130ec81609d1053b55e81cdae7027",
+  "supabase/functions/_shared/generator.ts": "171d121c9185dbd44ab5904fd4eb445a2995a2340290f191f833fc95cde2e69d",
+  "supabase/functions/_shared/student-row.ts": "6e6bb1f20c47c34e00ec4d3e9adc235b29d0f1a2080f063a9c1b91e7842e173d",
+  "supabase/migrations/20261016000001_schema.sql": "c7327c6f83934d19415959cba0459bd2f609b5f6c74a71a1fcdf3465bdcb2cd6",
+  "supabase/migrations/20261016000002_rls.sql": "2680e4f49c7a17ed46820073a4cbe517c54a3ca41bd167bbd22c8be115602468",
+  "supabase/migrations/20261016000003_exam_functions.sql": "465722bc3e8f327e07f25ea5706b21a87f4fbec926c2f626fc83c85507023e0e",
+  "supabase/migrations/20261016000004_levels_and_cron.sql": "69a0fd512f68addf02d74bb4b0f2c70547bfb0500a93813af4258cde23e4f096",
+  "supabase/migrations/20261016000005_grace_search_path.sql": "48ae1b11f729e8c2dd96f2faf63e636ed967348e562c239a1ca98c3a894d7873",
+  "supabase/migrations/20261016000006_next_student_code.sql": "1b1adc9886bc6b378385329d86cc10ea1f95f4f6a81d62b26bba7beb03ff01bb",
+  "supabase/migrations/20261017000007_g7_hardening.sql": "bdf1fcc0be5067390b423317181bde6ba8697bc087b4447b7c6d361d008c5c45",
+  "supabase/tests/g2_dry_run.sql": "3069fabe1524d8798aafc6655cebc906ab85c69d800731ad0289a63d3570ba95",
+  "supabase/tests/g7_load_test.sql": "f91cca593c8bea54c0996c423e6de871161be1a68b73d29510518690ea8bd590"
+ }
+}

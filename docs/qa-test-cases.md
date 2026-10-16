@@ -68,3 +68,14 @@ Not yet tested: real offline (network unplugged) — code queues answers in brow
 
 Test data note: the second attempt (SAI260002, 18/20) was inserted directly in the database to test ranking.
 Still to do before G7: CSV download opened in Excel; 10,000-row CSV import; load test (500 students at once); real phone/tablet test; real network-off test; absent-student label after an exam closes.
+
+## G7: Security review & load test (2026-10-17)
+| # | Test | Result |
+|---|---|---|
+| 1 | Supabase security advisor: only intentional notes left (SECURITY DEFINER functions check their caller; counters table has no policy on purpose); leaked-password check is a dashboard setting (owner) | ✅ reviewed |
+| 2 | Found & fixed: a disabled student with an exam already open could still save answers → `_check_session` now rejects them (migration 07) | ✅ fixed |
+| 3 | Added index on `exams.created_by` (advisor) | ✅ |
+| 4 | Database load test `supabase/tests/g7_load_test.sql`: 500 students × 30 questions at once, as each student with RLS on. Start+paper 0.8 ms each; open paper + 3 autosaves 1.5 ms per student; submit 0.7 ms each; leaderboard of 500 in 9 ms; cron closes 500 abandoned attempts in 76 ms; scoring check correct (7 of 30 as planned) | ✅ |
+| 5 | Load test rolled back; dev database back to 3 students / 2 exams | ✅ |
+
+Not covered: network/Edge Function/browser load, real devices, empty-project rebuild. See handoff 12.
