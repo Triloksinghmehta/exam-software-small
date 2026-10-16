@@ -1,0 +1,2447 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <title>Practice Test | Saksham Skills</title>
+  <link rel="icon" type="image/png" href="/img_main.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="/dashboard/style.css" />
+  <script src="/dashboard/app-config.js"></script>
+  <script src="/dashboard/auth.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    .instructions-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      overflow: hidden;
+      max-width: 100%;
+      width: calc(100% - 48px);
+      margin: 24px auto;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .instructions-header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 32px 40px;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .instructions-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 999px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .instructions-header h2 {
+      font-family: "Sora", sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+      border: none;
+      padding: 0;
+    }
+
+    .instructions-header p {
+      color: #94a3b8;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .header-cap-icon {
+      position: absolute;
+      right: 10px;
+      bottom: -10px;
+      font-size: 100px;
+      color: rgba(255, 255, 255, 0.04);
+      transform: rotate(-15deg);
+      pointer-events: none;
+    }
+
+    .stats-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 32px 40px 16px;
+    }
+
+    .stat-card-item {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .stat-card-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .icon-circle {
+      width: 36px;
+      height: 36px;
+      background: #fef2f2;
+      color: #dc2626;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .stat-lbl {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-val {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .rules-section {
+      padding: 16px 40px 32px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .rules-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .rules-title i {
+      color: #dc2626;
+    }
+
+    .alert-box {
+      background: #fffbeb;
+      border: 1px solid #fef3c7;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: #b45309;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+
+    .alert-box i {
+      font-size: 16px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      padding-left: 0;
+      list-style: none;
+      counter-reset: item;
+    }
+
+    .rules-list li {
+      font-size: 14px;
+      color: #334155;
+      line-height: 1.5;
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .rules-list li::before {
+      content: counter(item) "";
+      counter-increment: item;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      background: #0f172a;
+      color: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .instructions-card .start-test-btn {
+      margin: 24px 40px 32px;
+      width: calc(100% - 80px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .instructions-card .start-test-btn:hover {
+      background: #b91c1c;
+    }
+
+    .test-card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 100%;
+      width: calc(100% - 48px);
+      margin: 24px auto;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .test-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .summary-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .summary-item span {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .summary-item strong {
+      font-size: 16px;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .start-test-btn {
+      width: 100%;
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .start-test-btn:hover {
+      background: #b91c1c;
+    }
+
+    .settings-summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin: 24px 0 32px;
+      padding: 20px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 640px) {
+      .settings-summary {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .review-card {
+      background: #ffffff;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+
+    .review-card.correct {
+      border-color: #10b981;
+      background: #f0fdf4;
+    }
+
+    .review-card.incorrect {
+      border-color: #ef4444;
+      background: #fef2f2;
+    }
+
+    .review-card.unanswered {
+      border-color: #94a3b8;
+      background: #f8fafc;
+    }
+
+    .review-status-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 14px;
+    }
+
+    .review-status-badge.correct i {
+      color: #10b981;
+    }
+
+    .review-status-badge.incorrect i {
+      color: #ef4444;
+    }
+
+    .review-status-badge.unanswered i {
+      color: #94a3b8;
+    }
+
+    .review-ans-row {
+      width: 100%;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #e2e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .review-ans-row span {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .review-ans-row .student-ans {
+      color: #0f172a;
+    }
+
+    .review-card.correct .review-ans-row .student-ans {
+      color: #059669;
+    }
+
+    .review-card.incorrect .review-ans-row .student-ans {
+      color: #dc2626;
+    }
+
+    .review-ans-row .correct-ans {
+      color: #059669;
+    }
+
+    @media (max-width: 768px) {
+      .stats-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 24px 20px 12px;
+      }
+
+      .rules-section {
+        padding: 12px 20px 24px;
+      }
+
+      .instructions-header {
+        padding: 24px 20px;
+      }
+
+      .instructions-card .start-test-btn {
+        margin: 16px 20px 24px;
+        width: calc(100% - 40px);
+      }
+    }
+
+    .timer-box {
+      background: #0f172a;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 15px;
+    }
+
+    .timer-box.urgent {
+      background: #dc2626;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from {
+        transform: scale(1);
+      }
+
+      to {
+        transform: scale(1.05);
+      }
+    }
+
+    .auth-check-msg {
+      text-align: center;
+      margin: 100px auto;
+      font-size: 16px;
+      color: #64748b;
+    }
+
+    /* Game Header Bar */
+    .game-header-bar {
+      background: #ffffff;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .game-header-title {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      color: #1e293b;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .game-header-title i {
+      color: #dc2626;
+    }
+
+    .game-timer-badge {
+      background: #10b981;
+      color: #ffffff;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .game-timer-badge.urgent {
+      background: #dc2626;
+      animation: pulse 1s infinite alternate;
+    }
+
+    .exit-test-btn {
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .exit-test-btn:hover {
+      background: #b91c1c;
+    }
+
+    .game-content-area {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 24px 40px;
+    }
+
+    .questions-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .title-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title-left h2 {
+      font-family: 'Sora', sans-serif;
+      font-size: 24px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0;
+    }
+
+    .refresh-badge {
+      background: #fee2e2;
+      color: #dc2626;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .submit-test-btn-top {
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .submit-test-btn-top:hover {
+      background: #b91c1c;
+    }
+
+    /* Questions Grid */
+    .questions-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .question-card-grid {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .question-card-grid:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .q-no-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #ef4444;
+      text-transform: uppercase;
+      align-self: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .vertical-math {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-family: 'Sora', sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.2;
+      margin: 16px 0;
+      width: max-content;
+      min-width: 90px;
+      box-sizing: border-box;
+    }
+
+    .vertical-math-grid {
+      display: grid;
+      grid-template-columns: min-content auto auto;
+      align-items: center;
+      column-gap: 8px;
+      row-gap: 4px;
+      width: max-content;
+    }
+
+    .vertical-math-grid .operator {
+      grid-column: 1;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .vertical-math-grid .int-part {
+      grid-column: 2;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+
+    .vertical-math-grid .dec-part {
+      grid-column: 3;
+      text-align: left;
+      font-variant-numeric: tabular-nums;
+      font-feature-settings: "tnum";
+    }
+
+    .horizontal-math {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Sora', sans-serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 20px 0;
+      min-height: 32px;
+      width: 100%;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .top-number {
+      padding-right: 0;
+    }
+
+    .bottom-number-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 12px;
+    }
+
+    .math-divider {
+      width: 100%;
+      height: 2px;
+      background: #0f172a;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .answer-grid-input {
+      width: 100%;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      padding: 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #f8fafc;
+      box-sizing: border-box;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .answer-grid-input:focus {
+      outline: none;
+      border-color: #dc2626;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+    }
+
+    /* Hide input number arrows (spinners) */
+    .answer-grid-input::-webkit-outer-spin-button,
+    .answer-grid-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    .answer-grid-input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    /* Bottom Submit Button */
+    .bottom-action-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    .submit-test-btn-large {
+      background: #dc2626;
+      color: #ffffff;
+      border: none;
+      padding: 16px 36px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .submit-test-btn-large:hover {
+      background: #b91c1c;
+    }
+
+    body {
+      display: block !important;
+      padding-top: 24px !important;
+      padding-bottom: 40px !important;
+    }
+
+    body.test-in-progress {
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+    }
+
+    .admin-main {
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    body.test-in-progress .bg-animation {
+      display: none !important;
+    }
+
+    .syllabus-section {
+      padding: 16px 40px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .syllabus-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .syllabus-item-lbl {
+      font-size: 13px;
+      color: #334155;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .syllabus-item-lbl i {
+      color: #10b981;
+      font-size: 12px;
+    }
+
+    /* --- Mobile Responsiveness Adjustments --- */
+    @media (max-width: 640px) {
+      .game-header-bar {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        text-align: center;
+      }
+
+      .game-header-title {
+        font-size: 13px;
+        justify-content: center;
+      }
+
+      .game-timer-badge {
+        font-size: 13px;
+        padding: 6px 14px;
+      }
+
+      .exit-test-btn {
+        width: 100%;
+        justify-content: center;
+        padding: 8px;
+      }
+
+      .game-content-area {
+        padding: 16px 12px;
+      }
+
+      .questions-title-row {
+        flex-direction: column;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .title-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+      }
+
+      .submit-test-btn-top {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .instructions-card .start-test-btn {
+        margin: 16px 16px 24px;
+        width: calc(100% - 32px);
+        padding: 14px;
+        font-size: 15px;
+      }
+
+      .rules-section {
+        padding: 16px 16px 24px;
+      }
+
+      .instructions-header {
+        padding: 24px 16px;
+      }
+
+      .instructions-header h2 {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .questions-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .question-card-grid {
+        padding: 12px 6px;
+      }
+
+      .vertical-math {
+        font-size: 20px;
+        margin: 8px 0;
+        min-width: 70px;
+        width: max-content;
+      }
+
+      .answer-grid-input {
+        font-size: 13px;
+        padding: 8px;
+      }
+
+      .stats-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 16px 12px;
+      }
+
+      .stat-card-item {
+        padding: 12px 8px;
+      }
+
+      .stat-val {
+        font-size: 13px;
+      }
+
+      .review-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Background Floating Elements -->
+  <div class="bg-animation">
+    <i class="fa-solid fa-plus math-shape"></i>
+    <i class="fa-solid fa-minus math-shape"></i>
+    <i class="fa-solid fa-xmark math-shape"></i>
+    <i class="fa-solid fa-divide math-shape"></i>
+  </div>
+
+  <main class="admin-main">
+    <div id="loadingScreen" class="auth-check-msg">
+      <p>Verifying credentials and loading campaign settings...</p>
+    </div>
+
+    <div id="setupScreen" class="instructions-card" style="display: none;">
+      <div class="instructions-header">
+        <span class="instructions-badge">INSTRUCTIONS</span>
+        <h2>Read Before You Begin</h2>
+        <p>Take a moment to review the rules and get ready for your test!</p>
+        <div class="header-cap-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+      </div>
+
+      <div class="stats-cards-grid">
+        <div class="stat-card-item">
+          <div class="icon-circle"><i class="fa-solid fa-clock"></i></div>
+          <span class="stat-lbl">DURATION</span>
+          <strong class="stat-val" id="summaryDuration">8 Mins</strong>
+        </div>
+        <div class="stat-card-item">
+          <div class="icon-circle"><i class="fa-solid fa-circle-question"></i></div>
+          <span class="stat-lbl">QUESTIONS</span>
+          <strong class="stat-val" id="summaryTotalQs">25</strong>
+        </div>
+        <div class="stat-card-item">
+          <div class="icon-circle"><i class="fa-solid fa-award"></i></div>
+          <span class="stat-lbl">TOTAL MARKS</span>
+          <strong class="stat-val" id="summaryTotalMarks">25</strong>
+        </div>
+        <div class="stat-card-item">
+          <div class="icon-circle"><i class="fa-solid fa-layer-group"></i></div>
+          <span class="stat-lbl">LEVEL</span>
+          <strong class="stat-val" id="summaryLevelName">LEVEL L7</strong>
+        </div>
+      </div>
+
+      <div class="rules-section">
+        <h3 class="rules-title"><i class="fa-solid fa-circle-info"></i> Test Rules</h3>
+
+        <div class="alert-box">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>The countdown timer in the top-right corner shows remaining time. When it reaches zero, the exam ends
+            automatically — no manual submit needed.</span>
+        </div>
+
+        <ol class="rules-list">
+          <li>Ensure you are in a quiet, distraction-free environment before starting.</li>
+          <li>Each question carries exactly 1 mark. There is no negative marking for incorrect answers.</li>
+          <li>A wellness rest modal will automatically trigger after 3 minutes to help reduce eye strain.</li>
+          <li>No webcam is required. Type answers directly in the inputs inside the question grid.</li>
+        </ol>
+      </div>
+
+      <button class="start-test-btn" id="startTestBtn">Proceed to Test <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+
+    <!-- Main Game/Test screen with full-width header and grid -->
+    <div id="gameScreen" style="display: none; width: 100%;">
+      <!-- Header Row -->
+      <header class="game-header-bar">
+        <div class="game-header-title">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <span id="gameHeaderTitleText">Online Test | Level 7 Student (Level L7)</span>
+        </div>
+        <div class="game-timer-badge" id="gameTimerPill">
+          <i class="fa-solid fa-clock"></i> <span id="timerText">08:00</span>
+        </div>
+        <button class="exit-test-btn" id="exitTestBtn" onclick="exitTest()">
+          <i class="fa-solid fa-circle-xmark"></i> Exit
+        </button>
+      </header>
+
+      <div class="game-content-area">
+        <!-- Questions title row -->
+        <div class="questions-title-row">
+          <div class="title-left">
+            <h2>Questions</h2>
+            <span class="refresh-badge"><i class="fa-solid fa-circle-exclamation"></i> Do not refresh this page</span>
+          </div>
+          <button class="submit-test-btn-top" id="submitTestBtnTop">
+            <i class="fa-solid fa-circle-check"></i> Submit Test
+          </button>
+        </div>
+
+        <!-- Questions Grid -->
+        <div class="questions-grid" id="questionsGrid">
+          <!-- Dynamic question cards injected here -->
+        </div>
+
+        <!-- Bottom Submit Button -->
+        <div class="bottom-action-container">
+          <button class="submit-test-btn-large" id="submitTestBtnBottom">
+            <i class="fa-solid fa-circle-check"></i> Complete & Submit Test
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="endScreen" class="test-card" style="display: none; text-align: center;">
+      <div class="test-setup-head">
+        <div class="test-badge" style="background: #d1fae5; color: #065f46;">Completed</div>
+        <h1 class="test-title">Test Complete!</h1>
+        <p class="test-sub" id="endSubText">Well done, you have completed the blueprint rules.</p>
+      </div>
+
+      <div class="settings-summary">
+        <div class="summary-item">
+          <span>Total Questions</span>
+          <strong id="endTotalQs">—</strong>
+        </div>
+        <div class="summary-item">
+          <span>Correct Answers</span>
+          <strong id="endCorrectQs" style="color: #059669;">—</strong>
+        </div>
+        <div class="summary-item">
+          <span>Accuracy</span>
+          <strong id="endAccuracy">—</strong>
+        </div>
+        <div class="summary-item">
+          <span>Time Taken</span>
+          <strong id="endTimeTaken">—</strong>
+        </div>
+      </div>
+
+      <div id="endScreenActions" style="display: flex; gap: 16px; justify-content: center; margin-bottom: 32px;">
+        <button class="start-test-btn" style="margin: 0; max-width: 240px;" onclick="location.reload()">Restart
+          Practice</button>
+        <button class="start-test-btn" style="background: #10b981; margin: 0; max-width: 240px;" id="downloadPdfBtn">
+          <i class="fa-solid fa-file-pdf"></i> Download PDF
+        </button>
+        <button class="start-test-btn" style="background: #0f172a; margin: 0; max-width: 240px;"
+          onclick="localStorage.removeItem('saksham_campaign_session'); SakshamAuth.signOut()">Sign Out</button>
+      </div>
+
+      <div id="testReviewSection"
+        style="margin-top: 40px; text-align: left; border-top: 1px solid #e2e8f0; padding-top: 32px;">
+        <h3
+          style="font-family: 'Sora', sans-serif; font-size: 20px; font-weight: 700; color: #0f172a; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;">
+          <i class="fa-solid fa-square-poll-horizontal" style="color: #dc2626;"></i> Question Review
+        </h3>
+        <div class="review-grid" id="reviewGrid">
+          <!-- Dynamic review cards injected here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let authState = null;
+    let campaignId = "";
+    let levelNum = 1;
+    let campaign = null;
+    let levelRules = [];
+
+    const levelSyllabus = {
+      0: [
+        "Without carry or Without formula"
+      ],
+      1: [
+        "Small friend & Big friend & Combination"
+      ],
+      2: [
+        "+/- 2 digit 3 rows",
+        "+/- 3 digit 2 rows",
+        "1×1 Multiple",
+        "2 to 100 Table"
+      ],
+      3: [
+        "+/- 2 digit 5 rows",
+        "+/- 3 digit 3 rows",
+        "+/- 4 digit 2 rows",
+        "2×1 Multiple",
+        "2 to 300 Table"
+      ],
+      4: [
+        "+/- 2 digit 7 rows",
+        "+/- 3 digit 4 rows",
+        "+/- 4 digit 3 rows",
+        "3×1 Multiple",
+        "2 to 500 Table"
+      ],
+      5: [
+        "+/- 2 digit 10 rows",
+        "+/- 3 digit 5 rows",
+        "+/- 4 digit 4 rows",
+        "+/- 5 digit 2 rows",
+        "2×2 Multiple",
+        "2 by 1 Divide",
+        "2 to 1000 Table"
+      ],
+      6: [
+        "+/- 2 digit 15 rows",
+        "+/- 3 digit 6 rows",
+        "+/- 4 digit 5 rows",
+        "+/- 5 digit 3 rows",
+        "2×3 Multiple",
+        "3 by 1 Divide",
+        "2 to 2000 Table",
+        "Decimal"
+      ],
+      7: [
+        "+/- 2 digit 20 rows",
+        "+/- 3 digit 7 rows",
+        "+/- 4 digit 6 rows",
+        "+/- 5 digit 4 rows",
+        "3×3 Multiple",
+        "4 by 1 Divide",
+        "2 to 3000 Table",
+        "Decimal"
+      ],
+      8: [
+        "+/- 2 digit 25 rows",
+        "+/- 3 digit 8 rows",
+        "+/- 4 digit 7 rows",
+        "+/- 5 digit 5 rows",
+        "3×4 Multiple",
+        "4 by 2 Divide",
+        "2 to 5000 Table",
+        "Decimal"
+      ]
+    };
+
+    // Game state variables
+    let questionsList = [];
+    let currentQuestionIdx = 0;
+    let correctAnswersCount = 0;
+    let testTimeRemaining = 0; // seconds
+    let timerInterval = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // 1. Check for local campaign session first
+      const localSessionStr = localStorage.getItem("saksham_campaign_session");
+      let localProfile = null;
+      if (localSessionStr) {
+        try {
+          localProfile = JSON.parse(localSessionStr);
+        } catch (e) {
+          console.error("Error parsing local campaign session", e);
+        }
+      }
+
+      if (localProfile) {
+        campaignId = localProfile.campaignId;
+        levelNum = (localProfile.level !== undefined && localProfile.level !== null && localProfile.level !== "") ? parseInt(localProfile.level, 10) : 1;
+        document.getElementById("loadingScreen").style.display = "none";
+      } else {
+        // Force Authentication
+        const state = await SakshamAuth.requireAuth();
+        if (!state) return;
+        authState = state;
+        document.getElementById("loadingScreen").style.display = "none";
+
+        // 2. Parse URL parameters
+        const params = new URLSearchParams(window.location.search);
+        campaignId = params.get("campaign") || "";
+        levelNum = (params.get("level") !== null && params.get("level") !== "") ? parseInt(params.get("level"), 10) : 1;
+
+        let emailPrefix = "";
+
+        if (!campaignId) {
+          // If no campaign parameter, try to extract from user's email: prefix + l + level + @sakshamskill.com
+          const email = (authState.profile?.email || "").toLowerCase();
+          const match = email.match(/^([a-z0-9]+)l(\d)@/);
+          if (match) {
+            emailPrefix = match[1];
+            levelNum = parseInt(match[2], 10);
+          } else {
+            document.body.innerHTML = '<div class="auth-check-msg"><h1>Invalid Test Account</h1><p>Please use the correct login credentials sent by your teacher.</p></div>';
+            return;
+          }
+        }
+      }
+
+      // 3. Fetch Campaign Settings from backend
+      try {
+        const client = await SakshamAuth.getClient();
+        let dbQuery = client.from("campaigns").select("*");
+        if (campaignId) {
+          dbQuery = dbQuery.eq("id", campaignId);
+        } else {
+          dbQuery = dbQuery.eq("prefix", emailPrefix);
+        }
+        const { data, error } = await dbQuery.single();
+
+        if (error || !data) {
+          throw new Error(error?.message || "Campaign configuration not found.");
+        }
+
+        campaign = data;
+
+        // Double check if this custom student has already submitted (only for non-practice/test campaigns)
+        if (localProfile && campaign.mode !== "practice") {
+          try {
+            const { data: studentRecord, error: studentError } = await client
+              .from("students_user_id")
+              .select("submitted")
+              .eq("username", localProfile.studentUsername)
+              .maybeSingle();
+
+            if (studentRecord && studentRecord.submitted) {
+              throw new Error("You have already completed this exam. Only one submission is allowed.");
+            }
+          } catch (err) {
+            console.error("[Test Page] Error verifying submission:", err);
+            document.body.innerHTML = `<div class="auth-check-msg"><h1>Access Denied</h1><p>${err.message}</p></div>`;
+            return;
+          }
+        }
+
+        // Verify campaign start and expiration times
+        const now = new Date();
+        if (campaign.start_at && now < new Date(campaign.start_at)) {
+          const startTime = new Date(campaign.start_at).toLocaleString();
+          throw new Error(`This test has not started yet. It is scheduled to start at ${startTime}.`);
+        }
+        if (campaign.expire_at) {
+          if (now > new Date(campaign.expire_at)) {
+            throw new Error("This test has expired.");
+          }
+        } else if (!campaign.infinite_validity && campaign.validity_hours) {
+          const createdTime = new Date(campaign.created_at).getTime();
+          const expireTime = createdTime + (campaign.validity_hours * 60 * 60 * 1000);
+          if (now.getTime() > expireTime) {
+            throw new Error("This test has expired.");
+          }
+        }
+
+        // Verify single submission restriction
+        if (campaign.single_submission) {
+          const studentId = authState?.profile?.id;
+          if (studentId) {
+            const { data: existingSub } = await client
+              .from("test_submissions")
+              .select("id")
+              .eq("student_id", studentId)
+              .eq("campaign_id", campaign.id)
+              .maybeSingle();
+
+            if (existingSub) {
+              throw new Error("You have already completed this exam. Only one submission is allowed.");
+            }
+          }
+        }
+
+        // Map database keys to rule structures
+        // In database, key is "bud", "lvl1", "lvl2", etc.
+        const levelKey = levelNum === 0 ? "bud" : `lvl${levelNum}`;
+        levelRules = campaign.blueprints[levelKey] || [];
+
+        if (!levelRules.length) {
+          throw new Error(`No rules defined for Level ${levelNum} in this campaign.`);
+        }
+
+        renderSetupScreen();
+      } catch (err) {
+        console.error("[Test Page] Error loading campaign:", err);
+        document.body.innerHTML = `<div class="auth-check-msg"><h1>Error Loading Test</h1><p>${err.message}</p></div>`;
+      }
+    });
+
+    function renderSetupScreen() {
+      const isPractice = campaign && campaign.mode === "practice";
+
+      // Calculate total questions
+      const totalQs = levelRules.reduce((sum, r) => sum + Number(r.quantity || 0), 0);
+
+      const durationEl = document.getElementById("summaryDuration");
+      if (durationEl) durationEl.textContent = `${campaign.duration_minutes || 8} Mins`;
+
+      const totalQsEl = document.getElementById("summaryTotalQs");
+      if (totalQsEl) totalQsEl.textContent = totalQs;
+
+      const totalMarksEl = document.getElementById("summaryTotalMarks");
+      if (totalMarksEl) totalMarksEl.textContent = totalQs;
+
+      const levelNameEl = document.getElementById("summaryLevelName");
+      if (levelNameEl) {
+        levelNameEl.textContent = levelNum === 0 ? "LEVEL L0" : `LEVEL L${levelNum}`;
+      }
+
+      // Update setup screen text for practice vs test
+      const badgeEl = document.querySelector("#setupScreen .instructions-badge");
+      if (badgeEl) badgeEl.textContent = isPractice ? "PRACTICE" : "INSTRUCTIONS";
+
+      const titleEl = document.querySelector("#setupScreen h2");
+      if (titleEl) titleEl.textContent = isPractice ? "Practice Session Setup" : "Read Before You Begin";
+
+      const subEl = document.querySelector("#setupScreen .instructions-header p");
+      if (subEl) subEl.textContent = isPractice ? "Review the settings and get ready for your practice!" : "Take a moment to review the rules and get ready for your test!";
+
+      const rulesTitleEl = document.querySelector("#setupScreen .rules-title");
+      if (rulesTitleEl) {
+        rulesTitleEl.innerHTML = isPractice
+          ? `<i class="fa-solid fa-circle-info"></i> Practice Info`
+          : `<i class="fa-solid fa-circle-info"></i> Test Rules`;
+      }
+
+      const startBtn = document.getElementById("startTestBtn");
+      if (startBtn) {
+        startBtn.innerHTML = isPractice
+          ? `Proceed to Practice <i class="fa-solid fa-arrow-right"></i>`
+          : `Proceed to Test <i class="fa-solid fa-arrow-right"></i>`;
+      }
+
+      // Show welcome greeting if name is available (only for tests)
+      const localSessionStr = localStorage.getItem("saksham_campaign_session");
+      let displayName = "";
+      if (localSessionStr) {
+        try {
+          const sessionObj = JSON.parse(localSessionStr);
+          displayName = sessionObj.studentName;
+        } catch (e) { }
+      } else if (authState && authState.profile) {
+        displayName = authState.profile.full_name || authState.profile.email;
+      }
+
+      if (displayName && !isPractice) {
+        const header = document.querySelector(".instructions-header");
+        if (header) {
+          let welcomeEl = document.getElementById("welcomeStudentGreeting");
+          if (!welcomeEl) {
+            welcomeEl = document.createElement("div");
+            welcomeEl.id = "welcomeStudentGreeting";
+            welcomeEl.style.fontSize = "22px";
+            welcomeEl.style.fontWeight = "800";
+            welcomeEl.style.color = "#ffffff";
+            welcomeEl.style.marginBottom = "4px";
+            welcomeEl.style.fontFamily = "'Sora', sans-serif";
+            const badge = header.querySelector(".instructions-badge");
+            if (badge) {
+              badge.after(welcomeEl);
+            } else {
+              header.prepend(welcomeEl);
+            }
+          }
+          welcomeEl.textContent = `Welcome, ${displayName}!`;
+        }
+      } else {
+        const welcomeEl = document.getElementById("welcomeStudentGreeting");
+        if (welcomeEl) welcomeEl.remove();
+      }
+
+      document.getElementById("setupScreen").style.display = "block";
+      document.getElementById("startTestBtn").addEventListener("click", startTest);
+    }
+
+    function startTest() {
+      document.body.classList.add("test-in-progress");
+      document.getElementById("setupScreen").style.display = "none";
+      document.getElementById("gameScreen").style.display = "block";
+
+      // Update header details
+      const headerTitle = document.getElementById("gameHeaderTitleText");
+      if (headerTitle) {
+        const isPractice = campaign && campaign.mode === "practice";
+        if (isPractice) {
+          headerTitle.innerHTML = `<i class="fa-solid fa-circle-play"></i> Practice Session`;
+        } else {
+          const levelName = `Level ${levelNum}`;
+
+          // Get display name for active test header too
+          const localSessionStr = localStorage.getItem("saksham_campaign_session");
+          let displayName = "";
+          if (localSessionStr) {
+            try {
+              const sessionObj = JSON.parse(localSessionStr);
+              displayName = sessionObj.studentName;
+            } catch (e) { }
+          } else if (authState && authState.profile) {
+            displayName = authState.profile.full_name || authState.profile.email;
+          }
+          const displayNameSuffix = displayName ? ` | Student: ${displayName}` : "";
+          headerTitle.textContent = `Online Test | ${levelName}${displayNameSuffix}`;
+        }
+      }
+
+      // Generate equations list from levelRules
+      questionsList = [];
+      levelRules.forEach(rule => {
+        const qty = Number(rule.quantity || 10);
+        for (let i = 0; i < qty; i++) {
+          questionsList.push(generateQuestionForRule(rule));
+        }
+      });
+
+      // Render all questions in grid
+      const grid = document.getElementById("questionsGrid");
+      grid.innerHTML = "";
+
+      questionsList.forEach((q, idx) => {
+        const card = document.createElement("div");
+        card.className = "question-card-grid";
+        card.innerHTML = `
+            <span class="q-no-label">Q.NO ${idx + 1}</span>
+            <div class="vertical-math">
+              ${formatEquationVertical(q.equation)}
+            </div>
+            <input type="number" step="any" class="answer-grid-input" id="q-input-${idx}" placeholder="Answer" autocomplete="off" />
+          `;
+        grid.appendChild(card);
+      });
+
+      // Bind Submit Buttons
+      document.getElementById("submitTestBtnTop").onclick = tallyAndSubmitTest;
+      document.getElementById("submitTestBtnBottom").onclick = tallyAndSubmitTest;
+      document.getElementById("exitTestBtn").onclick = exitTest;
+
+      // Autofocus first input
+      const firstInput = document.getElementById("q-input-0");
+      if (firstInput) {
+        firstInput.focus();
+      }
+
+      // Handle keyboard navigation (Enter key -> next question)
+      grid.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && e.target.classList.contains("answer-grid-input")) {
+          e.preventDefault();
+          const currentIdStr = e.target.id;
+          const currentIdx = parseInt(currentIdStr.replace("q-input-", ""), 10);
+          const nextIdx = currentIdx + 1;
+          const nextInput = document.getElementById(`q-input-${nextIdx}`);
+          if (nextInput) {
+            nextInput.focus();
+          } else {
+            // Confirm before auto-submitting on pressing Enter on the last question
+            if (confirm("You are on the last question. Do you want to submit the test?")) {
+              tallyAndSubmitTest();
+            }
+          }
+        }
+      });
+
+      // Prevent mouse scroll wheel from changing values in number inputs
+      grid.addEventListener("wheel", (e) => {
+        if (e.target.type === "number") {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      // Start Countdown Timer
+      testTimeRemaining = campaign.duration_minutes * 60;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        testTimeRemaining--;
+        updateTimerDisplay();
+        if (testTimeRemaining <= 0) {
+          clearInterval(timerInterval);
+          tallyAndSubmitTest();
+        }
+      }, 1000);
+    }
+
+    function formatEquationVertical(equation) {
+      if (equation.includes(", ")) {
+        const parts = equation.split(", ");
+        let html = "";
+        for (let i = 0; i < parts.length; i++) {
+          html += `<div class="top-number">${parts[i]}</div>`;
+        }
+        html += `<div class="math-divider"></div>`;
+        return html;
+      }
+
+      const parts = equation.split(" ");
+      if (parts.length < 3) {
+        const numParts = equation.split('.');
+        const intPart = numParts[0];
+        const decPart = numParts[1] ? '.' + numParts[1] : '';
+        return `
+          <div class="vertical-math-grid">
+            <span class="operator"></span>
+            <span class="int-part">${intPart}</span>
+            <span class="dec-part">${decPart}</span>
+          </div>
+          <div class="math-divider"></div>
+        `;
+      }
+
+      let html = `<div class="vertical-math-grid">`;
+      // Top number
+      const topParts = parts[0].split('.');
+      const topInt = topParts[0];
+      const topDec = topParts[1] ? '.' + topParts[1] : '';
+      html += `
+        <span class="operator"></span>
+        <span class="int-part">${topInt}</span>
+        <span class="dec-part">${topDec}</span>
+      `;
+
+      // Operators and numbers
+      for (let i = 1; i < parts.length; i += 2) {
+        const op = parts[i];
+        const num = parts[i + 1];
+        const numParts = num.split('.');
+        const numInt = numParts[0];
+        const numDec = numParts[1] ? '.' + numParts[1] : '';
+        html += `
+          <span class="operator">${op}</span>
+          <span class="int-part">${numInt}</span>
+          <span class="dec-part">${numDec}</span>
+        `;
+      }
+      html += `</div><div class="math-divider"></div>`;
+      return html;
+    }
+
+    function updateTimerDisplay() {
+      const mins = Math.floor(testTimeRemaining / 60);
+      const secs = testTimeRemaining % 60;
+      const timeStr = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+
+      const pill = document.getElementById("gameTimerPill");
+      const timerSpan = document.getElementById("timerText");
+
+      if (timerSpan) timerSpan.textContent = timeStr;
+      else pill.textContent = timeStr;
+
+      if (testTimeRemaining < 60) {
+        pill.classList.add("urgent");
+      }
+    }
+
+    function isDirectAddition(num1, num2) {
+      const s1 = Math.abs(num1).toString();
+      const s2 = Math.abs(num2).toString();
+      const maxLen = Math.max(s1.length, s2.length);
+      const p1 = s1.padStart(maxLen, '0');
+      const p2 = s2.padStart(maxLen, '0');
+      
+      for (let i = 0; i < maxLen; i++) {
+        const d1 = parseInt(p1[i], 10);
+        const d2 = parseInt(p2[i], 10);
+        if (d1 + d2 > 9) return false;
+        if ((d1 % 5) + (d2 % 5) >= 5) return false;
+      }
+      return true;
+    }
+
+    function isDirectSubtraction(num1, num2) {
+      const s1 = Math.abs(num1).toString();
+      const s2 = Math.abs(num2).toString();
+      const maxLen = Math.max(s1.length, s2.length);
+      const p1 = s1.padStart(maxLen, '0');
+      const p2 = s2.padStart(maxLen, '0');
+      
+      for (let i = 0; i < maxLen; i++) {
+        const d1 = parseInt(p1[i], 10);
+        const d2 = parseInt(p2[i], 10);
+        if (d1 < d2) return false;
+        if ((d1 % 5) < (d2 % 5)) return false;
+      }
+      return true;
+    }
+
+    function generateQuestionForRule(rule) {
+      let d1 = 1;
+      let d2 = 1;
+      let dBefore1 = null;
+      let dAfter1 = null;
+      let dBefore2 = null;
+      let dAfter2 = null;
+
+      if (rule.digits && rule.digits.includes("b")) {
+        if (rule.digits.includes("_")) {
+          const parts = rule.digits.split("_");
+          const match1 = parts[0].match(/^(\d+)b(\d+)a$/);
+          const match2 = parts[1].match(/^(\d+)b(\d+)a$/);
+          if (match1 && match2) {
+            dBefore1 = parseInt(match1[1], 10);
+            dAfter1 = parseInt(match1[2], 10);
+            dBefore2 = parseInt(match2[1], 10);
+            dAfter2 = parseInt(match2[2], 10);
+          }
+        } else {
+          const match = rule.digits.match(/^(\d+)b(\d+)a$/);
+          if (match) {
+            dBefore1 = parseInt(match[1], 10);
+            dAfter1 = parseInt(match[2], 10);
+            dBefore2 = dBefore1;
+            dAfter2 = dAfter1;
+          }
+        }
+      } else {
+        const digitMatch = rule.digits ? rule.digits.match(/^(\d+)d(\d+)d$/) : null;
+        d1 = digitMatch ? parseInt(digitMatch[1], 10) : 1;
+        d2 = digitMatch ? parseInt(digitMatch[2], 10) : 1;
+      }
+
+      const rows = Number(rule.rows || 2);
+
+      const getRand = (digits) => {
+        const min = Math.pow(10, digits - 1);
+        const max = Math.pow(10, digits) - 1;
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      };
+
+      let num1, num2, equation, answer;
+      let isValid = false;
+      let attemptsCount = 0;
+
+      while (!isValid) {
+        attemptsCount++;
+        if (attemptsCount > 500) {
+          const val1 = getRand(d1);
+          const val2 = getRand(d2);
+          let fallbackEq = `${val1} + ${val2}`;
+          let fallbackAns = val1 + val2;
+
+          if (rule.operation === "subtraction" || rule.operation === "decimal_subtraction") {
+            fallbackEq = `${val1} - ${val2}`;
+            fallbackAns = val1 - val2;
+          } else if (rule.operation === "multiplication" || rule.operation === "decimal_multiplication") {
+            fallbackEq = `${val1} × ${val2}`;
+            fallbackAns = val1 * val2;
+          } else if (rule.operation === "division" || rule.operation === "decimal_division") {
+            let div1 = Math.max(val1, val2);
+            let div2 = Math.min(val1, val2) || 1;
+            fallbackEq = `${div1 * div2} ÷ ${div2}`;
+            fallbackAns = div1;
+          }
+
+          return {
+            equation: fallbackEq,
+            answer: fallbackAns
+          };
+        }
+
+        // 2-digit in first row, then 1-digit in the rest of the rows (or d1 in first row, d2 in the rest)
+        let digitCounts = [];
+        for (let r = 0; r < rows; r++) {
+          digitCounts.push(r === 0 ? d1 : d2);
+        }
+
+        let terms = [];
+        for (let r = 0; r < rows; r++) {
+          terms.push(getRand(digitCounts[r]));
+        }
+
+        equation = "";
+        answer = 0;
+
+        switch (rule.operation) {
+          case "multiplication":
+            {
+              let runningProduct = terms[0];
+              let equationParts = [runningProduct];
+              let isStepValid = true;
+
+              if (levelNum === 0 && (runningProduct < 0 || runningProduct > 9)) {
+                isStepValid = false;
+              }
+
+              for (let r = 1; r < rows; r++) {
+                const nextNum = terms[r];
+                const nextProduct = runningProduct * nextNum;
+                if (levelNum === 0 && nextProduct > 9) {
+                  isStepValid = false;
+                  break;
+                }
+                runningProduct = nextProduct;
+                equationParts.push("×", nextNum);
+              }
+
+              if (isStepValid) {
+                const minAns = levelNum === 0 ? 0 : 1;
+                const maxAns = levelNum === 0 ? 9 : Infinity;
+                if (runningProduct >= minAns && runningProduct <= maxAns) {
+                  equation = equationParts.join(" ");
+                  answer = runningProduct;
+                  isValid = true;
+                }
+              }
+            }
+            break;
+          case "mixed":
+            {
+              // Enforce at least 5 rows so there is space to include all 4 operators
+              let actualRows = Math.max(5, rows);
+
+              let attempts = 0;
+              while (attempts < 500) {
+                attempts++;
+                let ops = ['+', '-', '×', '÷'];
+                while (ops.length < actualRows - 1) {
+                  const choices = ['+', '-', '×', '÷'];
+                  ops.push(choices[Math.floor(Math.random() * choices.length)]);
+                }
+                ops.sort(() => Math.random() - 0.5);
+
+                let runningVal = getRand(d1);
+                let equationParts = [runningVal];
+                let isStepValid = true;
+                let usedOps = new Set();
+
+                for (let r = 0; r < ops.length; r++) {
+                  const op = ops[r];
+                  let term = 1;
+
+                  if (op === '+') {
+                    term = getRand(d2);
+                    runningVal += term;
+                    equationParts.push("+", term);
+                    usedOps.add('+');
+                  } else if (op === '-') {
+                    term = getRand(d2);
+                    if (runningVal - term < 0) {
+                      isStepValid = false;
+                      break;
+                    }
+                    runningVal -= term;
+                    equationParts.push("-", term);
+                    usedOps.add('-');
+                  } else if (op === '×') {
+                    term = Math.floor(Math.random() * 8) + 2; // small multiplier 2-9
+                    runningVal *= term;
+                    equationParts.push("×", term);
+                    usedOps.add('×');
+                  } else if (op === '÷') {
+                    let divisors = [];
+                    for (let d = 2; d <= 20; d++) {
+                      if (runningVal % d === 0) {
+                        divisors.push(d);
+                      }
+                    }
+                    if (divisors.length === 0) {
+                      isStepValid = false;
+                      break;
+                    }
+                    term = divisors[Math.floor(Math.random() * divisors.length)];
+                    runningVal /= term;
+                    equationParts.push("÷", term);
+                    usedOps.add('÷');
+                  }
+                }
+
+                if (isStepValid && usedOps.size === 4) {
+                  equation = equationParts.join(" ");
+                  answer = runningVal;
+                  isValid = true;
+                  break;
+                }
+              }
+
+              if (!isValid) {
+                // simple safe fallback if loop somehow fails
+                equation = "20 + 10 - 5 × 2 ÷ 10";
+                answer = 5;
+                isValid = true;
+              }
+            }
+            break;
+          case "table":
+            {
+              let minTable = 2;
+              let maxTable = 100;
+              if (rule.digits && rule.digits.includes("_")) {
+                const rangeParts = rule.digits.split("_");
+                minTable = parseInt(rangeParts[0], 10) || 2;
+                maxTable = parseInt(rangeParts[1], 10) || 100;
+              }
+
+              const sequenceLength = Math.max(3, Number(rule.rows || 10));
+
+              let limitTable = maxTable;
+
+              const tableNum = Math.floor(Math.random() * (limitTable - minTable + 1)) + minTable;
+
+              const startMultiplier = 1;
+
+              const sequence = [];
+              for (let i = 0; i < sequenceLength; i++) {
+                sequence.push((startMultiplier + i) * tableNum);
+              }
+
+              const missingIndex = Math.floor(Math.random() * (sequenceLength - 2)) + 1;
+              const correctAnswer = sequence[missingIndex];
+
+              const displaySequence = sequence.map((val, idx) => idx === missingIndex ? "?" : val);
+              equation = displaySequence.join(", ");
+              answer = correctAnswer;
+
+              if (levelNum !== 0 || (answer >= 0 && answer <= 9)) {
+                isValid = true;
+              }
+            }
+            break;
+          case "subtraction":
+            {
+              terms = [getRand(digitCounts[0])];
+              let runningSum = terms[0];
+              let equationParts = [runningSum];
+              let isStepValid = true;
+
+              for (let r = 1; r < rows; r++) {
+                let nextNum = null;
+                let stepAttempts = 0;
+                const minVal = levelNum === 0 ? 0 : 1;
+
+                while (stepAttempts < 100) {
+                  const candidate = getRand(digitCounts[r]);
+                  let isOk = (runningSum - candidate >= minVal);
+                  if (isOk && levelNum === 0 && !isDirectSubtraction(runningSum, candidate)) {
+                    isOk = false;
+                  }
+                  if (isOk) {
+                    nextNum = candidate;
+                    break;
+                  }
+                  stepAttempts++;
+                }
+
+                if (nextNum === null) {
+                  isStepValid = false;
+                  break;
+                }
+
+                runningSum -= nextNum;
+                terms.push(nextNum);
+                equationParts.push("-", nextNum);
+              }
+
+              if (isStepValid) {
+                const minAns = levelNum === 0 ? 0 : 1;
+                const maxAns = levelNum === 0 ? 9 : Infinity;
+                if (levelNum === 0 || (runningSum >= minAns && runningSum <= maxAns)) {
+                  equation = equationParts.join(" ");
+                  answer = runningSum;
+                  isValid = true;
+                }
+              }
+            }
+            break;
+          case "addition":
+            {
+              terms = [getRand(digitCounts[0])];
+              let runningSum = terms[0];
+              let equationParts = [runningSum];
+              let isStepValid = true;
+
+              for (let r = 1; r < rows; r++) {
+                let nextNum = null;
+                let stepAttempts = 0;
+
+                while (stepAttempts < 100) {
+                  const candidate = getRand(digitCounts[r]);
+                  let isOk = true;
+                  if (levelNum === 0 && !isDirectAddition(runningSum, candidate)) {
+                    isOk = false;
+                  }
+                  if (isOk) {
+                    nextNum = candidate;
+                    break;
+                  }
+                  stepAttempts++;
+                }
+
+                if (nextNum === null) {
+                  isStepValid = false;
+                  break;
+                }
+
+                runningSum += nextNum;
+                terms.push(nextNum);
+                equationParts.push("+", nextNum);
+              }
+
+              if (isStepValid) {
+                const minAns = levelNum === 0 ? 0 : 1;
+                const maxAns = levelNum === 0 ? 9 : Infinity;
+                if (levelNum === 0 || (runningSum >= minAns && runningSum <= maxAns)) {
+                  equation = equationParts.join(" ");
+                  answer = runningSum;
+                  isValid = true;
+                }
+              }
+            }
+            break;
+          case "add_sub":
+          default:
+            {
+              terms = [getRand(digitCounts[0])];
+              let runningSum = terms[0];
+              let equationParts = [runningSum];
+              let isStepValid = true;
+
+              for (let r = 1; r < rows; r++) {
+                let nextNum = null;
+                let chosenOp = "";
+                let stepAttempts = 0;
+                const preferSub = Math.random() < 0.5;
+
+                while (stepAttempts < 100) {
+                  const candidate = getRand(digitCounts[r]);
+                  
+                  if (preferSub) {
+                    const minVal = levelNum === 0 ? 0 : 1;
+                    let canSub = (runningSum - candidate >= minVal);
+                    if (canSub && levelNum === 0 && !isDirectSubtraction(runningSum, candidate)) {
+                      canSub = false;
+                    }
+                    if (canSub) {
+                      nextNum = candidate;
+                      chosenOp = "-";
+                      break;
+                    }
+                    let canAdd = true;
+                    if (levelNum === 0 && !isDirectAddition(runningSum, candidate)) {
+                      canAdd = false;
+                    }
+                    if (canAdd) {
+                      nextNum = candidate;
+                      chosenOp = "+";
+                      break;
+                    }
+                  } else {
+                    let canAdd = true;
+                    if (levelNum === 0 && !isDirectAddition(runningSum, candidate)) {
+                      canAdd = false;
+                    }
+                    if (canAdd) {
+                      nextNum = candidate;
+                      chosenOp = "+";
+                      break;
+                    }
+                    const minVal = levelNum === 0 ? 0 : 1;
+                    let canSub = (runningSum - candidate >= minVal);
+                    if (canSub && levelNum === 0 && !isDirectSubtraction(runningSum, candidate)) {
+                      canSub = false;
+                    }
+                    if (canSub) {
+                      nextNum = candidate;
+                      chosenOp = "-";
+                      break;
+                    }
+                  }
+                  stepAttempts++;
+                }
+
+                if (nextNum === null) {
+                  isStepValid = false;
+                  break;
+                }
+
+                if (chosenOp === "-") {
+                  runningSum -= nextNum;
+                  equationParts.push("-", nextNum);
+                } else {
+                  runningSum += nextNum;
+                  equationParts.push("+", nextNum);
+                }
+                terms.push(nextNum);
+              }
+
+              if (isStepValid) {
+                const minAns = levelNum === 0 ? 0 : 1;
+                const maxAns = levelNum === 0 ? 9 : Infinity;
+                if (levelNum === 0 || (runningSum >= minAns && runningSum <= maxAns)) {
+                  equation = equationParts.join(" ");
+                  answer = runningSum;
+                  isValid = true;
+                }
+              }
+            }
+            break;
+          case "division":
+            {
+              let div_d1 = d1;
+              let div_d2 = d2;
+              if (d1 < d2) {
+                div_d1 = d2;
+                div_d2 = d1;
+              }
+
+              let divisorsStr = [];
+              let product = 1;
+              let maxDividend = Math.pow(10, div_d1) - 1;
+
+              for (let r = 1; r < rows; r++) {
+                let minDivisor, maxDivisor;
+                let isFallback = false;
+
+                if (r === 1) {
+                  minDivisor = Math.pow(10, div_d2 - 1);
+                  maxDivisor = Math.min(Math.pow(10, div_d2) - 1, Math.floor(maxDividend / 1));
+                  if (minDivisor > maxDivisor) {
+                    minDivisor = 1;
+                    maxDivisor = 9;
+                    isFallback = true;
+                  }
+                } else {
+                  minDivisor = 1;
+                  maxDivisor = Math.min(Math.pow(10, div_d2) - 1, Math.floor(maxDividend / product));
+                  if (maxDivisor < 1) {
+                    maxDivisor = 1;
+                  }
+                  if (maxDivisor < Math.pow(10, div_d2 - 1)) {
+                    isFallback = true;
+                  }
+                }
+
+                let divisor;
+                if (isFallback) {
+                  let limit = Math.min(9, Math.floor(maxDividend / product));
+                  if (limit < 1) limit = 1;
+                  divisor = Math.floor(Math.random() * limit) + 1;
+                } else {
+                  divisor = Math.floor(Math.random() * (maxDivisor - minDivisor + 1)) + minDivisor;
+                }
+
+                let divisorStr = divisor.toString().padStart(div_d2, '0');
+                divisorsStr.push(divisorStr);
+                product *= divisor;
+              }
+
+              let minDividend = Math.pow(10, div_d1 - 1);
+              let minQuotient = Math.ceil(minDividend / product);
+              let maxQuotient = Math.floor(maxDividend / product);
+
+              let quotient;
+              if (maxQuotient >= minQuotient) {
+                quotient = Math.floor(Math.random() * (maxQuotient - minQuotient + 1)) + minQuotient;
+              } else {
+                quotient = Math.floor(Math.random() * 9) + 1;
+              }
+
+              let dividend = quotient * product;
+              let dividendStr = dividend.toString().padStart(div_d1, '0');
+
+              let equationParts = [dividendStr];
+              divisorsStr.forEach(dStr => {
+                equationParts.push("÷", dStr);
+              });
+              equation = equationParts.join(" ");
+              answer = quotient;
+              isValid = true;
+            }
+            break;
+          case "decimal_addition":
+          case "decimal_subtraction":
+          case "decimal_add_sub":
+            {
+              let dec1 = dAfter1 !== null ? dAfter1 : ((d1 <= 2 && d2 <= 2) ? 1 : 2);
+              let dec2 = dAfter2 !== null ? dAfter2 : ((d1 <= 2 && d2 <= 2) ? 1 : 2);
+              let before1 = dBefore1 !== null ? dBefore1 : d1;
+              let before2 = dBefore2 !== null ? dBefore2 : d2;
+
+              let num1Int = getRand(before1 + dec1);
+              let runningSum = num1Int / Math.pow(10, dec1);
+              let valStr1 = runningSum.toFixed(dec1);
+              let equationParts = [valStr1];
+              let isStepValid = true;
+
+              for (let r = 1; r < rows; r++) {
+                const nextNumInt = getRand(before2 + dec2);
+                const nextNumVal = nextNumInt / Math.pow(10, dec2);
+                let nextSum = runningSum;
+                let opChar = "+";
+
+                if (rule.operation === "decimal_subtraction") {
+                  nextSum = runningSum - nextNumVal;
+                  opChar = "-";
+                } else if (rule.operation === "decimal_addition") {
+                  nextSum = runningSum + nextNumVal;
+                  opChar = "+";
+                } else {
+                  if (Math.random() < 0.5) {
+                    nextSum = runningSum - nextNumVal;
+                    opChar = "-";
+                  } else {
+                    nextSum = runningSum + nextNumVal;
+                    opChar = "+";
+                  }
+                }
+
+                if (nextSum < 0) {
+                  if (opChar === "-") {
+                    nextSum = runningSum + nextNumVal;
+                    opChar = "+";
+                  } else {
+                    isStepValid = false;
+                    break;
+                  }
+                }
+
+                runningSum = nextSum;
+                equationParts.push(opChar, nextNumVal.toFixed(dec2));
+              }
+
+              if (isStepValid) {
+                equation = equationParts.join(" ");
+                let maxDec = Math.max(dec1, dec2);
+                answer = parseFloat(runningSum.toFixed(maxDec));
+                isValid = true;
+              }
+            }
+            break;
+          case "decimal_multiplication":
+            {
+              let dec1 = dAfter1 !== null ? dAfter1 : 1;
+              let dec2 = dAfter2 !== null ? dAfter2 : 1;
+              let before1 = dBefore1 !== null ? dBefore1 : d1;
+              let before2 = dBefore2 !== null ? dBefore2 : d2;
+              let num1Val = getRand(before1 + dec1) / Math.pow(10, dec1);
+
+              let runningProduct = num1Val;
+              let equationParts = [num1Val.toFixed(dec1)];
+              let totalDec = dec1;
+
+              for (let r = 1; r < rows; r++) {
+                let nextNumVal = getRand(before2 + dec2) / Math.pow(10, dec2);
+                runningProduct = runningProduct * nextNumVal;
+                totalDec += dec2;
+                equationParts.push("×", nextNumVal.toFixed(dec2));
+              }
+
+              equation = equationParts.join(" ");
+              answer = parseFloat(runningProduct.toFixed(totalDec));
+              isValid = true;
+            }
+            break;
+          case "decimal_division":
+            {
+              let dDec = dAfter2 !== null ? dAfter2 : 1;
+              let totalDec = dAfter1 !== null ? dAfter1 : 1;
+
+              let before1 = dBefore1 !== null ? dBefore1 : d1;
+              let before2 = dBefore2 !== null ? dBefore2 : d2;
+
+              let div_d1 = before1 + totalDec;
+              let div_d2 = before2 + dDec;
+
+              let divisorsIntStr = [];
+              let productInt = 1;
+              let maxDividend = Math.pow(10, div_d1) - 1;
+
+              for (let r = 1; r < rows; r++) {
+                let minDivisor, maxDivisor;
+                let isFallback = false;
+
+                if (r === 1) {
+                  minDivisor = Math.pow(10, div_d2 - 1);
+                  maxDivisor = Math.min(Math.pow(10, div_d2) - 1, Math.floor(maxDividend / 1));
+                  if (minDivisor > maxDivisor) {
+                    minDivisor = 1;
+                    maxDivisor = 9;
+                    isFallback = true;
+                  }
+                } else {
+                  minDivisor = 1;
+                  maxDivisor = Math.min(Math.pow(10, div_d2) - 1, Math.floor(maxDividend / productInt));
+                  if (maxDivisor < 1) {
+                    maxDivisor = 1;
+                  }
+                  if (maxDivisor < Math.pow(10, div_d2 - 1)) {
+                    isFallback = true;
+                  }
+                }
+
+                let divisorInt;
+                if (isFallback) {
+                  let limit = Math.min(9, Math.floor(maxDividend / productInt));
+                  if (limit < 1) limit = 1;
+                  divisorInt = Math.floor(Math.random() * limit) + 1;
+                } else {
+                  divisorInt = Math.floor(Math.random() * (maxDivisor - minDivisor + 1)) + minDivisor;
+                }
+
+                let divisorStr = divisorInt.toString().padStart(div_d2, '0');
+                divisorsIntStr.push(divisorStr);
+                productInt *= divisorInt;
+              }
+
+              let minQuotient = Math.ceil(Math.pow(10, div_d1 - 1) / productInt);
+              let maxQuotient = Math.floor((Math.pow(10, div_d1) - 1) / productInt);
+
+              let quotientInt;
+              if (maxQuotient >= minQuotient) {
+                quotientInt = Math.floor(Math.random() * (maxQuotient - minQuotient + 1)) + minQuotient;
+              } else {
+                quotientInt = Math.floor(Math.random() * 9) + 1;
+              }
+
+              let dividendInt = productInt * quotientInt;
+              let qDec = totalDec - dDec;
+
+              let divisorVal1 = parseInt(divisorsIntStr[0], 10) / Math.pow(10, dDec);
+              let dividendVal = dividendInt / Math.pow(10, totalDec);
+              let quotientVal = quotientInt * Math.pow(10, -qDec);
+
+              let equationParts = [dividendVal.toFixed(totalDec)];
+              equationParts.push("÷", divisorVal1.toFixed(dDec));
+
+              for (let i = 1; i < divisorsIntStr.length; i++) {
+                let dInt = parseInt(divisorsIntStr[i], 10);
+                equationParts.push("÷", dInt.toFixed(dDec));
+              }
+
+              equation = equationParts.join(" ");
+              let displayQDec = Math.max(0, qDec);
+              answer = parseFloat(quotientVal.toFixed(displayQDec));
+              isValid = true;
+            }
+            break;
+        }
+      }
+
+      return { equation, answer };
+    }
+
+    async function tallyAndSubmitTest() {
+      clearInterval(timerInterval);
+
+      correctAnswersCount = 0;
+      questionsList.forEach((q, idx) => {
+        const inputEl = document.getElementById(`q-input-${idx}`);
+        q.studentAnswer = null;
+        if (inputEl && inputEl.value !== "") {
+          const studentAns = parseFloat(inputEl.value);
+          q.studentAnswer = studentAns;
+          if (studentAns === q.answer) {
+            correctAnswersCount++;
+          }
+        }
+      });
+
+      // Calculate time taken
+      const totalDurationSeconds = campaign.duration_minutes * 60;
+      const timeTakenSeconds = Math.max(0, totalDurationSeconds - testTimeRemaining);
+
+      try {
+        const client = await SakshamAuth.getClient();
+        const localSessionStr = localStorage.getItem("saksham_campaign_session");
+        let localProfile = null;
+        if (localSessionStr) {
+          try {
+            localProfile = JSON.parse(localSessionStr);
+          } catch (e) { }
+        }
+
+        if (localProfile && localProfile.studentUsername) {
+          if (campaign && campaign.mode === "practice") {
+            const { count } = await client
+              .from("student_attempts")
+              .select("*", { count: "exact", head: true })
+              .eq("username", localProfile.studentUsername)
+              .eq("campaign_id", campaign.id);
+
+            const attemptNumber = (count || 0) + 1;
+
+            const { error: insertErr } = await client
+              .from("student_attempts")
+              .insert({
+                campaign_id: campaign.id,
+                username: localProfile.studentUsername,
+                name: localProfile.studentName,
+                level: localProfile.level,
+                score: correctAnswersCount,
+                total_questions: questionsList.length,
+                attempt_number: attemptNumber,
+                submitted_at: new Date().toISOString(),
+                time_taken: timeTakenSeconds
+              });
+            if (insertErr) throw insertErr;
+            console.log("[Test Page] Practice submission recorded in student_attempts.");
+          } else {
+            const { error: updateErr } = await client
+              .from("students_user_id")
+              .update({
+                submitted: true,
+                score: correctAnswersCount,
+                total_questions: questionsList.length,
+                submitted_at: new Date().toISOString(),
+                time_taken: timeTakenSeconds
+              })
+              .eq("username", localProfile.studentUsername);
+
+            if (updateErr) {
+              throw updateErr;
+            }
+            console.log("[Test Page] Submission recorded in students_user_id.");
+          }
+        } else {
+          const studentId = authState?.profile?.id;
+          if (studentId && campaign && campaign.id) {
+            if (campaign.mode === "practice") {
+              const emailVal = authState.profile?.email || "registered_student";
+              const nameVal = authState.profile?.name || emailVal;
+
+              const { count } = await client
+                .from("student_attempts")
+                .select("*", { count: "exact", head: true })
+                .eq("username", emailVal)
+                .eq("campaign_id", campaign.id);
+
+              const attemptNumber = (count || 0) + 1;
+
+              await client.from("student_attempts").insert({
+                campaign_id: campaign.id,
+                username: emailVal,
+                name: nameVal,
+                level: levelNum,
+                score: correctAnswersCount,
+                total_questions: questionsList.length,
+                attempt_number: attemptNumber,
+                submitted_at: new Date().toISOString(),
+                time_taken: timeTakenSeconds
+              });
+              console.log("[Test Page] Registered student practice recorded in student_attempts.");
+            } else {
+              await client.from("test_submissions").upsert({
+                student_id: studentId,
+                campaign_id: campaign.id,
+                score: correctAnswersCount,
+                total_questions: questionsList.length,
+                submitted_at: new Date().toISOString(),
+                time_taken: timeTakenSeconds
+              });
+              console.log("[Test Page] Submission recorded in test_submissions.");
+            }
+          }
+        }
+      } catch (dbErr) {
+        console.error("[Test Page] Failed to record submission:", dbErr);
+      }
+
+      endTest();
+    }
+
+    function exitTest() {
+      localStorage.removeItem('saksham_campaign_session');
+      window.location.href = "/index.html";
+    }
+
+    function endTest() {
+      clearInterval(timerInterval);
+      document.body.classList.remove("test-in-progress");
+      document.getElementById("gameScreen").style.display = "none";
+      document.getElementById("endScreen").style.display = "block";
+
+      const isPractice = campaign && campaign.mode === "practice";
+      const titleEl = document.querySelector("#endScreen .test-title");
+      if (titleEl) {
+        titleEl.textContent = isPractice ? "Practice Complete!" : "Test Complete!";
+      }
+      const subEl = document.getElementById("endSubText");
+      if (subEl && isPractice) {
+        subEl.textContent = "Well done, you have completed the practice rules.";
+      }
+
+      const totalQuestions = questionsList.length;
+      const accuracy = totalQuestions > 0 ? Math.round((correctAnswersCount / totalQuestions) * 100) : 0;
+
+      // Calculate time taken
+      const totalDurationSeconds = campaign.duration_minutes * 60;
+      const timeTakenSeconds = Math.max(0, totalDurationSeconds - testTimeRemaining);
+      const timeTakenMins = Math.floor(timeTakenSeconds / 60);
+      const timeTakenSecs = timeTakenSeconds % 60;
+
+      let timeTakenStr = "";
+      if (timeTakenMins > 0) {
+        timeTakenStr += `${timeTakenMins} Min${timeTakenMins > 1 ? 's' : ''} `;
+      }
+      timeTakenStr += `${timeTakenSecs} Sec${timeTakenSecs !== 1 ? 's' : ''}`;
+
+      // Append total test duration
+      const totalMins = campaign.duration_minutes || 8;
+      timeTakenStr += ` out of ${totalMins} Min${totalMins > 1 ? 's' : ''}`;
+
+      document.getElementById("endTotalQs").textContent = totalQuestions;
+      document.getElementById("endCorrectQs").textContent = correctAnswersCount;
+      document.getElementById("endAccuracy").textContent = `${accuracy}%`;
+      document.getElementById("endTimeTaken").textContent = timeTakenStr;
+
+      document.getElementById("endSubText").textContent = `You scored ${correctAnswersCount} out of ${totalQuestions} correctly.`;
+
+      // Render question review list
+      const reviewGrid = document.getElementById("reviewGrid");
+      if (reviewGrid) {
+        reviewGrid.innerHTML = "";
+        questionsList.forEach((q, idx) => {
+          const isCorrect = q.studentAnswer !== undefined && q.studentAnswer !== null && q.studentAnswer !== "" && parseFloat(q.studentAnswer) === q.answer;
+          const isUnanswered = q.studentAnswer === undefined || q.studentAnswer === null || q.studentAnswer === "";
+
+          let cardClass = "review-card";
+          let badgeHtml = "";
+
+          if (isCorrect) {
+            cardClass += " correct";
+            badgeHtml = `<span class="review-status-badge correct"><i class="fa-solid fa-circle-check"></i></span>`;
+          } else if (isUnanswered) {
+            cardClass += " unanswered";
+            badgeHtml = `<span class="review-status-badge unanswered"><i class="fa-solid fa-circle-minus"></i></span>`;
+          } else {
+            cardClass += " incorrect";
+            badgeHtml = `<span class="review-status-badge incorrect"><i class="fa-solid fa-circle-xmark"></i></span>`;
+          }
+
+          const card = document.createElement("div");
+          card.className = cardClass;
+          card.innerHTML = `
+              ${badgeHtml}
+              <span class="q-no-label">Q.NO ${idx + 1}</span>
+              <div class="vertical-math" style="margin: 8px 0;">
+                ${formatEquationVertical(q.equation)}
+              </div>
+              <div class="review-ans-row">
+                <span>Your Ans: <span class="student-ans">${isUnanswered ? "None" : q.studentAnswer}</span></span>
+                <span>Correct: <span class="correct-ans">${q.answer}</span></span>
+              </div>
+            `;
+          reviewGrid.appendChild(card);
+        });
+      }
+
+      const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+      if (downloadPdfBtn) {
+        downloadPdfBtn.onclick = downloadPdf;
+      }
+    }
+
+    function downloadPdf() {
+      const element = document.getElementById("endScreen");
+      const actionsRow = document.getElementById("endScreenActions");
+
+      if (actionsRow) actionsRow.style.display = "none";
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Saksham_Report_L${levelNum}_Campaign_${campaignId}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        if (actionsRow) actionsRow.style.display = "flex";
+      }).catch(err => {
+        console.error("PDF download failed", err);
+        if (actionsRow) actionsRow.style.display = "flex";
+      });
+    }
+  </script>
+</body>
+
+</html>
+
+</html>

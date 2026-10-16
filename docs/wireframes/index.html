@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abacus Exam Wireframes</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1f2328;--mute:#6b7280;--line:#d0d5dd;--pri:#2563eb;--ok:#16a34a;--bad:#dc2626;--warn:#facc15}
+*{box-sizing:border-box}body{margin:0;font:16px/1.4 system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+header{padding:12px 16px;background:#111827;color:#fff}header h1{margin:0;font-size:18px}
+nav{display:flex;flex-wrap:wrap;gap:6px;padding:12px 16px;background:#fff;border-bottom:1px solid var(--line)}
+nav button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 10px;font-size:14px;cursor:pointer}
+nav button.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+nav b{width:100%;font-size:12px;color:var(--mute);margin-top:4px}
+main{padding:16px;display:flex;justify-content:center}
+.phone{width:100%;max-width:400px;background:var(--card);border:2px solid #111;border-radius:20px;padding:16px;min-height:560px}
+.wide{max-width:900px}
+.scr{display:none}.scr.on{display:block}
+h2{font-size:20px;margin:0 0 12px}.note{font-size:13px;color:var(--mute);background:#eef2ff;padding:8px;border-radius:8px;margin-top:16px}
+.in{border:1px solid var(--line);border-radius:8px;padding:12px;margin:6px 0 12px;color:var(--mute)}
+.btn{display:block;width:100%;text-align:center;background:var(--pri);color:#fff;border:0;border-radius:10px;padding:14px;font-size:17px;font-weight:600;margin:8px 0;cursor:pointer}
+.btn.sec{background:#fff;color:var(--pri);border:2px solid var(--pri)}.btn.dis{background:#e5e7eb;color:var(--mute)}
+.btn.sm{display:inline-block;width:auto;padding:8px 14px;font-size:14px}
+.card{border:1px solid var(--line);border-radius:12px;padding:12px;margin:8px 0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:#e5e7eb}.tag.p{background:var(--warn)}
+.top{position:sticky;top:0;background:#fff;border-bottom:1px solid var(--line);padding:8px 0;margin-bottom:8px}
+.q{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;text-align:right;font:20px/1.3 ui-monospace,monospace}
+.q small{float:left;font:12px system-ui;color:var(--mute)}
+.q .ans{border:2px solid var(--pri);border-radius:8px;padding:8px;margin-top:6px;text-align:left;font:16px system-ui;color:var(--mute)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tile{border:1px solid var(--line);border-radius:10px;padding:10px;text-align:center}.tile b{display:block;font-size:22px}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{border-bottom:1px solid var(--line);padding:6px;text-align:left}
+.red td{background:#fee2e2}.pop{border:2px solid #111;border-radius:12px;padding:16px;margin-top:16px;background:#fff;box-shadow:0 6px 20px #0003}
+.sw{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
+.ok{color:var(--ok)}.bad{color:var(--bad)}
+.scroll{overflow-x:auto}
+</style>
+</head>
+<body>
+<header><h1>Abacus Exam — G1 Wireframes (draft for approval)</h1></header>
+<nav id="nav"></nav>
+<main><div class="phone" id="frame">
+
+<section class="scr" data-id="S1" data-name="S1 Login" data-who="Student">
+<h2>Student Login</h2>
+Student ID<div class="in">SAI260001</div>Password<div class="in">••••••</div>
+<button class="btn" data-go="S2">Login</button>
+<div class="note">Error: "Wrong ID or password". Disabled: "Account disabled, contact your teacher". Too many tries: "Wait 5 minutes".</div>
+</section>
+
+<section class="scr" data-id="S2" data-name="S2 New password" data-who="Student">
+<h2>Set your new password</h2>
+New password<div class="in">at least 6 characters</div>Type again<div class="in"></div>
+<button class="btn" data-go="S3">Save</button>
+<div class="note">Shown only on first login (temp password).</div>
+</section>
+
+<section class="scr" data-id="S3" data-name="S3 Home" data-who="Student">
+<div class="row"><div><b>Riya Sharma</b><br><small>SAI260001 · Level 3</small></div><button class="btn sm sec" data-go="S1">Logout</button></div>
+<h2 style="margin-top:16px">Exams</h2>
+<div class="card"><b>October Level 3 Exam</b><br><small>Open till 20 Oct, 6:00 PM · 20 questions · 8 min</small><button class="btn" data-go="S4">Start</button></div>
+<div class="card"><b>November Exam</b><br><small>Opens 18 Nov, 10:00 AM</small><button class="btn dis">Not open yet</button></div>
+<div class="card"><b>September Exam</b><br><small>Done</small><button class="btn sec" data-go="S6">View result</button></div>
+<h2>Practice</h2>
+<div class="card"><span class="tag p">PRACTICE</span> <b>Level 3 Practice</b><br><small>1 try left</small><button class="btn sec" data-go="S4">Practice</button></div>
+<button class="btn sec" data-go="S7">My results</button>
+<div class="note">Empty: "No exams right now. Your teacher will add one." Error: "Can't load. Check internet." + Try again. Missed exam card shows grey "Missed".</div>
+</section>
+
+<section class="scr" data-id="S4" data-name="S4 Instructions" data-who="Student">
+<h2>October Level 3 Exam</h2>
+<div class="tiles"><div class="tile"><b>20</b>Questions</div><div class="tile"><b>8 min</b>Time</div><div class="tile"><b>20</b>Marks</div><div class="tile"><b>0</b>Minus marks</div></div>
+<ul><li>Type the answer in the box. Press Tab or Enter for next.</li><li>Mixed questions: × and ÷ first (BODMAS).</li><li>Don't leave this screen — it is recorded.</li><li>Time over = auto submit.</li></ul>
+<button class="btn" id="ready">I'm ready</button>
+<div class="pop" id="pop" hidden><h2>Are you ready?</h2>The timer starts now.<button class="btn" data-go="S5">Start</button><button class="btn sec" id="cancel">Cancel</button></div>
+</section>
+
+<section class="scr" data-id="S5" data-name="S5 Exam" data-who="Student">
+<div class="top"><div class="row"><b style="font-size:22px">07:42</b><span>12 / 20 done</span><span class="ok">✓ Saved</span></div><button class="btn" id="sub" style="margin-bottom:0">Submit</button></div>
+<div class="q"><small>Q1</small>47<br>+ 8<br>− 15<br>+ 6<hr><div class="ans">Answer</div></div>
+<div class="q"><small>Q2</small>352<br>− 128<br>+ 64<hr><div class="ans">278</div></div>
+<div class="q"><small>Q3</small>23<br>× 4<hr><div class="ans">Answer</div></div>
+<div class="q"><small>Q4 · fill the missing number</small>7, 14, ?, 28, 35<div class="ans">Answer</div></div>
+<div class="pop" id="pop2" hidden><h2>Submit now?</h2>You left <b>3</b> questions empty.<button class="btn" data-go="S6">Submit</button><button class="btn sec" id="back">Go back</button></div>
+<div class="note">Last minute: timer red. Offline: "⚠ Offline – answers kept". Refresh: same questions + answers, timer continues. Practice: yellow PRACTICE band.</div>
+</section>
+
+<section class="scr" data-id="S6" data-name="S6 Result" data-who="Student">
+<h2 style="text-align:center">16 / 20 <small>(80%)</small></h2>
+<div class="tiles"><div class="tile ok"><b>16</b>Correct</div><div class="tile bad"><b>1</b>Wrong</div><div class="tile"><b>3</b>Skipped</div><div class="tile"><b>6:18</b>Time</div></div>
+<p><small>Started 10:02 AM · Submitted 10:08 AM · Submitted by you</small></p>
+<div class="card"><div class="row"><span>Q1 · 47+8−15+6</span><span class="ok">✓ 46</span></div></div>
+<div class="card"><div class="row"><span>Q2 · 352−128+64</span><span class="bad">✗ you 278 · correct 288</span></div></div>
+<div class="card"><div class="row"><span>Q3 · 23×4</span><span>– skipped · correct 92</span></div></div>
+<button class="btn sec" data-go="L1">Leaderboard</button>
+<button class="btn" data-go="S3">Back to home</button>
+<div class="note">Leaderboard button only appears when admin turns it on.</div>
+</section>
+
+<section class="scr" data-id="L1" data-name="S6b Leaderboard" data-who="Student">
+<h2>Leaderboard — October Level 3</h2>
+<table><tr><th>#</th><th>Name</th><th>Score</th><th>Time</th></tr><tr><td>1</td><td>Aman</td><td>20</td><td>5:10</td></tr><tr><td>2</td><td>Riya</td><td>16</td><td>6:18</td></tr><tr><td>2</td><td>Kabir</td><td>16</td><td>6:18</td></tr><tr><td>4</td><td>Neha</td><td>15</td><td>4:02</td></tr></table>
+<button class="btn" data-go="S6">Back</button>
+<div class="note">Ties: higher score → less time → earlier submit → same rank.</div>
+</section>
+
+<section class="scr" data-id="S7" data-name="S7 My results" data-who="Student">
+<h2>My results</h2>
+<div class="row"><button class="btn sm">Exams</button><button class="btn sm sec">Practice</button></div>
+<div class="card" data-go="S6"><b>September Exam</b><br><small>18/20 · 2 Sep</small></div>
+<div class="card" data-go="S6"><b>October Level 3 Exam</b><br><small>16/20 · 16 Oct</small></div>
+<button class="btn" data-go="S3">Back</button>
+</section>
+
+<section class="scr wide" data-id="A2" data-name="A2 Home" data-who="Admin">
+<h2>Admin Home</h2>
+<div class="tiles"><div class="tile"><b>240</b>Students</div><div class="tile"><b>2</b>Exams open</div><div class="tile"><b>18</b>Writing now</div><div class="tile"><b>57</b>Submitted today</div></div>
+<button class="btn" data-go="A4">Add students (CSV)</button><button class="btn" data-go="A6">Create exam</button>
+<div class="row"><button class="btn sec sm" data-go="A3">Students</button><button class="btn sec sm" data-go="A5">Exams</button><button class="btn sec sm" data-go="A8">Levels</button><button class="btn sec sm" data-go="A9">Settings</button></div>
+</section>
+
+<section class="scr wide" data-id="A3" data-name="A3 Students" data-who="Admin">
+<h2>Students</h2>
+<div class="row"><div class="in" style="flex:1">Search name or ID</div><div class="in">Level ▾</div></div>
+<div class="scroll"><table><tr><th>ID</th><th>Name</th><th>Father</th><th>DOB</th><th>Level</th><th>Status</th><th></th></tr>
+<tr><td>SAI260001</td><td>Riya Sharma</td><td>Rakesh</td><td>04-05-2015</td><td>3</td><td>Active</td><td>Edit · Reset · Disable</td></tr>
+<tr><td>SAI260002</td><td>Aman Gupta</td><td>Sunil</td><td>11-01-2014</td><td>3</td><td>Active</td><td>Edit · Reset · Disable</td></tr></table></div>
+<div class="row"><button class="btn sm">Add student</button><button class="btn sm" data-go="A4">Upload CSV</button><button class="btn sm sec">Download list</button></div>
+<div class="note">Empty: "No students yet. Upload a CSV to add many at once."</div>
+</section>
+
+<section class="scr wide" data-id="A4" data-name="A4 CSV upload" data-who="Admin">
+<h2>Upload students (CSV)</h2>
+<p>1. <a href="#">Download template</a> (name, father_name, dob DD-MM-YYYY, level 0–8)<br>2. Choose your file</p>
+<div class="in" style="text-align:center;padding:24px">Drop CSV here or tap to choose</div>
+<b>Preview: 45 good, 2 bad</b>
+<div class="scroll"><table><tr><th>Row</th><th>Name</th><th>Father</th><th>DOB</th><th>Level</th><th>Problem</th></tr>
+<tr><td>1</td><td>Riya Sharma</td><td>Rakesh</td><td>04-05-2015</td><td>3</td><td class="ok">OK</td></tr>
+<tr class="red"><td>2</td><td></td><td>Sunil</td><td>11-01-2014</td><td>3</td><td>Name missing</td></tr>
+<tr class="red"><td>3</td><td>Neha Jain</td><td>Amit</td><td>31-02-2015</td><td>12</td><td>Bad date; level must be 0–8</td></tr></table></div>
+<button class="btn">Import 45 students</button><button class="btn sec">Download bad rows</button>
+<div class="note">After import: "Download login list" (ID + temp password) — shown only once. Duplicate = same name + father + DOB.</div>
+</section>
+
+<section class="scr wide" data-id="A5" data-name="A5 Exams" data-who="Admin">
+<h2>Exams</h2>
+<div class="row"><button class="btn sm">Official</button><button class="btn sm sec">Practice</button><button class="btn sm" data-go="A6">+ Create exam</button></div>
+<div class="card" data-go="A7"><div class="row"><b>October Level 3 Exam</b><span class="tag" style="background:#bbf7d0">Open</span></div><small>Level 3 · 16–20 Oct · 32/40 submitted</small></div>
+<div class="card"><div class="row"><b>November Exam</b><span class="tag">Draft</span></div><small>Level 3 · not published</small></div>
+</section>
+
+<section class="scr wide" data-id="A6" data-name="A6 Create exam" data-who="Admin">
+<h2>Create exam</h2>
+Name<div class="in">October Level 3 Exam</div>
+<div class="row"><div style="flex:1">Type<div class="in">Official ▾</div></div><div style="flex:1">Level<div class="in">3 ▾</div></div></div>
+<div class="row"><div style="flex:1">Opens<div class="in">16 Oct 10:00 AM</div></div><div style="flex:1">Closes (max 5 days)<div class="in">20 Oct 6:00 PM</div></div></div>
+<div class="row"><div style="flex:1">Time (min)<div class="in">8</div></div><div style="flex:1">Tries allowed<div class="in">1</div></div></div>
+<b>Question rules</b> <small>(from Level 3 defaults)</small>
+<div class="scroll"><table><tr><th>Operation</th><th>Digits</th><th>Rows</th><th>How many</th></tr>
+<tr><td>Addition &amp; Subtraction ▾</td><td>2</td><td>5</td><td>8</td></tr>
+<tr><td>Multiplication ▾</td><td>2 × 1</td><td>2</td><td>6</td></tr>
+<tr><td>Table ▾</td><td>2–300</td><td>5</td><td>6</td></tr></table></div>
+<button class="btn sm sec">+ Add rule</button> <b>Total: 20 questions = 20 marks</b>
+<button class="btn sec">Preview sample paper</button><button class="btn sec">Save draft</button><button class="btn" data-go="A5">Publish</button>
+<div class="note">Operations: Addition, Multiplication, Division, Addition &amp; Subtraction, Decimal Addition, Decimal Multiplication, Decimal Division, Decimal Addition &amp; Subtraction, Table, Mixed. After first student starts, rules are locked.</div>
+</section>
+
+<section class="scr wide" data-id="A7" data-name="A7 Exam results" data-who="Admin">
+<h2>October Level 3 Exam</h2>
+<div class="row"><button class="btn sm">Results</button><button class="btn sm sec">Leaderboard</button><button class="btn sm sec">Close now</button></div>
+<div class="scroll"><table><tr><th>ID</th><th>Name</th><th>Score</th><th>✓</th><th>✗</th><th>–</th><th>Time</th><th>Status</th><th>Left screen</th></tr>
+<tr><td>SAI260002</td><td>Aman</td><td>20</td><td>20</td><td>0</td><td>0</td><td>5:10</td><td>Submitted</td><td>0</td></tr>
+<tr><td>SAI260001</td><td>Riya</td><td>16</td><td>16</td><td>1</td><td>3</td><td>6:18</td><td>Submitted</td><td class="bad">2×</td></tr>
+<tr><td>SAI260009</td><td>Dev</td><td>—</td><td></td><td></td><td></td><td></td><td>Not started</td><td></td></tr></table></div>
+<div class="sw"><span>Show leaderboard to students</span><b>OFF ⚪</b></div>
+<button class="btn sec">Download CSV</button>
+</section>
+
+<section class="scr wide" data-id="A8" data-name="A8 Levels" data-who="Admin">
+<h2>Levels &amp; default rules</h2>
+<div class="card"><div class="row"><b>Level 0</b><small>Direct add/sub</small><button class="btn sm sec">Edit</button></div></div>
+<div class="card"><div class="row"><b>Level 1</b><small>Small &amp; big friend</small><button class="btn sm sec">Edit</button></div></div>
+<div class="card"><div class="row"><b>Level 2 … Level 8</b><small>…</small><button class="btn sm sec">Edit</button></div></div>
+<div class="note">Edit opens the same rule table as Create exam + Preview.</div>
+</section>
+
+<section class="scr wide" data-id="A9" data-name="A9 Settings" data-who="Admin">
+<h2>Settings</h2>
+Student ID start<div class="in">SAI</div><small>Next ID: SAI260241</small>
+<h2 style="margin-top:16px">Anti-cheat</h2>
+<div class="sw"><span>Full screen during exam</span><b>ON 🟢</b></div>
+<div class="sw"><span>Record leaving the exam screen</span><b>ON 🟢</b></div>
+<div class="sw"><span>Block copy / paste / right-click</span><b>ON 🟢</b></div>
+<div class="sw"><span>Only one login at a time</span><b>ON 🟢</b></div>
+<div class="sw"><span>Auto-submit after leaving [3] times</span><b>OFF ⚪</b></div>
+<button class="btn">Save</button>
+</section>
+
+</div></main>
+<script>
+const scr=[...document.querySelectorAll('.scr')],nav=document.getElementById('nav'),frame=document.getElementById('frame');
+let who='';
+scr.forEach(s=>{if(s.dataset.who!==who){who=s.dataset.who;nav.insertAdjacentHTML('beforeend',`<b>${who}</b>`)}
+ const b=document.createElement('button');b.textContent=s.dataset.name;b.onclick=()=>show(s.dataset.id);b.dataset.id=s.dataset.id;nav.append(b)});
+function show(id){scr.forEach(s=>s.classList.toggle('on',s.dataset.id===id));
+ frame.classList.toggle('wide',document.querySelector(`.scr[data-id="${id}"]`).classList.contains('wide'));
+ nav.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+ document.getElementById('pop').hidden=true;document.getElementById('pop2').hidden=true;scrollTo(0,0)}
+document.addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g)show(g.dataset.go)});
+ready.onclick=()=>pop.hidden=false;cancel.onclick=()=>pop.hidden=true;sub.onclick=()=>pop2.hidden=false;back.onclick=()=>pop2.hidden=true;
+show('S1');
+</script>
+</body>
+</html>
