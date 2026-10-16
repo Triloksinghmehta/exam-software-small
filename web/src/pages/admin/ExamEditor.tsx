@@ -1,0 +1,129 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Button, Card, ErrorBox, Field, Page } from "../../components/ui";
+import { RulesEditor, rulesError } from "../../components/RulesEditor";
+import { friendly, supabase } from "../../lib/supabase";
+import { GENERATOR_VERSION, type Rule } from "../../../../supabase/functions/_shared/generator";
+import { examState, type Exam } from "./Exams";
+
+const LEVELS = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const DAY = 86400000;
+// ISO -> value for <input type="datetime-local"> in the browser's time zone (IST in India)
+const toLocal = (iso: string) => { const d = new Date(iso); return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16); };
+const inHour = () => { const d = new Date(Date.now() + 3600000); d.setMinutes(0, 0, 0); return d.toISOString(); };
+
+export default function ExamEditor() {
+  const { id } = useParams();
+  const isNew = !id;
+  const [params] = useSearchParams();
+  const nav = useNavigate();
+  const [f, setF] = useState({
+    name: "", mode: (params.get("mode") ?? "official") as Exam["mode"], level: 0,
+    starts_at: toLocal(inHour()), ends_at: toLocal(new Date(Date.parse(inHour()) + DAY).toISOString()),
+    duration_minutes: 8, attempts_allowed: 1,
+  });
+  const [rules, setRules] = useState<Rule[]>([]);
+  const [exam, setExam] = useState<Exam | null>(null);
+  const [started, setStarted] = useState(0); // attempts so far -> rules locked
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function loadLevelRules(level: number) {
+    const { data } = await supabase.from("levels").select("default_rules").eq("level", level).single();
+    setRules((data?.default_rules ?? []) as Rule[]);
+  }
+
+  useEffect(() => {
+    if (isNew) { loadLevelRules(0); return; }
+    (async () => {
+      const { data: e, error } = await supabase.from("exams").select("*").eq("id", id).single();
+      if (error) return setError(friendly(error));
+      setExam(e);
+      setF({ name: e.name, mode: e.mode, level: e.level, starts_at: toLocal(e.starts_at), ends_at: toLocal(e.ends_at), duration_minutes: e.duration_minutes, attempts_allowed: e.attempts_allowed });
+      setRules(e.rules as Rule[]);
+      const { count } = await supabase.from("attempts").select("id", { count: "exact", head: true }).eq("exam_id", id);
+      setStarted(count ?? 0);
+    })();
+  }, [id]);
+
+  const locked = started > 0;
+  const set = (k: keyof typeof f) => (e: { target: { value: string } }) =>
+    setF({ ...f, [k]: ["level", "duration_minutes", "attempts_allowed"].includes(k) ? Number(e.target.value) : e.target.value });
+
+  function check(): string | null {
+    if (!f.name.trim()) return "Please give the exam a name";
+    const s = Date.parse(f.starts_at), en = Date.parse(f.ends_at);
+    if (!(en > s)) return "Closing time must be after opening time";
+    if (en - s > 5 * DAY) return "The exam can be open for at most 5 days";
+    if (!(f.duration_minutes >= 1 && f.duration_minutes <= 300)) return "Time must be 1 to 300 minutes";
+    if (!(f.attempts_allowed >= 1 && f.attempts_allowed <= 100)) return "Tries allowed must be 1 to 100";
+    return rulesError(rules);
+  }
+
+  async function save(status: Exam["status"]) {
+    setError("");
+    const problem = check();
+    if (problem) return setError(problem);
+    setBusy(true);
+    const row = {
+      ...f, name: f.name.trim(), rules, status, generator_version: GENERATOR_VERSION,
+      starts_at: new Date(f.starts_at).toISOString(), ends_at: new Date(f.ends_at).toISOString(),
+    };
+    const { data, error } = isNew
+      ? await supabase.from("exams").insert(row).select().single()
+      : await supabase.from("exams").update(locked ? { name: row.name, ends_at: row.ends_at, status } : row).eq("id", id!).select().single();
+    setBusy(false);
+    if (error) return setError(error.message.includes("EXAM_LOCKED") ? "Students have started this exam. Only the name and a later closing time can change." : friendly(error));
+    nav(`/admin/exams/${data.id}`, { replace: true });
+    setExam(data);
+  }
+
+  async function setStatus(status: Exam["status"], ask: string) {
+    if (!confirm(ask)) return;
+    const { data, error } = await supabase.from("exams").update({ status }).eq("id", id!).select().single();
+    if (error) setError(friendly(error)); else setExam(data);
+  }
+
+  const state = exam && examState(exam);
+  return (
+    <Page title={isNew ? "Create exam" : exam?.name ?? "Exam"} wide>
+      {state && <p className="-mt-3 mb-4"><span className={`rounded-full px-3 py-1 text-sm ${state.cls}`}>{state.label}</span>
+        {locked && <span className="ml-2 text-slate-600">{started} student{started > 1 ? "s have" : " has"} started. Rules are locked.</span>}</p>}
+      <ErrorBox>{error}</ErrorBox>
+      <Card className="mb-4">
+        <div className="grid gap-x-4 sm:grid-cols-2">
+          <div className="sm:col-span-2"><Field label="Exam name" value={f.name} onChange={set("name")} placeholder="October Level 3 Exam" /></div>
+          <label className="block mb-4"><span className="block mb-1 font-medium">Type</span>
+            <select disabled={locked} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg" value={f.mode} onChange={set("mode")}>
+              <option value="official">Official exam</option><option value="practice">Practice</option>
+            </select></label>
+          <label className="block mb-4"><span className="block mb-1 font-medium">Level</span>
+            <select disabled={locked} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg" value={f.level}
+              onChange={(e) => { set("level")(e); if (!locked && (isNew || confirm("Replace the question rules with this level's default rules?"))) loadLevelRules(Number(e.target.value)); }}>
+              {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
+            </select></label>
+          <Field label="Opens at" type="datetime-local" disabled={locked} value={f.starts_at} onChange={set("starts_at")} />
+          <Field label="Closes at (max 5 days after opening)" type="datetime-local" value={f.ends_at} onChange={set("ends_at")} />
+          <Field label="Time for the exam (minutes)" type="number" min={1} max={300} disabled={locked} value={f.duration_minutes} onChange={set("duration_minutes")} />
+          <Field label="Tries allowed per student" type="number" min={1} max={100} disabled={locked} value={f.attempts_allowed} onChange={set("attempts_allowed")} />
+        </div>
+      </Card>
+      <Card className="mb-4">
+        <h2 className="mb-2 text-xl font-bold">Question rules</h2>
+        <RulesEditor rules={rules} onChange={setRules} locked={locked} />
+      </Card>
+      <div className="flex flex-wrap gap-2">
+        {(isNew || exam?.status === "draft") && <>
+          <Button variant="secondary" disabled={busy} onClick={() => save("draft")}>Save draft</Button>
+          <Button disabled={busy} onClick={() => save("published")}>Publish</Button>
+        </>}
+        {exam?.status === "published" && <>
+          <Button disabled={busy} onClick={() => save("published")}>Save changes</Button>
+          {!locked && <Button variant="secondary" onClick={() => setStatus("draft", "Unpublish? Students won't see this exam.")}>Unpublish</Button>}
+          <Button variant="danger" onClick={() => setStatus("closed", "Close this exam now? No new student can start it.")}>Close now</Button>
+        </>}
+        {exam?.status === "closed" && <Button variant="secondary" onClick={() => setStatus("published", "Open this exam again?")}>Reopen</Button>}
+      </div>
+    </Page>
+  );
+}

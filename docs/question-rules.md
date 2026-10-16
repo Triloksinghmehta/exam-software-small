@@ -77,7 +77,13 @@ Each exam / level has a list of rules:
 Rules that apply to all questions: answers are never negative; division is always exact; mixed uses BODMAS and every intermediate result is a whole, non-negative number; decimal answers are compared exactly (0.30 = 0.3).
 Defaults for each level are in migration `20261016000004_levels_and_cron.sql` (quantities are starting values; the admin can edit them).
 
-## 4. Implementation (G4)
+## 4. Implementation (G4, done)
+- Code: `supabase/functions/_shared/generator.ts`; tests: `web/src/generator.test.ts` (run `npx vitest run` in `web/`; `GEN_SAMPLES=10000` for the full run).
+- Display: vertical rows with + − × ÷; tables as a sequence with `?`; mixed on one line (BODMAS).
+- Friends rule: Level 1 every step is NOT direct (needs a 5 or 10 friend); Level 0 every step IS direct.
+- Division is built backwards (quotient × divisors) so it is always exact; divisors are ≥ 2.
+- Decimal division: 2 rows only; answer has (dividend places − divisor places) decimals.
+- Multiplication: up to 4 rows.
 - One TypeScript module `generator.ts`, used by the server (real papers) and the admin preview.
 - If a rule can't be satisfied, it is rejected with a clear message at preview or publish time. There is no silent fallback.
 - Tests: ≥10,000 questions per rule, checking answer correctness and level constraints.

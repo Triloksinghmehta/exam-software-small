@@ -10,6 +10,9 @@ import AdminHome from "./pages/admin/AdminHome";
 import Students from "./pages/admin/Students";
 import ImportStudents from "./pages/admin/ImportStudents";
 import Settings from "./pages/admin/Settings";
+import Exams from "./pages/admin/Exams";
+import ExamEditor from "./pages/admin/ExamEditor";
+import Levels from "./pages/admin/Levels";
 
 // Route guards: UI convenience only — the database (RLS) is what actually protects data.
 function StudentOnly({ children }: { children: ReactNode }) {
@@ -40,6 +43,10 @@ export default function App() {
           <Route path="/admin" element={<AdminOnly><AdminHome /></AdminOnly>} />
           <Route path="/admin/students" element={<AdminOnly><Students /></AdminOnly>} />
           <Route path="/admin/students/import" element={<AdminOnly><ImportStudents /></AdminOnly>} />
+          <Route path="/admin/exams" element={<AdminOnly><Exams /></AdminOnly>} />
+          <Route path="/admin/exams/new" element={<AdminOnly><ExamEditor key="new" /></AdminOnly>} />
+          <Route path="/admin/exams/:id" element={<AdminOnly><ExamEditor /></AdminOnly>} />
+          <Route path="/admin/levels" element={<AdminOnly><Levels /></AdminOnly>} />
           <Route path="/admin/settings" element={<AdminOnly><Settings /></AdminOnly>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

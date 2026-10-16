@@ -23,3 +23,19 @@
 
 Known gap: a blocked duplicate still uses up an ID number (SAI260004 was skipped). This is harmless, and IDs stay unique.
 Not yet tested: a 10,000-row CSV (performance, planned for G6), and disabling a student who is logged in (they keep their session until it expires; checked again at exam start in G5).
+
+## G4: Question generator & exams (2026-10-17)
+| # | Test | Result |
+|---|---|---|
+| 1 | All 10 operations: 10,000 questions per rule, answer re-checked by an independent BigInt evaluator; no negatives; digit/decimal counts match | ✅ 35/35 |
+| 2 | Level 0 every step direct; Level 1 every step uses a friend | ✅ |
+| 3 | Mixed (5+ rows) always uses + − × ÷; BODMAS; whole numbers | ✅ |
+| 4 | Default rules of levels 0–8 all produce full papers | ✅ |
+| 5 | Impossible rule → clear error naming the rule (no silent fallback) | ✅ |
+| 6 | Browser: create exam, level 3 defaults loaded (5 rules, 20 questions), preview shows answers | ✅ (spot-checked 70+59−46+52−36 = 99) |
+| 7 | Publish without a name → "Please give the exam a name" | ✅ |
+| 8 | 6-day window → "at most 5 days" (also enforced by database) | ✅ |
+| 9 | Publish → status Open; Save / Unpublish / Close now shown | ✅ |
+| 10 | Levels page: Level 1 preview uses friends; invalid rows blocked | ✅ |
+
+Test data left in dev database: exam "Test Level 3 Exam" (open ~2 days), used for G5.

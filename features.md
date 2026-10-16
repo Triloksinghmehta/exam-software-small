@@ -19,16 +19,16 @@ Status key: ⬜ not started · 🟨 in progress · ✅ done (tested) · ⏸ wait
 | F11 | Admin login + overview | G3 | ✅ (exam tiles in G4) |
 | F12 | Students list / add / edit / disable / reset password | G3 | ✅ |
 | F13 | CSV import: template, preview, bad rows shown, import good rows, credentials download | G3 | ✅ |
-| F14 | Levels 0–8 with question rules | G4 | ⬜ |
-| F15 | Question rules editor + preview sample paper | G4 | ⬜ |
-| F16 | Create exam: level, official/practice, rules, duration, validity (≤5 days), attempts | G4 | ⬜ |
-| F17 | Publish / close exam | G4 | ⬜ |
+| F14 | Levels 0–8 with question rules | G4 | ✅ |
+| F15 | Question rules editor + preview sample paper | G4 | ✅ |
+| F16 | Create exam: level, official/practice, rules, duration, validity (≤5 days), attempts | G4 | ✅ |
+| F17 | Publish / close exam | G4 | ✅ |
 | F18 | Results per exam + CSV export | G6 | ⬜ |
 | F19 | Leaderboard + "show to students" switch | G6 | ⬜ |
 | F20 | Anti-cheat log per attempt | G6 | ⬜ |
 | F24 | Settings: Student ID start + anti-cheat switches | G3 | ✅ |
 | **System** ||||
-| F21 | Server-side question generation + scoring | G4/G5 | ⬜ |
+| F21 | Server-side question generation + scoring | G4/G5 | 🟨 generator done (G4); server use in G5; scoring done (G2) |
 | F22 | Security rules (RLS) + tests | G2+ | 🟨 applied; tested G2 + G3 |
 | F23 | Handoff bundle + tag `phase1-approved-v1.0.0` | G7 | ⬜ |
 

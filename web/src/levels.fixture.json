@@ -1,0 +1,512 @@
+[
+ {
+  "level": 0,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     1,
+     1
+    ],
+    "rows": 3,
+    "quantity": 20,
+    "formula": "direct"
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     1,
+     1
+    ],
+    "rows": 4,
+    "quantity": 20,
+    "formula": "friends"
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 3,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     1,
+     1
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     100
+    ]
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 5,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 3,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     4,
+     4
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     2,
+     1
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     300
+    ]
+   }
+  ]
+ },
+ {
+  "level": 4,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 7,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 4,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     4,
+     4
+    ],
+    "rows": 3,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     3,
+     1
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     500
+    ]
+   }
+  ]
+ },
+ {
+  "level": 5,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 10,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 5,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     4,
+     4
+    ],
+    "rows": 4,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     5,
+     5
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "division",
+    "digits": [
+     2,
+     1
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     1000
+    ]
+   }
+  ]
+ },
+ {
+  "level": 6,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 15,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 6,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     4,
+     4
+    ],
+    "rows": 5,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     5,
+     5
+    ],
+    "rows": 3,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     2,
+     3
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "division",
+    "digits": [
+     3,
+     1
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     2000
+    ]
+   },
+   {
+    "operation": "decimal_add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 3,
+    "quantity": 4,
+    "decimals": [
+     2,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "level": 7,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 20,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 7,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     4,
+     4
+    ],
+    "rows": 6,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     5,
+     5
+    ],
+    "rows": 4,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "division",
+    "digits": [
+     4,
+     1
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     3000
+    ]
+   },
+   {
+    "operation": "decimal_add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 3,
+    "quantity": 4,
+    "decimals": [
+     2,
+     2
+    ]
+   }
+  ]
+ },
+ {
+  "level": 8,
+  "default_rules": [
+   {
+    "operation": "add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 25,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     3,
+     3
+    ],
+    "rows": 8,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     4,
+     4
+    ],
+    "rows": 7,
+    "quantity": 4
+   },
+   {
+    "operation": "add_sub",
+    "digits": [
+     5,
+     5
+    ],
+    "rows": 5,
+    "quantity": 4
+   },
+   {
+    "operation": "multiplication",
+    "digits": [
+     3,
+     4
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "division",
+    "digits": [
+     4,
+     2
+    ],
+    "rows": 2,
+    "quantity": 4
+   },
+   {
+    "operation": "table",
+    "digits": [
+     0,
+     0
+    ],
+    "rows": 5,
+    "quantity": 4,
+    "range": [
+     2,
+     5000
+    ]
+   },
+   {
+    "operation": "decimal_add_sub",
+    "digits": [
+     2,
+     2
+    ],
+    "rows": 3,
+    "quantity": 4,
+    "decimals": [
+     2,
+     2
+    ]
+   }
+  ]
+ }
+]

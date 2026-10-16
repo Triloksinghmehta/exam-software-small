@@ -7,8 +7,8 @@ Each gate ends with your manual approval. No gate starts before the previous is 
 | G0 | Questions + plan | plan.md, open-questions.md, question-rules.md | ✅ approved 2026-10-16 |
 | G1 | Simple screen designs (wireframes) for every student/admin screen | clickable wireframe page | ✅ approved 2026-10-16 |
 | G2 | Database, security rules, question/scoring spec | database-schema.md, auth-rls-matrix.md, first migrations | ✅ approved + applied 2026-10-16 |
-| G3 | Students: login, add/edit, CSV import | working admin student pages | 🟨 built + tested, waiting for your review |
-| G4 | Question generator + exam creation | sample papers per level, generator tests | ⬜ |
+| G3 | Students: login, add/edit, CSV import | working admin student pages | ✅ approved 2026-10-17 |
+| G4 | Question generator + exam creation | sample papers per level, generator tests | 🟨 built + tested, waiting for your review |
 | G5 | Taking exams: practice + official, timer, autosave, results | working student flow | ⬜ |
 | G6 | Results, leaderboard, export, phone/tablet/desktop testing | test report | ⬜ |
 | G7 | Security check, docs, handoff bundle, release tag — **Phase 1 STOP** | handoff/phase1-v1.0.0/ | ⬜ |
@@ -25,3 +25,4 @@ Simple and straightforward: big buttons, one main action per screen, plain words
 - 2026-10-16 — **G1 APPROVED**. G2 written: 4 migrations, security rules, ADR-0001..0004; dry run on Supabase passed 24/24 checks (rolled back, DB still empty).
 - 2026-10-16 — **G2 APPROVED**; migrations applied to Supabase. ECC + ponytail plugins enabled for the project (.claude/settings.json).
 - 2026-10-16 — G3 built: student login + forced password change, admin login, students list/add/edit/disable/reset, CSV import, settings. Tested in browser (see docs/qa-test-cases.md).
+- 2026-10-17 — **G3 APPROVED**; code pushed to GitHub (private). G4 built: question generator (10 operations, friends/direct, BODMAS, exact decimals), exams list/create/edit/publish/close, level default rules editor, sample paper preview. 35 generator tests pass (10,000 questions per rule).

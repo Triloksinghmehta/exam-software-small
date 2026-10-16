@@ -44,6 +44,8 @@ export function AdminBar() {
         <b className="mr-3">Abacus Admin</b>
         <Link className={link} to="/admin">Home</Link>
         <Link className={link} to="/admin/students">Students</Link>
+        <Link className={link} to="/admin/exams">Exams</Link>
+        <Link className={link} to="/admin/levels">Levels</Link>
         <Link className={link} to="/admin/settings">Settings</Link>
         <button className={`${link} ml-auto`} onClick={() => supabase.auth.signOut()}>Logout</button>
       </div>
