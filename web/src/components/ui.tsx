@@ -107,16 +107,16 @@ export function Centered({ title, subtitle, children }: { title: string; subtitl
       </aside>
       <div className="relative flex flex-col px-6 py-8 sm:px-12">
         {/* phones/tablets: hero image as backdrop */}
-        <img src="/hero.webp" alt="" className="absolute inset-0 -z-10 h-full w-full object-cover lg:hidden" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-indigo-900/60 via-indigo-900/70 to-indigo-900/95 lg:hidden" />
-        <div className="flex items-center gap-2.5"><Logo size={40} /><b className="font-display text-xl font-medium text-white lg:text-indigo-800">ERPLI</b></div>
-        <div className="mx-auto my-auto w-full max-w-sm py-12">
-          <h1 className="font-display text-4xl font-medium tracking-tight text-white lg:text-slate-900">{title}</h1>
-          {subtitle && <p className="mt-2 text-white/85 lg:text-slate-500">{subtitle}</p>}
+        <img src="/hero.webp" alt="" className="absolute inset-x-0 top-0 -z-10 h-[46vh] w-full max-lg:top-16 object-cover object-[50%_30%] lg:hidden" />
+        <div className="absolute inset-x-0 top-16 -z-10 h-[46vh] bg-gradient-to-b from-slate-50 from-0% via-slate-50/0 via-15% to-slate-50 to-100% lg:hidden" />
+        <div className="flex items-center gap-2 max-lg:justify-center"><Logo size={34} /><b className="font-display text-[22px] font-semibold tracking-[0.06em] text-indigo-800">ERPLI</b></div>
+        <div className="mx-auto w-full max-w-sm pb-10 pt-[40vh] lg:my-auto lg:py-12">
+          <h1 className="font-display text-4xl font-medium tracking-tight">{title}</h1>
+          {subtitle && <p className="mt-2 text-slate-500">{subtitle}</p>}
           <div className="mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-brass-400 via-coral-500 to-indigo-500" />
           <Card className="mt-8 p-6 shadow-[0_20px_50px_-20px_rgb(45_40_33/0.18)]">{children}</Card>
         </div>
-        <p className="text-center text-xs text-white/70 lg:text-slate-400">© {new Date().getFullYear()} ERPLI Examination Portal</p>
+        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} ERPLI Examination Portal</p>
       </div>
     </main>
   );
