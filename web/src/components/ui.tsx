@@ -91,7 +91,7 @@ export function Logo({ size = 36 }: { size?: number }) {
 // Login-style pages: framed hero image (lg+) beside the form
 export function Centered({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
-    <main className="grid min-h-screen bg-slate-50 lg:grid-cols-[1.15fr_1fr] lg:p-4">
+    <main className="isolate grid min-h-screen bg-slate-50 lg:grid-cols-[1.15fr_1fr] lg:p-4">
       <aside className="relative hidden overflow-hidden rounded-[28px] bg-slate-100 lg:block">
         <img src="/hero.webp" alt="" className="absolute inset-0 h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/90 via-indigo-900/10 to-transparent" />
@@ -105,15 +105,18 @@ export function Centered({ title, subtitle, children }: { title: string; subtitl
           </div>
         </div>
       </aside>
-      <div className="flex flex-col px-6 py-8 sm:px-12">
-        <div className="flex items-center gap-2.5"><Logo size={40} /><b className="font-display text-xl font-medium text-indigo-800">ERPLI</b></div>
+      <div className="relative flex flex-col px-6 py-8 sm:px-12">
+        {/* phones/tablets: hero image as backdrop */}
+        <img src="/hero.webp" alt="" className="absolute inset-0 -z-10 h-full w-full object-cover lg:hidden" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-indigo-900/60 via-indigo-900/70 to-indigo-900/95 lg:hidden" />
+        <div className="flex items-center gap-2.5"><Logo size={40} /><b className="font-display text-xl font-medium text-white lg:text-indigo-800">ERPLI</b></div>
         <div className="mx-auto my-auto w-full max-w-sm py-12">
-          <h1 className="font-display text-4xl font-medium tracking-tight">{title}</h1>
-          {subtitle && <p className="mt-2 text-slate-500">{subtitle}</p>}
+          <h1 className="font-display text-4xl font-medium tracking-tight text-white lg:text-slate-900">{title}</h1>
+          {subtitle && <p className="mt-2 text-white/85 lg:text-slate-500">{subtitle}</p>}
           <div className="mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-brass-400 via-coral-500 to-indigo-500" />
           <Card className="mt-8 p-6 shadow-[0_20px_50px_-20px_rgb(45_40_33/0.18)]">{children}</Card>
         </div>
-        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} ERPLI Examination Portal</p>
+        <p className="text-center text-xs text-white/70 lg:text-slate-400">© {new Date().getFullYear()} ERPLI Examination Portal</p>
       </div>
     </main>
   );
