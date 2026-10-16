@@ -83,22 +83,9 @@ export function Segmented<T extends string>({ options, value, onChange }: { opti
   );
 }
 
-// ---- brand mark: abacus frame with brass beads ----
+// ---- brand mark (placeholder ERPLI logo; swap public/logo.png later) ----
 export function Logo({ size = 36 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 36 36" role="img" aria-label="Abacus Exam" className="shrink-0">
-      <rect width="36" height="36" rx="7" className="fill-indigo-500" />
-      <rect x="7.5" y="7.5" width="21" height="21" rx="1.5" fill="none" className="stroke-white/55" strokeWidth="1.4" />
-      <path d="M13 8v20M18 8v20M23 8v20" className="stroke-white/30" strokeWidth="1" />
-      <path d="M7.5 14.5h21" className="stroke-white/70" strokeWidth="1.4" />
-      <g className="fill-brass-400">
-        <ellipse cx="13" cy="11.2" rx="2.3" ry="1.7" /><ellipse cx="18" cy="12.9" rx="2.3" ry="1.7" /><ellipse cx="23" cy="11.2" rx="2.3" ry="1.7" />
-        <ellipse cx="13" cy="17.2" rx="2.3" ry="1.7" /><ellipse cx="13" cy="20.2" rx="2.3" ry="1.7" />
-        <ellipse cx="18" cy="23.2" rx="2.3" ry="1.7" /><ellipse cx="18" cy="26" rx="2.3" ry="1.7" />
-        <ellipse cx="23" cy="17.2" rx="2.3" ry="1.7" /><ellipse cx="23" cy="20.2" rx="2.3" ry="1.7" /><ellipse cx="23" cy="23.2" rx="2.3" ry="1.7" />
-      </g>
-    </svg>
-  );
+  return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 rounded-lg bg-white object-contain" />;
 }
 
 // Login-style pages
@@ -112,7 +99,7 @@ export function Centered({ title, subtitle, children }: { title: string; subtitl
           {subtitle && <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>}
         </div>
         <Card className="p-6">{children}</Card>
-        <p className="mt-6 text-center text-xs tracking-wide text-slate-400">ABACUS EXAMINATION PORTAL</p>
+        <p className="mt-6 text-center text-xs tracking-wide text-slate-400">ERPLI EXAMINATION PORTAL</p>
       </div>
     </main>
   );
@@ -158,7 +145,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <aside className="hidden w-60 shrink-0 flex-col bg-indigo-700 md:sticky md:top-0 md:flex md:h-screen">
         <div className="flex items-center gap-3 px-5 pb-8 pt-6">
           <Logo />
-          <div><b className="font-display block text-[17px] font-medium leading-tight text-white">Abacus</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-400">Examination Portal</span></div>
+          <div><b className="font-display block text-[17px] font-medium leading-tight text-white">ERPLI</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-400">Examination Portal</span></div>
         </div>
         <p className="mb-2 px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Manage</p>
         <nav className="flex flex-col">
@@ -172,7 +159,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       <div className="min-w-0 flex-1">
         <header className="sticky top-0 z-10 bg-indigo-700 md:hidden">
           <div className="flex items-center justify-between px-4 py-3">
-            <b className="font-display flex items-center gap-3 font-medium text-white"><Logo size={30} />Abacus</b>
+            <b className="font-display flex items-center gap-3 font-medium text-white"><Logo size={30} />ERPLI</b>
             <button aria-label="Log out" onClick={() => supabase.auth.signOut()} className="p-2 text-slate-300"><Icon name="logout" /></button>
           </div>
           <nav className="flex gap-1 overflow-x-auto px-3">
@@ -193,7 +180,7 @@ export function StudentShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen">
       <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-8">
-          <Link to="/" className="font-display flex items-center gap-3 text-lg font-medium"><Logo size={32} /><span className="hidden sm:inline">Abacus</span></Link>
+          <Link to="/" className="font-display flex items-center gap-3 text-lg font-medium"><Logo size={32} /><span className="hidden sm:inline">ERPLI</span></Link>
           <div className="ml-auto flex items-center gap-3">
             <div className="text-right leading-tight"><b className="block text-sm font-medium">{student?.full_name}</b><span className="text-xs text-slate-500">{student?.student_code} · Level {student?.level}</span></div>
             <span className="grid h-9 w-9 place-items-center rounded-full bg-indigo-600 text-xs font-semibold text-white">{initials}</span>
