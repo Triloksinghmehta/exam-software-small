@@ -88,33 +88,37 @@ export function Logo({ size = 36 }: { size?: number }) {
   return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 rounded-lg bg-white object-contain" />;
 }
 
-// Login-style pages: brand panel (lg+) beside the form
+// Login-style pages: framed hero image (lg+) beside the form
 export function Centered({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
-    <main className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
-      <aside className="relative hidden overflow-hidden bg-slate-100 lg:block">
+    <main className="grid min-h-screen bg-slate-50 lg:grid-cols-[1.15fr_1fr] lg:p-4">
+      <aside className="relative hidden overflow-hidden rounded-[28px] bg-slate-100 lg:block">
         <img src="/hero.webp" alt="" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/85 via-indigo-900/20 to-transparent" />
-        <div className="absolute left-12 top-10 flex items-center gap-3 rounded-full bg-white/85 py-1.5 pl-1.5 pr-5 shadow-sm backdrop-blur"><Logo size={36} /><b className="font-display text-lg font-medium text-indigo-800">ERPLI</b></div>
-        <div className="absolute inset-x-12 bottom-12 max-w-lg text-white">
-          <h2 className="font-display text-5xl font-medium leading-tight">Learn. Practise. <span className="text-brass-400">Excel.</span></h2>
-          <p className="mt-4 text-lg text-white/85">Your online examination portal. Sharpen your speed and accuracy, one paper at a time.</p>
+        <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/90 via-indigo-900/10 to-transparent" />
+        <div className="absolute inset-x-10 bottom-10 text-white">
+          <span className="inline-block rounded-full bg-brass-400 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-indigo-900">Online exams</span>
+          <h2 className="font-display mt-4 max-w-md text-[44px] font-medium leading-[1.1]">Every bead counts. <span className="italic text-brass-400">So does every second.</span></h2>
+          <div className="mt-8 flex gap-10 border-t border-white/20 pt-6 text-sm text-white/80">
+            <div><b className="font-display block text-2xl font-medium text-white">Timed</b>Real exam conditions</div>
+            <div><b className="font-display block text-2xl font-medium text-white">Instant</b>Results &amp; rankings</div>
+            <div><b className="font-display block text-2xl font-medium text-white">Levelled</b>Papers for every stage</div>
+          </div>
         </div>
       </aside>
-      <div className="grid place-items-center px-4 py-10">
-        <div className="w-full max-w-sm">
-          <div className="mb-8 flex flex-col items-center text-center">
-            <Logo size={72} />
-            <h1 className="font-display mt-5 text-3xl font-medium">{title}</h1>
-            {subtitle && <p className="mt-1.5 text-sm text-slate-500">{subtitle}</p>}
-          </div>
-          <Card className="p-6">{children}</Card>
-          <p className="mt-6 text-center text-xs tracking-wide text-slate-400 lg:hidden">ERPLI EXAMINATION PORTAL</p>
+      <div className="flex flex-col px-6 py-8 sm:px-12">
+        <div className="flex items-center gap-2.5"><Logo size={40} /><b className="font-display text-xl font-medium text-indigo-800">ERPLI</b></div>
+        <div className="mx-auto my-auto w-full max-w-sm py-12">
+          <h1 className="font-display text-4xl font-medium tracking-tight">{title}</h1>
+          {subtitle && <p className="mt-2 text-slate-500">{subtitle}</p>}
+          <div className="mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-brass-400 via-coral-500 to-indigo-500" />
+          <Card className="mt-8 p-6 shadow-[0_20px_50px_-20px_rgb(45_40_33/0.18)]">{children}</Card>
         </div>
+        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} ERPLI Examination Portal</p>
       </div>
     </main>
   );
 }
+
 
 
 // ---- icons (inline SVG, no extra library) ----
