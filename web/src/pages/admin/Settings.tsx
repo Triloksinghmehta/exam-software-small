@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Button, Card, ErrorBox, Page } from "../../components/ui";
+import { Button, Card, ErrorBox, Page, Toggle } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 
 type S = {
   id_prefix: string; import_mode: "auto" | "custom"; ac_fullscreen: boolean; ac_log_leaves: boolean; ac_block_copy: boolean;
-  ac_single_session: boolean; ac_auto_submit_after: number | null;
+  ac_single_session: boolean; ac_auto_submit_after: number;
 };
 const SWITCHES: [keyof S, string, string][] = [
   ["ac_fullscreen", "Full screen during exam", "The exam opens full screen so students can't easily look at other windows."],
@@ -18,7 +18,7 @@ export default function Settings() {
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
   useEffect(() => {
-    supabase.from("settings").select("*").single().then(({ data, error }) => error ? setError(friendly(error)) : setS(data));
+    supabase.from("settings").select("*").single().then(({ data, error }) => error ? setError(friendly(error)) : setS({ ...data, ac_auto_submit_after: data.ac_auto_submit_after ?? 1 })); // never empty: default 1
   }, []);
   if (!s) return <Page title="Settings" wide><ErrorBox>{error}</ErrorBox><p>Loading…</p></Page>;
 
@@ -57,13 +57,13 @@ export default function Settings() {
         {SWITCHES.map(([k, label, hint]) => (
           <label key={k} className="flex items-center justify-between border-b border-slate-100 py-3">
             <span>{label}<span className="block text-sm text-slate-500">{hint}</span></span>
-            <input type="checkbox" className="h-6 w-6" checked={!!s[k]} onChange={(e) => setS({ ...s, [k]: e.target.checked })} />
+            <Toggle checked={!!s[k]} onChange={(e) => setS({ ...s, [k]: e.target.checked })} />
           </label>
         ))}
         <label className="flex items-center justify-between py-3 gap-3">
-          <span>Auto-submit after leaving the screen this many times<span className="block text-sm text-slate-500">The exam submits by itself once a student leaves the screen this many times. Leave empty to turn off.</span></span>
+          <span>Auto-submit after leaving the screen this many times<span className="block text-sm text-slate-500">The exam submits by itself once a student leaves the screen this many times.</span></span>
           <input type="number" min={1} className="w-24 rounded-lg border border-slate-300 px-3 py-2"
-            value={s.ac_auto_submit_after ?? ""} onChange={(e) => setS({ ...s, ac_auto_submit_after: e.target.value ? Math.max(1, Number(e.target.value)) : null })} />
+            value={s.ac_auto_submit_after} onChange={(e) => setS({ ...s, ac_auto_submit_after: Math.max(1, Math.floor(Number(e.target.value)) || 1) })} />
         </label>
       </Card>
       <Button onClick={save}>Save</Button> <span className="ml-2 text-sm text-slate-500">Changes apply only after you press Save.</span> {msg && <span className="ml-3 text-green-700">{msg}</span>}

@@ -40,7 +40,8 @@ export default function Exams() {
       ) : <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{rows.map((e) => {
         const s = examState(e);
         return (
-          <Link key={e.id} to={`/admin/exams/${e.id}/results`} className="block rounded-lg border border-slate-200/80 bg-white p-5 transition hover:border-indigo-300">
+          <div key={e.id} className="flex items-center rounded-lg border border-slate-200/80 bg-white transition hover:border-indigo-300">
+          <Link to={`/admin/exams/${e.id}/results`} className="block min-w-0 flex-1 p-5">
             <div className="mb-3 flex items-start justify-between gap-2">
               <b className="text-lg leading-snug">{e.name}</b>
               <Badge tone={s.tone}>{s.label}</Badge>
@@ -48,6 +49,8 @@ export default function Exams() {
             <p className="flex items-center gap-2 text-sm text-slate-600"><Icon name="levels" className="h-4 w-4" />Level {e.level} · {e.duration_minutes} min</p>
             <p className="mt-1 flex items-center gap-2 text-sm text-slate-600"><Icon name="clock" className="h-4 w-4" />{when(e.starts_at)} to {when(e.ends_at)}</p>
           </Link>
+          <Link aria-label={`Edit ${e.name}`} title="Edit exam" to={`/admin/exams/${e.id}`} className="mr-4 grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-300 bg-white text-indigo-700 transition hover:border-indigo-600 hover:bg-indigo-600/5"><Icon name="pencil" className="h-4 w-4" /></Link>
+          </div>
         );
       })}</div>}
     </Page>

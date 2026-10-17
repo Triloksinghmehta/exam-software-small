@@ -1,43 +1,33 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Button, Card, ErrorBox, Icon, LinkButton, Page } from "../components/ui";
+import { Button, ErrorBox, Icon } from "../components/ui";
 import { friendly, supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
-import { when, type Exam } from "./admin/Exams";
+import { type Exam } from "./admin/Exams";
 
 type Attempt = { id: string; exam_id: string; status: string; correct: number | null; total: number | null; submitted_at: string | null };
 
-function ExamCard({ e, attempts }: { e: Exam; attempts: Attempt[] }) {
-  const mine = attempts.filter((a) => a.exam_id === e.id);
-  const open = mine.find((a) => a.status === "in_progress");
-  const done = mine.filter((a) => a.status !== "in_progress").sort((a, b) => b.submitted_at!.localeCompare(a.submitted_at!));
-  const left = e.attempts_allowed - mine.length;
-  const now = Date.now();
-  const isOpen = e.status === "published" && now >= Date.parse(e.starts_at) && now <= Date.parse(e.ends_at);
-  const qs = (e.rules as { quantity: number }[]).reduce((s, r) => s + r.quantity, 0);
+// Built for young children: one big thing per card, one big button, very little text.
+const BIG = "block w-full rounded-2xl px-6 py-4 text-center text-xl font-bold transition active:scale-[0.98]";
+
+function TestCard({ e, attempts }: { e: Exam; attempts: Attempt[] }) {
+  const open = attempts.find((a) => a.exam_id === e.id && a.status === "in_progress");
   const practice = e.mode === "practice";
-
-  let action;
-  if (open) action = <LinkButton to={`/attempt/${open.id}`} className="w-full">Continue</LinkButton>;
-  else if (isOpen && left > 0) action = <LinkButton to={`/exam/${e.id}`} className="w-full">{practice ? "Practice" : "Start exam"}</LinkButton>;
-  else if (done.length) action = <LinkButton to={`/result/${done[0].id}`} variant="secondary" className="w-full">View result ({done[0].correct}/{done[0].total})</LinkButton>;
-  else if (now < Date.parse(e.starts_at)) action = <span className="block w-full rounded-md bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">Opens {when(e.starts_at)}</span>;
-  else action = <span className="block w-full rounded-md bg-slate-100 px-4 py-3 text-center font-semibold text-slate-500">{practice ? "Closed" : "Missed"}</span>;
-
   return (
-    <Card className="flex flex-col">
-      <div className="mb-3 flex items-start justify-between gap-2">
-        <b className="text-lg leading-snug">{e.name}</b>
-        <Badge tone={practice ? "amber" : "indigo"}>{practice ? "Practice" : "Exam"}</Badge>
+    <div className="rounded-3xl bg-white p-5 shadow-[0_6px_24px_rgba(36,69,49,0.10)] ring-1 ring-slate-200/70">
+      <div className="mb-5 flex items-center gap-4">
+        <span className={`grid h-16 w-16 shrink-0 place-items-center rounded-2xl ${practice ? "bg-brass-400/25 text-brass-600" : "bg-indigo-600/10 text-indigo-700"}`}>
+          <Icon name={practice ? "pencil" : "exams"} className="h-9 w-9" />
+        </span>
+        <div className="min-w-0">
+          <b className="font-display block text-2xl leading-snug sm:text-3xl">{e.name}</b>
+          <span className="text-base text-slate-600">{practice ? "Practice" : "Exam"}</span>
+        </div>
       </div>
-      <ul className="mb-4 space-y-1 text-sm text-slate-600">
-        <li className="flex items-center gap-2"><Icon name="exams" className="h-4 w-4" />{qs} questions</li>
-        <li className="flex items-center gap-2"><Icon name="clock" className="h-4 w-4" />{e.duration_minutes} minutes{isOpen && <> · open till {when(e.ends_at)}</>}</li>
-        {practice && isOpen && !open && <li className="text-slate-500">{Math.max(0, left)} {left === 1 ? "try" : "tries"} left</li>}
-      </ul>
-      {done.length > 0 && (open || (isOpen && left > 0)) && <Link className="mb-3 text-sm text-indigo-700 underline" to={`/result/${done[0].id}`}>Last result: {done[0].correct}/{done[0].total}</Link>}
-      <div className="mt-auto">{action}</div>
-    </Card>
+      <Link to={open ? `/attempt/${open.id}` : `/exam/${e.id}`} className={`${BIG} flex items-center justify-center gap-3 bg-indigo-600 text-white shadow-md hover:bg-indigo-700`}>
+        {open ? "Keep going" : "Start"}<Icon name="arrow" className="h-7 w-7" />
+      </Link>
+    </div>
   );
 }
 
@@ -60,31 +50,47 @@ export default function StudentHome() {
   useEffect(() => { load(); }, []);
   if (!student) return null;
 
+  const now = Date.now();
+  const mineOf = (e: Exam) => attempts.filter((a) => a.exam_id === e.id);
   // Hide exams closed more than 30 days ago that I never attempted
-  const recent = (exams ?? []).filter((e) => Date.parse(e.ends_at) > Date.now() - 30 * 86400000 || attempts.some((a) => a.exam_id === e.id));
-  const official = recent.filter((e) => e.mode === "official");
-  const practice = recent.filter((e) => e.mode === "practice");
+  const recent = (exams ?? []).filter((e) => Date.parse(e.ends_at) > now - 30 * 86400000 || mineOf(e).length);
+  const isOpen = (e: Exam) => e.status === "published" && now >= Date.parse(e.starts_at) && now <= Date.parse(e.ends_at);
+  const canStart = (e: Exam) => isOpen(e) && (mineOf(e).some((a) => a.status === "in_progress") || e.attempts_allowed > mineOf(e).length);
+  const ready = recent.filter(canStart).sort((a, b) => Number(a.mode === "practice") - Number(b.mode === "practice"));
   const first = student.full_name.split(" ")[0];
-  const section = (title: string, list: Exam[], empty?: string) => (
-    <section className="mb-8">
-      <h2 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.1em] text-slate-500">{title}</h2>
-      {list.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{list.map((e) => <ExamCard key={e.id} e={e} attempts={attempts} />)}</div>
-        : empty && <Card><p className="text-slate-500">{empty}</p></Card>}
-    </section>
-  );
 
   return (
-    <Page title={`Hi, ${first}`} wide actions={<LinkButton to="/results" variant="secondary">My results</LinkButton>}>
+    <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-12">
+      <header className="mb-8 flex items-center gap-4">
+        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-indigo-700 text-brass-400"><Icon name="abacus" className="h-9 w-9" /></span>
+        <div><h1 className="font-display text-4xl font-medium text-slate-900 sm:text-5xl">Hi, {first}</h1><p className="text-lg text-slate-600">Your tests</p></div>
+      </header>
+
       {student.password_shared && (
-        <p className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm">
-          Your password was set by your school, so other people may know it. Please <Link to="/change-password" className="font-semibold text-indigo-700 underline">change it now</Link> to keep your account safe.
+        <p className="mb-6 rounded-2xl border border-amber-300 bg-amber-50 p-4 text-base">
+          Please <Link to="/change-password" className="font-bold text-indigo-700 underline">change your password</Link> to keep your account safe.
         </p>
       )}
       {error && <><ErrorBox>{error}</ErrorBox><Button variant="secondary" className="mb-4" onClick={load}>Try again</Button></>}
-      {exams === null && !error ? <p className="text-slate-500">Loading…</p> : <>
-        {section("Exams", official, "No exams right now. Your teacher will add one.")}
-        {practice.length > 0 && section("Practice", practice)}
-      </>}
-    </Page>
+
+      {exams === null && !error ? (
+        <div className="space-y-5">{[0, 1].map((i) => <div key={i} className="h-44 animate-pulse rounded-3xl bg-slate-200/70" />)}</div>
+      ) : (
+        <>
+          {ready.length > 0 ? (
+            <section className="mb-10 space-y-5">
+              <h2 className="text-xl font-bold text-slate-800">Ready for you</h2>
+              {ready.map((e) => <TestCard key={e.id} e={e} attempts={attempts} />)}
+            </section>
+          ) : (
+            <section className="mb-10 flex items-center gap-4 rounded-3xl border-2 border-slate-200 bg-white p-6">
+              <span className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-emerald-600/10 text-emerald-700"><Icon name="check" className="h-9 w-9" /></span>
+              <b className="font-display text-2xl">Nothing to do right now</b>
+            </section>
+          )}
+
+        </>
+      )}
+    </main>
   );
 }

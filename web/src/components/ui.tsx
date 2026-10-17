@@ -29,11 +29,21 @@ export function Field({ label, ...p }: InputHTMLAttributes<HTMLInputElement> & {
   );
 }
 
+// On/off slider. Put it inside a <label> so a click anywhere on the row flips it.
+export function Toggle(p: Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "className">) {
+  return (
+    <span className="relative inline-flex shrink-0 cursor-pointer">
+      <input {...p} type="checkbox" role="switch" className="peer sr-only" />
+      <span className="relative h-7 w-12 rounded-full bg-slate-300 transition-colors after:absolute after:left-0.5 after:top-0.5 after:h-6 after:w-6 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:bg-indigo-600 peer-checked:after:translate-x-5 peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-600 peer-focus-visible:ring-offset-2 peer-disabled:opacity-50" />
+    </span>
+  );
+}
+
 export const ErrorBox = ({ children }: { children: ReactNode }) =>
   children ? <p role="alert" className="mb-4 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">{children}</p> : null;
 
 export const Card = ({ children, className = "" }: { children: ReactNode; className?: string }) =>
-  <div className={`rounded-lg border border-slate-200 bg-white p-5 ${className}`}>{children}</div>;
+  <div className={`rounded-xl border border-slate-200 bg-white p-5 shadow-sm ${className}`}>{children}</div>;
 
 // Small label with a status dot. No filled pills.
 export function Badge({ tone = "slate", children }: { tone?: "slate" | "green" | "amber" | "red" | "indigo"; children: ReactNode }) {
@@ -209,23 +219,56 @@ export function AdminShell({ children }: { children: ReactNode }) {
   );
 }
 
-// ---- student shell ----
+// ---- student shell: green sidebar on desktop, top bar with tabs on phone ----
+const STUDENT_NAV = [
+  { to: "/", label: "My tests", icon: "exams", end: true },
+  { to: "/results", label: "Progress", icon: "levels" },
+  { to: "/change-password", label: "Settings", icon: "settings" },
+];
+
 export function StudentShell({ children }: { children: ReactNode }) {
   const { student } = useAuth();
   const initials = (student?.full_name ?? "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const link = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-3 border-l-4 px-5 py-3.5 text-base font-medium transition-colors ${isActive ? "border-brass-400 bg-white/10 text-white" : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"}`;
   return (
-    <div className="min-h-screen">
-      <header className="sticky top-0 z-10 border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3 sm:px-8">
-          <Link to="/" className="font-display flex items-center gap-3 text-lg font-medium"><Logo size={44} /><span className="hidden sm:inline">ERPLI</span></Link>
-          <div className="ml-auto flex items-center gap-3">
-            <div className="text-right leading-tight"><b className="block text-sm font-medium">{student?.full_name}</b><span className="text-xs text-slate-500">{student?.student_code} · Level {student?.level}</span></div>
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-indigo-600 text-xs font-semibold text-white">{initials}</span>
-            <button aria-label="Log out" onClick={() => supabase.auth.signOut()} className="p-2 text-slate-500 hover:text-slate-900"><Icon name="logout" className="h-[18px] w-[18px]" /></button>
-          </div>
+    <div className="min-h-screen md:flex">
+      <aside className="hidden w-64 shrink-0 flex-col bg-indigo-700 md:sticky md:top-0 md:flex md:h-screen">
+        <div className="flex items-center gap-3 px-5 pb-6 pt-6">
+          <Logo size={52} />
+          <b className="font-display text-xl font-medium text-white">ERPLI</b>
         </div>
-      </header>
-      {children}
+        <div className="mx-5 mb-6 flex items-center gap-3 rounded-xl bg-white/10 p-3">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brass-400 text-sm font-bold text-indigo-900">{initials}</span>
+          <div className="min-w-0 leading-tight"><b className="block truncate text-sm text-white">{student?.full_name}</b><span className="text-xs text-slate-300">Level {student?.level}</span></div>
+        </div>
+        <nav className="flex flex-col">
+          {STUDENT_NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={link}><Icon name={n.icon} className="h-5 w-5" />{n.label}</NavLink>)}
+        </nav>
+        <div className="mt-auto border-t border-white/10 px-5 py-4">
+          <button onClick={() => supabase.auth.signOut()} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
+        </div>
+      </aside>
+      <div className="min-w-0 flex-1 pb-24 md:pb-0">
+        <header className="sticky top-0 z-10 flex items-center justify-between bg-indigo-700 px-4 py-2.5 shadow-md md:hidden">
+          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-white"><Logo size={36} />ERPLI</b>
+          <div className="flex items-center gap-1">
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-brass-400 text-xs font-bold text-indigo-900">{initials}</span>
+            <button aria-label="Log out" onClick={() => supabase.auth.signOut()} className="p-2 text-slate-200"><Icon name="logout" /></button>
+          </div>
+        </header>
+        {children}
+      </div>
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-3 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] md:hidden">
+        {STUDENT_NAV.map((n) => (
+          <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `flex flex-col items-center gap-1 py-2.5 text-[11px] font-semibold ${isActive ? "text-indigo-700" : "text-slate-500"}`}>
+            {({ isActive }) => <>
+              <span className={`grid h-8 w-14 place-items-center rounded-full transition-colors ${isActive ? "bg-indigo-600/10" : ""}`}><Icon name={n.icon} className="h-6 w-6" /></span>
+              {n.label}
+            </>}
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }
