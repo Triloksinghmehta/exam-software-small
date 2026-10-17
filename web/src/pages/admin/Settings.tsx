@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Card, ErrorBox, Page, Toggle } from "../../components/ui";
+import { Button, Card, ErrorBox, Field, Page, Toggle, useConfirm } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 
 type S = {
@@ -17,6 +17,10 @@ export default function Settings() {
   const [s, setS] = useState<S | null>(null);
   const [msg, setMsg] = useState("");
   const [error, setError] = useState("");
+  const [ask, dialog] = useConfirm();
+  const [pw, setPw] = useState({ a: "", b: "" });
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwErr, setPwErr] = useState("");
   useEffect(() => {
     supabase.from("settings").select("*").single().then(({ data, error }) => error ? setError(friendly(error)) : setS({ ...data, ac_auto_submit_after: data.ac_auto_submit_after ?? 1 })); // never empty: default 1
   }, []);
@@ -27,6 +31,14 @@ export default function Settings() {
     if (!/^[A-Z]{2,6}$/.test(s!.id_prefix)) return setError("Student ID start must be 2 to 6 capital letters");
     const { error } = await supabase.from("settings").update(s!).eq("id", 1);
     if (error) setError(friendly(error)); else setMsg("Saved");
+  }
+  async function changePassword() {
+    setPwMsg(""); setPwErr("");
+    if (pw.a.length < 8) return setPwErr("Password must be at least 8 characters");
+    if (pw.a !== pw.b) return setPwErr("The two passwords are not the same");
+    if (!(await ask({ title: "Change your admin password?", message: "You will use the new password the next time you log in. The old one will stop working.", yes: "Change password", icon: "settings" }))) return;
+    const { error } = await supabase.auth.updateUser({ password: pw.a });
+    if (error) setPwErr(friendly(error)); else { setPw({ a: "", b: "" }); setPwMsg("Password changed."); }
   }
   const yy = String(new Date().getFullYear() % 100).padStart(2, "0");
 
@@ -66,6 +78,17 @@ export default function Settings() {
             value={s.ac_auto_submit_after} onChange={(e) => setS({ ...s, ac_auto_submit_after: Math.max(1, Math.floor(Number(e.target.value)) || 1) })} />
         </label>
       </Card>
+      <Card className="mb-4">
+        <h2 className="mb-3 text-xl font-bold">Change my password</h2>
+        <ErrorBox>{pwErr}</ErrorBox>
+        {pwMsg && <p role="status" className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">{pwMsg}</p>}
+        <div className="grid gap-x-4 sm:grid-cols-2">
+          <Field label="New password" type="password" autoComplete="new-password" placeholder="at least 8 characters" value={pw.a} onChange={(e) => setPw({ ...pw, a: e.target.value })} />
+          <Field label="Type it again" type="password" autoComplete="new-password" value={pw.b} onChange={(e) => setPw({ ...pw, b: e.target.value })} />
+        </div>
+        <Button variant="secondary" onClick={changePassword}>Change password</Button>
+      </Card>
+      {dialog}
       <Button onClick={save}>Save</Button> <span className="ml-2 text-sm text-slate-500">Changes apply only after you press Save.</span> {msg && <span className="ml-3 text-green-700">{msg}</span>}
     </Page>
   );

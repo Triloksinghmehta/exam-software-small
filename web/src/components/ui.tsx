@@ -242,104 +242,78 @@ export function Icon({ name, className = "h-5 w-5" }: { name: keyof typeof PATHS
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className}><path d={PATHS[name]} /></svg>;
 }
 
-// ---- admin shell: ink-navy sidebar on desktop, top bar with tabs on phone ----
-const ADMIN_NAV = [
+// ---- app shell: sidebar on desktop; slim top bar + bottom tab bar on phone (like a mobile app) ----
+type NavItem = { to: string; label: string; icon: string; end?: boolean };
+const ADMIN_NAV: NavItem[] = [
   { to: "/admin", label: "Dashboard", icon: "home", end: true },
   { to: "/admin/students", label: "Students", icon: "students" },
   { to: "/admin/exams", label: "Exams", icon: "exams" },
   { to: "/admin/levels", label: "Levels", icon: "levels" },
   { to: "/admin/settings", label: "Settings", icon: "settings" },
 ];
-
-export function AdminShell({ children }: { children: ReactNode }) {
-  const { session } = useAuth();
-  const email = session?.user.email ?? "";
-  const link = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 border-l-2 px-5 py-2.5 text-sm font-medium transition-colors ${isActive ? "border-brass-400 bg-white/[0.07] text-white" : "border-transparent text-slate-300 hover:bg-white/[0.04] hover:text-white"}`;
-  return (
-    <div className="min-h-screen md:flex">
-      <aside className="hidden w-60 shrink-0 flex-col bg-indigo-700 md:sticky md:top-0 md:flex md:h-screen">
-        <div className="flex items-center gap-3 px-5 pb-8 pt-6">
-          <Logo size={52} />
-          <div><b className="font-display block text-[17px] font-medium leading-tight text-white">ERPLI</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-400">Examination Portal</span></div>
-        </div>
-        <p className="mb-2 px-5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Manage</p>
-        <nav className="flex flex-col">
-          {ADMIN_NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={link}><Icon name={n.icon} className="h-[18px] w-[18px]" />{n.label}</NavLink>)}
-        </nav>
-        <div className="mt-auto border-t border-white/10 px-5 py-4">
-          <p className="mb-3 truncate text-xs text-slate-400">{email}</p>
-          <button onClick={() => logOut("/admin/login")} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
-        </div>
-      </aside>
-      <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-10 bg-indigo-700 md:hidden">
-          <div className="flex items-center justify-between px-4 py-3">
-            <b className="font-display flex items-center gap-3 font-medium text-white"><Logo size={40} />ERPLI</b>
-            <button aria-label="Log out" onClick={() => logOut("/admin/login")} className="p-2 text-slate-300"><Icon name="logout" /></button>
-          </div>
-          <nav className="flex gap-1 overflow-x-auto px-3">
-            {ADMIN_NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium ${isActive ? "border-brass-400 text-white" : "border-transparent text-slate-300"}`}>{n.label}</NavLink>)}
-          </nav>
-        </header>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-// ---- student shell: green sidebar on desktop, top bar with tabs on phone ----
-const STUDENT_NAV = [
+const STUDENT_NAV: NavItem[] = [
   { to: "/", label: "My tests", icon: "exams", end: true },
   { to: "/results", label: "Progress", icon: "levels" },
   { to: "/change-password", label: "Settings", icon: "settings" },
 ];
 
-export function StudentShell({ children }: { children: ReactNode }) {
-  const { student } = useAuth();
-  const initials = (student?.full_name ?? "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
-  const link = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 border-l-4 px-5 py-3.5 text-base font-medium transition-colors ${isActive ? "border-brass-400 bg-white/10 text-white" : "border-transparent text-slate-300 hover:bg-white/5 hover:text-white"}`;
+function Shell({ nav, name, sub, initials, logoutTo, tag, children }: {
+  nav: NavItem[]; name: string; sub: string; initials: string; logoutTo?: string; tag: string; children: ReactNode;
+}) {
+  const side = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors ${isActive ? "bg-white text-indigo-800 shadow-sm" : "text-white/75 hover:bg-white/10 hover:text-white"}`;
   return (
     <div className="min-h-screen md:flex">
-      <aside className="hidden w-64 shrink-0 flex-col bg-indigo-700 md:sticky md:top-0 md:flex md:h-screen">
-        <div className="flex items-center gap-3 px-5 pb-6 pt-6">
-          <Logo size={52} />
-          <b className="font-display text-xl font-medium text-white">ERPLI</b>
+      <aside className="hidden w-64 shrink-0 flex-col bg-indigo-700 px-3 md:sticky md:top-0 md:flex md:h-screen">
+        <div className="flex items-center gap-3 px-2 pb-6 pt-6">
+          <Logo size={44} />
+          <div className="leading-tight"><b className="font-display block text-xl font-medium text-white">ERPLI</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-400">{tag}</span></div>
         </div>
-        <div className="mx-5 mb-6 flex items-center gap-3 rounded-xl bg-white/10 p-3">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brass-400 text-sm font-bold text-indigo-900">{initials}</span>
-          <div className="min-w-0 leading-tight"><b className="block truncate text-sm text-white">{student?.full_name}</b><span className="text-xs text-slate-300">Level {student?.level}</span></div>
-        </div>
-        <nav className="flex flex-col">
-          {STUDENT_NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={link}><Icon name={n.icon} className="h-5 w-5" />{n.label}</NavLink>)}
+        <nav className="flex flex-col gap-1">
+          {nav.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={side}><Icon name={n.icon} className="h-5 w-5" />{n.label}</NavLink>)}
         </nav>
-        <div className="mt-auto border-t border-white/10 px-5 py-4">
-          <button onClick={() => logOut()} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
+        <div className="mb-4 mt-auto rounded-xl bg-white/10 p-3">
+          <div className="flex items-center gap-3">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brass-400 text-sm font-bold text-indigo-900">{initials}</span>
+            <div className="min-w-0 leading-tight"><b className="block truncate text-sm text-white">{name}</b><span className="block truncate text-xs text-white/60">{sub}</span></div>
+          </div>
+          <button onClick={() => logOut(logoutTo)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-white/10 py-2 text-sm font-medium text-white/85 transition hover:bg-white/20 hover:text-white"><Icon name="logout" className="h-4 w-4" />Log out</button>
         </div>
       </aside>
       <div className="min-w-0 flex-1 pb-24 md:pb-0">
         <header className="sticky top-0 z-10 flex items-center justify-between bg-indigo-700 px-4 py-2.5 shadow-md md:hidden">
-          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-white"><Logo size={36} />ERPLI</b>
+          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-white"><Logo size={34} />ERPLI</b>
           <div className="flex items-center gap-1">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-brass-400 text-xs font-bold text-indigo-900">{initials}</span>
-            <button aria-label="Log out" onClick={() => logOut()} className="p-2 text-slate-200"><Icon name="logout" /></button>
+            <button aria-label="Log out" onClick={() => logOut(logoutTo)} className="p-2 text-white/80"><Icon name="logout" /></button>
           </div>
         </header>
         {children}
       </div>
-      <nav className="fixed inset-x-0 bottom-0 z-20 grid grid-cols-3 border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] md:hidden">
-        {STUDENT_NAV.map((n) => (
+      <nav className="fixed inset-x-0 bottom-0 z-20 grid border-t border-slate-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-4px_16px_rgba(0,0,0,0.06)] md:hidden" style={{ gridTemplateColumns: `repeat(${nav.length}, minmax(0, 1fr))` }}>
+        {nav.map((n) => (
           <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `flex flex-col items-center gap-1 py-2.5 text-[11px] font-semibold ${isActive ? "text-indigo-700" : "text-slate-500"}`}>
             {({ isActive }) => <>
               <span className={`grid h-8 w-14 place-items-center rounded-full transition-colors ${isActive ? "bg-indigo-600/10" : ""}`}><Icon name={n.icon} className="h-6 w-6" /></span>
-              {n.label}
+              <span className="truncate">{n.label}</span>
             </>}
           </NavLink>
         ))}
       </nav>
     </div>
   );
+}
+
+export function AdminShell({ children }: { children: ReactNode }) {
+  const { session } = useAuth();
+  const email = session?.user.email ?? "";
+  return <Shell nav={ADMIN_NAV} name="Admin" sub={email} initials="AD" logoutTo="/admin/login" tag="Admin panel">{children}</Shell>;
+}
+
+export function StudentShell({ children }: { children: ReactNode }) {
+  const { student } = useAuth();
+  const initials = (student?.full_name ?? "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  return <Shell nav={STUDENT_NAV} name={student?.full_name ?? ""} sub={`${student?.student_code ?? ""} · Level ${student?.level ?? ""}`} initials={initials} tag="Student">{children}</Shell>;
 }
 
 // Blocking popup shown when this login was replaced by a newer login on another device.
