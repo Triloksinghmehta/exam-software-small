@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { SESSION_REPLACED_EVENT, supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 
 export function Button({ variant = "primary", className = "", ...p }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "danger" }) {
@@ -338,6 +338,28 @@ export function StudentShell({ children }: { children: ReactNode }) {
           </NavLink>
         ))}
       </nav>
+    </div>
+  );
+}
+
+// Blocking popup shown when this login was replaced by a newer login on another device.
+export function SessionReplacedDialog() {
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    const on = () => setOpen(true);
+    window.addEventListener(SESSION_REPLACED_EVENT, on);
+    return () => window.removeEventListener(SESSION_REPLACED_EVENT, on);
+  }, []);
+  if (!open) return null;
+  async function logOut() { await supabase.auth.signOut(); setOpen(false); } // route guards then send the student to /login
+  return (
+    <div className="fixed inset-0 z-[60] grid place-items-center bg-slate-900/60 p-4 backdrop-blur-[2px]">
+      <div role="alertdialog" aria-modal="true" aria-labelledby="replaced-title" className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl">
+        <span className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-brass-400/25 text-brass-600"><Icon name="alert" className="h-7 w-7" /></span>
+        <h2 id="replaced-title" className="font-display text-2xl font-medium text-slate-900">Logged in on another device</h2>
+        <p className="mt-2 text-slate-600">You logged in on another device. Please log in again.</p>
+        <Button autoFocus className="mt-6 flex w-full items-center justify-center gap-2" onClick={logOut}><Icon name="logout" className="h-5 w-5" />Log out</Button>
+      </div>
     </div>
   );
 }

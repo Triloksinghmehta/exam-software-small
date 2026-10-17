@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, ErrorBox, Icon } from "../components/ui";
 import { QuestionView } from "../components/QuestionView";
 import { friendly, supabase } from "../lib/supabase";
@@ -31,11 +31,8 @@ export default function ExamAttempt() {
   const finishing = useRef(false);
 
   const finish = useCallback(() => nav(`/result/${id}`, { replace: true }), [id, nav]);
-  const fail = useCallback(async (e: unknown) => {
-    const msg = e instanceof Error ? e.message : String(e);
-    if (msg.includes("SESSION_REPLACED")) { alert(friendly(e)); await supabase.auth.signOut(); nav("/login", { replace: true }); }
-    return msg;
-  }, [nav]);
+  // Readable text for any error (never "[object Object]"). friendly() also opens the "logged in elsewhere" popup when needed.
+  const fail = useCallback(async (e: unknown) => friendly(e), []);
 
   // Send unsent answers. Returns false if offline.
   const flush = useCallback(async () => {
@@ -124,7 +121,18 @@ export default function ExamAttempt() {
     };
   }, [paper, ac, id, storeKey, finish]);
 
-  if (!paper) return <main className="mx-auto max-w-md p-6"><ErrorBox>{error}</ErrorBox>{!error && <p>Loading your paper…</p>}</main>;
+  if (!paper) return (
+    <main className="mx-auto max-w-md p-6">
+      <ErrorBox>{error}</ErrorBox>
+      {!error && <p>Loading your paper…</p>}
+      {error && (
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <Link to="/" className="flex-1 rounded-xl bg-indigo-600 px-4 py-3 text-center font-semibold text-white hover:bg-indigo-700">Back to home</Link>
+          <button onClick={() => supabase.auth.signOut()} className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800 hover:bg-slate-100">Log out</button>
+        </div>
+      )}
+    </main>
+  );
 
   const total = paper.questions.length;
   const answered = paper.questions.filter((q) => toAnswer(values[q.position] ?? "") !== null).length;

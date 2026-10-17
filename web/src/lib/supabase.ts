@@ -20,9 +20,12 @@ const MESSAGES: Record<string, string> = {
   PAPER_RULES_INVALID: "This exam's question settings have a problem. Please tell your teacher.",
   PAPER_NOT_READY: "Your paper is still being made. Please try again.",
 };
+// Every error path goes through friendly(), so this one place opens the "logged in elsewhere" popup (see SessionReplacedDialog)
+export const SESSION_REPLACED_EVENT = "session-replaced";
 export const friendly = (e: unknown) => {
   // Supabase errors are plain objects ({message}), not Error instances
   const m = e instanceof Error ? e.message : typeof e === "object" && e && "message" in e ? String((e as { message: unknown }).message) : String(e);
+  if (m.includes("SESSION_REPLACED")) window.dispatchEvent(new Event(SESSION_REPLACED_EVENT));
   return Object.entries(MESSAGES).find(([k]) => m.includes(k))?.[1] ?? (m === "Failed to fetch" ? "Can't connect. Check internet." : m);
 };
 

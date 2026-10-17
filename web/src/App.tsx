@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth";
-import { AdminShell, Splash, StudentShell } from "./components/ui";
+import { AdminShell, SessionReplacedDialog, Splash, StudentShell } from "./components/ui";
 import StudentLogin from "./pages/StudentLogin";
 import ChangePassword from "./pages/ChangePassword";
 import StudentHome from "./pages/StudentHome";
@@ -41,6 +41,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <SessionReplacedDialog />
         <Routes>
           <Route path="/login" element={<StudentLogin />} />
           <Route path="/change-password" element={<StudentOnly><ChangePassword /></StudentOnly>} />
