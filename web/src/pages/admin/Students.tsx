@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Button, Card, ErrorBox, Field, LinkButton, Page, download, toCsv } from "../../components/ui";
+import { Badge, Button, Card, ErrorBox, Field, LinkButton, Page, RowMenu, download, toCsv, useConfirm } from "../../components/ui";
 import { adminStudents, friendly, supabase } from "../../lib/supabase";
 import type { Student } from "../../lib/auth";
 import { checkRow } from "../../../../supabase/functions/_shared/student-row";
@@ -16,6 +16,7 @@ export default function Students() {
   const [level, setLevel] = useState("");
   const [editing, setEditing] = useState<Student | "new" | null>(null);
   const [shown, setShown] = useState<Created | null>(null); // a password shown once
+  const [ask, dialog] = useConfirm();
 
   async function reload() {
     const { data, error } = await supabase.from("students").select("*").order("student_code");
@@ -28,8 +29,14 @@ export default function Students() {
     (!q || `${s.student_code} ${s.full_name} ${s.father_name}`.toLowerCase().includes(q.toLowerCase()))), [list, q, level]);
 
   async function reset(s: Student) {
-    if (!confirm(`Make a new password for ${s.full_name} (${s.student_code})? The old one stops working.`)) return;
+    if (!(await ask({ title: "Make a new password?", message: `${s.full_name} (${s.student_code}) will get a new password. The old one stops working.`, yes: "Make new password", tone: "danger", icon: "settings" }))) return;
     try { setShown({ ...(await adminStudents<Created>({ action: "reset_password", student_id: s.id })), full_name: s.full_name }); }
+    catch (e) { setError(friendly(e)); }
+  }
+  async function remove(s: Student) {
+    const ok = await ask({ title: "Delete this student?", message: `${s.full_name} (${s.student_code}) will be removed for good, together with all their exam attempts and results. This cannot be undone. To only stop them logging in, use Disable account instead.`, yes: "Delete student", tone: "danger", icon: "trash" });
+    if (!ok) return;
+    try { await adminStudents({ action: "delete", student_id: s.id }); reload(); }
     catch (e) { setError(friendly(e)); }
   }
   async function toggle(s: Student) {
@@ -41,6 +48,7 @@ export default function Students() {
   return (
     <Page title="Students" wide>
       <ErrorBox>{error}</ErrorBox>
+      {dialog}
       {shown && (
         <Card className="mb-4 border-2 border-green-600">
           <p className="mb-2">Give these to <b>{shown.full_name}</b>. The password is shown <b>only now</b>.</p>
@@ -78,10 +86,13 @@ export default function Students() {
                   <td className="p-3">{fmtDob(s.dob)}</td>
                   <td className="p-3">{s.level}</td>
                   <td className="p-3"><Badge tone={s.status === "active" ? "green" : "red"}>{s.status === "active" ? "Active" : "Disabled"}</Badge></td>
-                  <td className="p-3 whitespace-nowrap text-right">
-                    <button className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-50" onClick={() => setEditing(s)}>Edit</button>
-                    <button className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-100" onClick={() => reset(s)}>Reset password</button>
-                    <button className="rounded-lg px-2.5 py-1.5 text-sm font-medium text-red-700 hover:bg-red-50" onClick={() => toggle(s)}>{s.status === "active" ? "Disable" : "Enable"}</button>
+                  <td className="p-3 text-right">
+                    <RowMenu label={`Actions for ${s.full_name}`} items={[
+                      { label: "Edit details", icon: "pencil", onClick: () => setEditing(s) },
+                      { label: "Reset password", icon: "key", onClick: () => reset(s) },
+                      { label: s.status === "active" ? "Disable account" : "Enable account", icon: s.status === "active" ? "ban" : "check", onClick: () => toggle(s) },
+                      { label: "Delete student", icon: "trash", danger: true, onClick: () => remove(s) },
+                    ]} />
                   </td>
                 </tr>
               ))}

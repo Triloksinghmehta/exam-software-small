@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Badge, Card, ErrorBox, Icon, LinkButton, Page, Segmented } from "../../components/ui";
+import { Link, useNavigate } from "react-router-dom";
+import { Badge, Card, ErrorBox, Icon, LinkButton, Page, RowMenu, Segmented, useConfirm } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 
 export type Exam = {
@@ -26,10 +26,18 @@ export default function Exams() {
   const [mode, setMode] = useState<"official" | "practice">("official");
   const [list, setList] = useState<Exam[] | null>(null);
   const [error, setError] = useState("");
-  useEffect(() => {
-    supabase.from("exams").select("*").order("starts_at", { ascending: false })
-      .then(({ data, error }) => (error ? setError(friendly(error)) : setList(data)));
-  }, []);
+  const [ask, dialog] = useConfirm();
+  const nav = useNavigate();
+  const load = () => supabase.from("exams").select("*").order("starts_at", { ascending: false })
+    .then(({ data, error }) => (error ? setError(friendly(error)) : setList(data)));
+  useEffect(() => { load(); }, []);
+
+  async function remove(e: Exam) {
+    const ok = await ask({ title: "Delete this exam?", message: `"${e.name}" will be removed for good, together with every student's attempts and results for it. This cannot be undone. To stop students from starting it, use Close now inside the exam instead.`, yes: "Delete exam", tone: "danger", icon: "trash" });
+    if (!ok) return;
+    const { error } = await supabase.rpc("delete_exam", { p_exam: e.id });
+    if (error) setError(friendly(error)); else load();
+  }
   const rows = (list ?? []).filter((e) => e.mode === mode);
   return (
     <Page title="Exams" wide actions={<LinkButton to={`/admin/exams/new?mode=${mode}`}>+ Create exam</LinkButton>}>
@@ -49,10 +57,15 @@ export default function Exams() {
             <p className="flex items-center gap-2 text-sm text-slate-600"><Icon name="levels" className="h-4 w-4" />Level {e.level} · {e.duration_minutes} min</p>
             <p className="mt-1 flex items-center gap-2 text-sm text-slate-600"><Icon name="clock" className="h-4 w-4" />{when(e.starts_at)} to {when(e.ends_at)}</p>
           </Link>
-          <Link aria-label={`Edit ${e.name}`} title="Edit exam" to={`/admin/exams/${e.id}`} className="mr-4 grid h-9 w-9 shrink-0 place-items-center rounded-lg border border-slate-300 bg-white text-indigo-700 transition hover:border-indigo-600 hover:bg-indigo-600/5"><Icon name="pencil" className="h-4 w-4" /></Link>
+          <div className="mr-3 shrink-0"><RowMenu label={`Actions for ${e.name}`} items={[
+            { label: "Edit exam", icon: "pencil", onClick: () => nav(`/admin/exams/${e.id}`) },
+            { label: "Use again", icon: "exams", onClick: () => nav(`/admin/exams/new?copy=${e.id}`) },
+            { label: "Delete exam", icon: "trash", danger: true, onClick: () => remove(e) },
+          ]} /></div>
           </div>
         );
       })}</div>}
+      {dialog}
     </Page>
   );
 }

@@ -1,4 +1,4 @@
-// Admin-only: create students (single or CSV batch) and reset passwords.
+// Admin-only: create students (single or CSV batch), reset passwords, delete students.
 // Creates Supabase Auth users, so it needs the service role key (never sent to the browser).
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 import { checkRow, identityKey } from "../_shared/student-row.ts";
@@ -46,6 +46,19 @@ Deno.serve(async (req) => {
     await db.auth.admin.signOut(s.id).catch(() => {}); // end existing logins (best effort)
     await db.from("audit_events").insert({ actor: actor?.id, action: "reset_password", target: s.student_code });
     return json({ student_code: s.student_code, password });
+  }
+
+  if (body.action === "delete") {
+    if (!body.student_id) return json({ error: "student_id required" }, 400);
+    const { data: s } = await db.from("students").select("id, student_code").eq("id", body.student_id).maybeSingle();
+    if (!s) return json({ error: "NOT_FOUND" }, 404);
+    // attempts.student_id has no cascade: remove the student's attempts first (answers and logs cascade from them)
+    const a = await db.from("attempts").delete().eq("student_id", s.id);
+    if (a.error) return json({ error: a.error.message }, 500);
+    const { error } = await db.auth.admin.deleteUser(s.id); // cascades profile and student rows
+    if (error) return json({ error: error.message }, 500);
+    await db.from("audit_events").insert({ actor: actor?.id, action: "delete_student", target: s.student_code });
+    return json({ ok: true });
   }
 
   if (body.action === "create") {

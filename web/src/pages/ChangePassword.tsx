@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Card, ErrorBox, Field, Page } from "../components/ui";
+import { Button, Card, ErrorBox, Field, Page, useConfirm } from "../components/ui";
 import { friendly, supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 
@@ -13,11 +13,13 @@ export default function ChangePassword() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [ask, dialog] = useConfirm();
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     if (p1.length < 6) return setError("Password must be at least 6 characters");
     if (p1 !== p2) return setError("The two passwords are not the same");
+    if (!(await ask({ title: "Change your password?", message: "You will use the new password the next time you log in. The old one will stop working.", yes: "Change password", icon: "settings" }))) return;
     setBusy(true); setError("");
     try {
       const { error } = await supabase.auth.updateUser({ password: p1 });
@@ -57,10 +59,11 @@ export default function ChangePassword() {
             {saved && <p role="status" className="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">Password saved.</p>}
             <Field label="New password" type="password" value={p1} onChange={(e) => setP1(e.target.value)} autoComplete="new-password" placeholder="at least 6 characters" required />
             <Field label="Type it again" type="password" value={p2} onChange={(e) => setP2(e.target.value)} autoComplete="new-password" required />
-            <Button className="w-full" disabled={busy}>{busy ? "Saving…" : "Save"}</Button>
+            <Button className="w-full" disabled={busy}>{busy ? "Saving…" : "Change password"}</Button>
           </form>
         </Card>
       </div>
+      {dialog}
     </Page>
   );
 }

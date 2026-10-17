@@ -1,5 +1,6 @@
 // Shared UI. Direction: quiet and scholarly. Ink navy, warm ivory, one brass accent; flat panels with hairlines;
 // serif display headings; big touch targets and plain words (roadmap.md UI rule).
+import { useEffect, useRef, useState } from "react";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { supabase } from "../lib/supabase";
@@ -36,6 +37,70 @@ export function Toggle(p: Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "
       <input {...p} type="checkbox" role="switch" className="peer sr-only" />
       <span className="relative h-7 w-12 rounded-full bg-slate-300 transition-colors after:absolute after:left-0.5 after:top-0.5 after:h-6 after:w-6 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:bg-indigo-600 peer-checked:after:translate-x-5 peer-focus-visible:ring-2 peer-focus-visible:ring-indigo-600 peer-focus-visible:ring-offset-2 peer-disabled:opacity-50" />
     </span>
+  );
+}
+
+// Styled replacement for window.confirm. Usage: const [ask, dialog] = useConfirm(); if (!(await ask({...}))) return; ... render {dialog}
+type AskOpts = { title: string; message: string; yes?: string; no?: string; tone?: "primary" | "danger"; icon?: string };
+export function useConfirm() {
+  const [st, setSt] = useState<(AskOpts & { done: (v: boolean) => void }) | null>(null);
+  const ask = (o: AskOpts) => new Promise<boolean>((done) => setSt({ ...o, done }));
+  const close = (v: boolean) => { st?.done(v); setSt(null); };
+  const danger = st?.tone === "danger";
+  const dialog = st && (
+    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-900/50 p-4 backdrop-blur-[2px]" onClick={() => close(false)} onKeyDown={(e) => e.key === "Escape" && close(false)}>
+      <div role="dialog" aria-modal="true" aria-labelledby="confirm-title" onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+        <span className={`mb-4 grid h-12 w-12 place-items-center rounded-xl ${danger ? "bg-red-100 text-red-700" : "bg-brass-400/25 text-brass-600"}`}><Icon name={st.icon ?? "alert"} className="h-6 w-6" /></span>
+        <h2 id="confirm-title" className="font-display text-2xl font-medium text-slate-900">{st.title}</h2>
+        <p className="mt-2 text-slate-600">{st.message}</p>
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <Button variant="secondary" autoFocus onClick={() => close(false)}>{st.no ?? "Cancel"}</Button>
+          <Button variant={danger ? "danger" : "primary"} onClick={() => close(true)}>{st.yes ?? "Yes"}</Button>
+        </div>
+      </div>
+    </div>
+  );
+  return [ask, dialog] as const;
+}
+
+// Three-dot actions menu. Positioned with `fixed` so scrolling tables don't clip it.
+export type MenuItem = { label: string; icon: string; onClick: () => void; danger?: boolean };
+export function RowMenu({ items, label }: { items: MenuItem[]; label: string }) {
+  const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  const close = () => setPos(null);
+  useEffect(() => {
+    if (!pos) return;
+    const off = (e: Event) => { if (e.type !== "keydown" || (e as KeyboardEvent).key === "Escape") close(); };
+    window.addEventListener("scroll", off, true); window.addEventListener("resize", off); window.addEventListener("keydown", off);
+    return () => { window.removeEventListener("scroll", off, true); window.removeEventListener("resize", off); window.removeEventListener("keydown", off); };
+  }, [pos]);
+  function toggle() {
+    if (pos) return close();
+    const r = btn.current!.getBoundingClientRect();
+    const flip = r.bottom + items.length * 44 + 16 > window.innerHeight; // open upwards near the bottom of the screen
+    setPos({ top: flip ? r.top - items.length * 44 - 12 : r.bottom + 4, right: window.innerWidth - r.right });
+  }
+  return (
+    <>
+      <button ref={btn} aria-label={label} aria-haspopup="menu" aria-expanded={!!pos} onClick={toggle}
+        className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 aria-expanded:bg-slate-100">
+        <Icon name="dots" className="h-5 w-5" />
+      </button>
+      {pos && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={close} />
+          <div role="menu" style={{ top: pos.top, right: pos.right }} className="fixed z-50 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl">
+            {items.map((it, i) => (
+              <button key={it.label} role="menuitem" onClick={() => { close(); it.onClick(); }}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${it.danger ? "text-red-700 hover:bg-red-50" : "text-slate-700 hover:bg-slate-100"} ${it.danger && i > 0 ? "mt-1 border-t border-slate-100 pt-3" : ""}`}>
+                <Icon name={it.icon} className="h-[18px] w-[18px]" />{it.label}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </>
   );
 }
 
@@ -168,6 +233,10 @@ const PATHS: Record<string, string> = {
   alert: "M12 9v4M12 17h.01M10.3 3.9L1.8 18a2 2 0 001.7 3h17a2 2 0 001.7-3L13.7 3.9a2 2 0 00-3.4 0z",
   abacus: "M4 4v16M20 4v16M4 8h16M4 16h16M9 5v6M14 13v6",
   arrow: "M5 12h14M13 6l6 6-6 6",
+  dots: "M12 5h.01M12 12h.01M12 19h.01",
+  trash: "M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3",
+  key: "M15 7a4 4 0 11-3.9 4.9L4 19v-3h3v-2h2l2.1-2.1A4 4 0 0115 7z",
+  ban: "M12 22a10 10 0 100-20 10 10 0 000 20zM5 5l14 14",
 };
 export function Icon({ name, className = "h-5 w-5" }: { name: keyof typeof PATHS | string; className?: string }) {
   return <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className={className}><path d={PATHS[name]} /></svg>;

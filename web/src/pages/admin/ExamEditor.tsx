@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Badge, Button, Card, ErrorBox, Field, Page } from "../../components/ui";
+import { Badge, Button, Card, ErrorBox, Field, Icon, Page, useConfirm } from "../../components/ui";
 import { RulesEditor, rulesError } from "../../components/RulesEditor";
 import { friendly, supabase } from "../../lib/supabase";
 import { GENERATOR_VERSION, type Rule } from "../../../../supabase/functions/_shared/generator";
@@ -27,6 +27,7 @@ export default function ExamEditor() {
   const [started, setStarted] = useState(0); // attempts so far -> rules locked
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [ask, dialog] = useConfirm();
 
   async function loadLevelRules(level: number) {
     const { data } = await supabase.from("levels").select("default_rules, duration_minutes").eq("level", level).single();
@@ -35,6 +36,15 @@ export default function ExamEditor() {
   }
 
   useEffect(() => {
+    const copy = params.get("copy");
+    if (isNew && copy) { // "Use again": same name, level, time and rules; fresh dates; saved only when the admin presses a save button
+      supabase.from("exams").select("*").eq("id", copy).single().then(({ data: e, error }) => {
+        if (error) return setError(friendly(error));
+        setF((p) => ({ ...p, name: `${e.name} (copy)`, mode: e.mode, level: e.level, duration_minutes: e.duration_minutes, attempts_allowed: e.attempts_allowed }));
+        setRules(e.rules as Rule[]);
+      });
+      return;
+    }
     if (isNew) { loadLevelRules(0); return; }
     (async () => {
       const { data: e, error } = await supabase.from("exams").select("*").eq("id", id).single();
@@ -79,8 +89,8 @@ export default function ExamEditor() {
     setExam(data);
   }
 
-  async function setStatus(status: Exam["status"], ask: string) {
-    if (!confirm(ask)) return;
+  async function setStatus(status: Exam["status"], title: string, message: string, yes: string, tone?: "danger") {
+    if (!(await ask({ title, message, yes, tone }))) return;
     const { data, error } = await supabase.from("exams").update({ status }).eq("id", id!).select().single();
     if (error) setError(friendly(error)); else setExam(data);
   }
@@ -91,6 +101,12 @@ export default function ExamEditor() {
       {state && <p className="-mt-3 mb-4"><Badge tone={state.tone}>{state.label}</Badge>
         {locked && <span className="ml-2 text-slate-600">{started} student{started > 1 ? "s have" : " has"} started. Rules are locked.</span>}</p>}
       {exam && <Link className="-mt-2 mb-4 inline-block text-indigo-700 underline" to={`/admin/exams/${exam.id}/results`}>View results and leaderboard</Link>}
+      <div className="sticky top-24 z-[5] -mx-1 mb-4 flex flex-wrap items-center gap-x-6 gap-y-1 rounded-xl bg-indigo-700 px-5 py-3 text-white shadow-md md:top-2">
+        <span className="font-display text-xl font-medium">Level {f.level}</span>
+        <span className="text-sm text-white/80">{f.mode === "practice" ? "Practice" : "Official exam"}</span>
+        <span className="flex items-center gap-1.5 text-sm text-white/80"><Icon name="clock" className="h-4 w-4" />{f.duration_minutes} min</span>
+        <span className="flex items-center gap-1.5 text-sm text-white/80"><Icon name="exams" className="h-4 w-4" />{rules.reduce((n, r) => n + (r.quantity || 0), 0)} questions</span>
+      </div>
       <ErrorBox>{error}</ErrorBox>
       <Card className="mb-4">
         <div className="grid gap-x-4 sm:grid-cols-2">
@@ -101,7 +117,12 @@ export default function ExamEditor() {
             </select></label>
           <label className="block mb-4"><span className="block mb-1 font-medium">Level</span>
             <select disabled={locked} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg" value={f.level}
-              onChange={(e) => { set("level")(e); if (!locked && (isNew || confirm("Replace the question rules with this level's default rules?"))) loadLevelRules(Number(e.target.value)); }}>
+              onChange={async (e) => {
+                const lv = Number(e.target.value);
+                set("level")(e);
+                if (locked) return;
+                if (isNew || await ask({ title: `Switch to Level ${lv} rules?`, message: "The question rules and time limit will be replaced with this level's defaults. Your own changes to the rules will be lost.", yes: "Use level defaults", no: "Keep my rules" })) loadLevelRules(lv);
+              }}>
               {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
             </select></label>
           <Field label="Opens at" type="datetime-local" disabled={locked} value={f.starts_at} onChange={set("starts_at")} />
@@ -121,11 +142,12 @@ export default function ExamEditor() {
         </>}
         {exam?.status === "published" && <>
           <Button disabled={busy} onClick={() => save("published")}>Save changes</Button>
-          {!locked && <Button variant="secondary" onClick={() => setStatus("draft", "Unpublish? Students won't see this exam.")}>Unpublish</Button>}
-          <Button variant="danger" onClick={() => setStatus("closed", "Close this exam now? No new student can start it.")}>Close now</Button>
+          {!locked && <Button variant="secondary" onClick={() => setStatus("draft", "Unpublish this exam?", "Students will no longer see it until you publish it again.", "Unpublish")}>Unpublish</Button>}
+          <Button variant="danger" onClick={() => setStatus("closed", "Close this exam now?", "No new student will be able to start it.", "Close exam", "danger")}>Close now</Button>
         </>}
-        {exam?.status === "closed" && <Button variant="secondary" onClick={() => setStatus("published", "Open this exam again?")}>Reopen</Button>}
+        {exam?.status === "closed" && <Button variant="secondary" onClick={() => setStatus("published", "Open this exam again?", "Students will be able to start it again.", "Reopen")}>Reopen</Button>}
       </div>
+    {dialog}
     </Page>
   );
 }
