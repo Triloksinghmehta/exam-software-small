@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 import { Link, NavLink } from "react-router-dom";
-import { SESSION_REPLACED_EVENT, supabase } from "../lib/supabase";
+import { SESSION_REPLACED_EVENT, logOut } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 
 export function Button({ variant = "primary", className = "", ...p }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "danger" }) {
@@ -269,14 +269,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </nav>
         <div className="mt-auto border-t border-white/10 px-5 py-4">
           <p className="mb-3 truncate text-xs text-slate-400">{email}</p>
-          <button onClick={() => supabase.auth.signOut()} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
+          <button onClick={() => logOut("/admin/login")} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
         </div>
       </aside>
       <div className="min-w-0 flex-1">
         <header className="sticky top-0 z-10 bg-indigo-700 md:hidden">
           <div className="flex items-center justify-between px-4 py-3">
             <b className="font-display flex items-center gap-3 font-medium text-white"><Logo size={40} />ERPLI</b>
-            <button aria-label="Log out" onClick={() => supabase.auth.signOut()} className="p-2 text-slate-300"><Icon name="logout" /></button>
+            <button aria-label="Log out" onClick={() => logOut("/admin/login")} className="p-2 text-slate-300"><Icon name="logout" /></button>
           </div>
           <nav className="flex gap-1 overflow-x-auto px-3">
             {ADMIN_NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={({ isActive }) => `whitespace-nowrap border-b-2 px-3 py-2.5 text-sm font-medium ${isActive ? "border-brass-400 text-white" : "border-transparent text-slate-300"}`}>{n.label}</NavLink>)}
@@ -315,7 +315,7 @@ export function StudentShell({ children }: { children: ReactNode }) {
           {STUDENT_NAV.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={link}><Icon name={n.icon} className="h-5 w-5" />{n.label}</NavLink>)}
         </nav>
         <div className="mt-auto border-t border-white/10 px-5 py-4">
-          <button onClick={() => supabase.auth.signOut()} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
+          <button onClick={() => logOut()} className="flex items-center gap-2 text-sm font-medium text-slate-300 hover:text-white"><Icon name="logout" className="h-[18px] w-[18px]" />Log out</button>
         </div>
       </aside>
       <div className="min-w-0 flex-1 pb-24 md:pb-0">
@@ -323,7 +323,7 @@ export function StudentShell({ children }: { children: ReactNode }) {
           <b className="font-display flex items-center gap-2.5 text-lg font-medium text-white"><Logo size={36} />ERPLI</b>
           <div className="flex items-center gap-1">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-brass-400 text-xs font-bold text-indigo-900">{initials}</span>
-            <button aria-label="Log out" onClick={() => supabase.auth.signOut()} className="p-2 text-slate-200"><Icon name="logout" /></button>
+            <button aria-label="Log out" onClick={() => logOut()} className="p-2 text-slate-200"><Icon name="logout" /></button>
           </div>
         </header>
         {children}
@@ -351,14 +351,14 @@ export function SessionReplacedDialog() {
     return () => window.removeEventListener(SESSION_REPLACED_EVENT, on);
   }, []);
   if (!open) return null;
-  async function logOut() { await supabase.auth.signOut(); setOpen(false); } // route guards then send the student to /login
+  const leave = () => logOut();
   return (
     <div className="fixed inset-0 z-[60] grid place-items-center bg-slate-900/60 p-4 backdrop-blur-[2px]">
       <div role="alertdialog" aria-modal="true" aria-labelledby="replaced-title" className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-2xl">
         <span className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-2xl bg-brass-400/25 text-brass-600"><Icon name="alert" className="h-7 w-7" /></span>
         <h2 id="replaced-title" className="font-display text-2xl font-medium text-slate-900">Logged in on another device</h2>
         <p className="mt-2 text-slate-600">You logged in on another device. Please log in again.</p>
-        <Button autoFocus className="mt-6 flex w-full items-center justify-center gap-2" onClick={logOut}><Icon name="logout" className="h-5 w-5" />Log out</Button>
+        <Button autoFocus className="mt-6 flex w-full items-center justify-center gap-2" onClick={leave}><Icon name="logout" className="h-5 w-5" />Log out</Button>
       </div>
     </div>
   );

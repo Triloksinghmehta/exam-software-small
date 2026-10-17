@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, ErrorBox, Icon } from "../components/ui";
 import { QuestionView } from "../components/QuestionView";
-import { friendly, supabase } from "../lib/supabase";
+import { friendly, logOut, supabase } from "../lib/supabase";
 import type { Prompt } from "../../../supabase/functions/_shared/generator";
 import type { AntiCheat } from "./ExamInstructions";
 
@@ -128,7 +128,7 @@ export default function ExamAttempt() {
       {error && (
         <div className="flex flex-col gap-2 sm:flex-row">
           <Link to="/" className="flex-1 rounded-xl bg-indigo-600 px-4 py-3 text-center font-semibold text-white hover:bg-indigo-700">Back to home</Link>
-          <button onClick={() => supabase.auth.signOut()} className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800 hover:bg-slate-100">Log out</button>
+          <button onClick={() => logOut()} className="flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 font-semibold text-slate-800 hover:bg-slate-100">Log out</button>
         </div>
       )}
     </main>

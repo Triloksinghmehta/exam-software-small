@@ -2,6 +2,13 @@ import { createClient } from "@supabase/supabase-js";
 
 export const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY);
 
+// Local sign-out: clears this browser's session without a server call, so it works even when the
+// server already revoked the session (newer login elsewhere, password reset) and answers 403.
+export async function logOut(to = "/login") {
+  await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+  window.location.replace(to);
+}
+
 // ADR-0002: student ID -> hidden login email
 export const studentEmail = (code: string) =>
   `${code.trim().toLowerCase()}@${import.meta.env.VITE_STUDENT_EMAIL_DOMAIN ?? "students.local"}`;

@@ -23,8 +23,8 @@ export default function StudentLogin() {
       if (error) throw error;
       await supabase.rpc("claim_session"); // newest login wins ("one login at a time")
       const { data: s } = await supabase.from("students").select("status").maybeSingle();
-      if (!s) { await supabase.auth.signOut(); throw new Error("Wrong ID or password"); } // e.g. an admin account
-      if (s.status !== "active") { await supabase.auth.signOut(); throw new Error("Account disabled. Please contact your teacher."); }
+      if (!s) { await supabase.auth.signOut({ scope: "local" }); throw new Error("Wrong ID or password"); } // e.g. an admin account
+      if (s.status !== "active") { await supabase.auth.signOut({ scope: "local" }); throw new Error("Account disabled. Please contact your teacher."); }
       await refresh();
       nav("/", { replace: true });
     } catch (err) {

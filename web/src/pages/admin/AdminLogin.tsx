@@ -21,7 +21,7 @@ export default function AdminLogin() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       const { data: isAdmin } = await supabase.rpc("is_admin");
-      if (!isAdmin) { await supabase.auth.signOut(); throw new Error("This account is not an admin"); }
+      if (!isAdmin) { await supabase.auth.signOut({ scope: "local" }); throw new Error("This account is not an admin"); }
       await refresh();
       nav("/admin", { replace: true });
     } catch (err) {
