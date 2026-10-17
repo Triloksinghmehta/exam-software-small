@@ -14,6 +14,13 @@ export const useAuth = () => useContext(AuthCtx);
 
 async function load(session: Session | null): Promise<Me> {
   if (!session) return { session, role: null, student: null };
+  // The saved token can outlive its server session (newer login elsewhere, password reset, logout).
+  // Ask the server; if the session is gone, drop the saved copy instead of looking logged in.
+  const { error } = await supabase.auth.getUser();
+  if (error && error.status && error.status < 500) {
+    await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+    return { session: null, role: null, student: null };
+  }
   const uid = session.user.id;
   const [{ data: p }, { data: s }] = await Promise.all([
     supabase.from("profiles").select("role").eq("id", uid).maybeSingle(),

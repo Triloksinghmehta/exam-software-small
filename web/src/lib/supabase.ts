@@ -6,6 +6,7 @@ export const supabase = createClient(import.meta.env.VITE_SUPABASE_URL, import.m
 // server already revoked the session (newer login elsewhere, password reset) and answers 403.
 export async function logOut(to = "/login") {
   await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+  Object.keys(localStorage).filter((k) => k.startsWith("sb-")).forEach((k) => localStorage.removeItem(k)); // belt and braces
   window.location.replace(to);
 }
 
