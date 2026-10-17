@@ -167,11 +167,11 @@ export default function ExamAttempt() {
       <main className="mx-auto grid max-w-3xl gap-3 px-4 py-4 sm:grid-cols-2">
         <div className="sm:col-span-2"><ErrorBox>{error}</ErrorBox></div>
         {paper.questions.map((q, i) => (
-          <Card key={q.position} className="flex flex-col">
-            <span className="mb-2 text-sm text-slate-500">Q{q.position}</span>
+          <Card key={q.position} className={`flex flex-col transition-colors ${toAnswer(values[q.position] ?? "") !== null ? "border-emerald-300 bg-emerald-50/40" : ""}`}>
+            <span className={`mb-2 inline-flex h-8 min-w-8 self-start items-center justify-center rounded-lg px-2 text-sm font-bold ${toAnswer(values[q.position] ?? "") !== null ? "bg-emerald-600 text-white" : "bg-indigo-600/10 text-indigo-700"}`}>Q{q.position}</span>
             <div className="mb-3 self-end text-right"><QuestionView prompt={q.prompt} /></div>
             <input id={`ans-${i}`} aria-label={`Answer for question ${q.position}`} inputMode="decimal" autoComplete="off"
-              className="mt-auto w-full rounded-lg border-2 border-indigo-600 px-3 py-3 text-xl" placeholder="Answer"
+              className="mt-auto w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3 text-right font-mono text-2xl font-bold tabular-nums text-slate-900 outline-none transition placeholder:font-sans placeholder:text-lg placeholder:font-normal placeholder:text-slate-400 focus:border-indigo-600 focus:ring-4 focus:ring-indigo-600/15" placeholder="Answer"
               value={values[q.position] ?? ""} onChange={(e) => change(q.position, e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); next(i); } }} onBlur={() => flush()} />
           </Card>
