@@ -29,8 +29,9 @@ export default function ExamEditor() {
   const [busy, setBusy] = useState(false);
 
   async function loadLevelRules(level: number) {
-    const { data } = await supabase.from("levels").select("default_rules").eq("level", level).single();
+    const { data } = await supabase.from("levels").select("default_rules, duration_minutes").eq("level", level).single();
     setRules((data?.default_rules ?? []) as Rule[]);
+    if (data?.duration_minutes) setF((p) => ({ ...p, duration_minutes: data.duration_minutes })); // level's time limit
   }
 
   useEffect(() => {

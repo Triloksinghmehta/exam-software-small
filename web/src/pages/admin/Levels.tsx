@@ -4,7 +4,7 @@ import { RulesEditor, rulesError } from "../../components/RulesEditor";
 import { friendly, supabase } from "../../lib/supabase";
 import type { Rule } from "../../../../supabase/functions/_shared/generator";
 
-type Level = { level: number; name: string; description: string; default_rules: Rule[] };
+type Level = { level: number; name: string; description: string; default_rules: Rule[]; duration_minutes: number };
 
 // Default rules are copied into each new exam; editing them never changes existing exams.
 export default function Levels() {
@@ -34,7 +34,7 @@ export default function Levels() {
       {levels.map((l) => (
         <Card key={l.level} className="mb-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div><b className="text-lg">{l.name}</b> <span className="text-slate-600">· {l.description} · {l.default_rules.reduce((s, r) => s + r.quantity, 0)} questions</span></div>
+            <div><b className="text-lg">{l.name}</b> <span className="text-slate-600">· {l.description} · {l.default_rules.reduce((s, r) => s + r.quantity, 0)} questions · {l.duration_minutes} min</span></div>
             <Button variant="secondary" onClick={() => { setOpen(open === l.level ? null : l.level); setRules(l.default_rules); setMsg(""); setError(""); }}>
               {open === l.level ? "Close" : "Edit"}
             </Button>
