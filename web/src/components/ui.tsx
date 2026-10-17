@@ -6,19 +6,36 @@ import { Link, NavLink } from "react-router-dom";
 import { SESSION_REPLACED_EVENT, logOut } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 
-export function Button({ variant = "primary", className = "", ...p }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "danger" }) {
+const PRESS = "active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2";
+const Spinner = ({ className = "h-4 w-4" }: { className?: string }) => <span aria-hidden="true" className={`inline-block animate-spin rounded-full border-2 border-current border-t-transparent ${className}`} />;
+
+// Press feedback (sinks slightly) and, when onClick returns a promise, a spinner with the button disabled until it finishes.
+export function Button({ variant = "primary", className = "", onClick, disabled, children, ...p }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: "primary" | "secondary" | "danger" }) {
+  const [pending, setPending] = useState(false);
   const v = {
     primary: "bg-indigo-600 text-white hover:bg-indigo-700",
     secondary: "border border-slate-300 bg-white text-slate-800 hover:bg-slate-100",
     danger: "border border-red-300 bg-white text-red-700 hover:bg-red-50",
   }[variant];
-  return <button {...p} className={`rounded-md px-4 py-3 text-[15px] font-medium transition-colors disabled:pointer-events-none disabled:opacity-50 ${v} ${className}`} />;
+  async function click(e: Parameters<NonNullable<typeof onClick>>[0]) {
+    const r: unknown = onClick!(e);
+    if (r && typeof (r as Promise<unknown>).then === "function") {
+      setPending(true);
+      try { await r; } finally { setPending(false); }
+    }
+  }
+  return (
+    <button {...p} onClick={onClick ? click : undefined} disabled={disabled || pending} aria-busy={pending || undefined}
+      className={`rounded-md px-4 py-3 text-[15px] font-medium transition disabled:pointer-events-none disabled:opacity-60 ${PRESS} ${v} ${className}`}>
+      {pending ? <span className="inline-flex items-center justify-center gap-2"><Spinner />{children}</span> : children}
+    </button>
+  );
 }
 
 // A link that looks like a Button
 export function LinkButton({ to, variant = "primary", className = "", children }: { to: string; variant?: "primary" | "secondary"; className?: string; children: ReactNode }) {
   const v = variant === "primary" ? "bg-indigo-600 text-white hover:bg-indigo-700" : "border border-slate-300 bg-white text-slate-800 hover:bg-slate-100";
-  return <Link to={to} className={`inline-block rounded-md px-4 py-3 text-center text-[15px] font-medium transition-colors ${v} ${className}`}>{children}</Link>;
+  return <Link to={to} className={`inline-block rounded-md px-4 py-3 text-center text-[15px] font-medium transition ${PRESS} ${v} ${className}`}>{children}</Link>;
 }
 
 export function Field({ label, ...p }: InputHTMLAttributes<HTMLInputElement> & { label: string }) {
@@ -64,9 +81,10 @@ export function useConfirm() {
 }
 
 // Three-dot actions menu. Positioned with `fixed` so scrolling tables don't clip it.
-export type MenuItem = { label: string; icon: string; onClick: () => void; danger?: boolean };
+export type MenuItem = { label: string; icon: string; onClick: () => void | Promise<unknown>; danger?: boolean };
 export function RowMenu({ items, label }: { items: MenuItem[]; label: string }) {
   const [pos, setPos] = useState<{ top: number; right: number } | null>(null);
+  const [working, setWorking] = useState(false);
   const btn = useRef<HTMLButtonElement>(null);
   const close = () => setPos(null);
   useEffect(() => {
@@ -83,16 +101,16 @@ export function RowMenu({ items, label }: { items: MenuItem[]; label: string }) 
   }
   return (
     <>
-      <button ref={btn} aria-label={label} aria-haspopup="menu" aria-expanded={!!pos} onClick={toggle}
-        className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 aria-expanded:bg-slate-100">
-        <Icon name="dots" className="h-5 w-5" />
+      <button ref={btn} aria-label={label} aria-haspopup="menu" aria-expanded={!!pos} aria-busy={working || undefined} disabled={working} onClick={toggle}
+        className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 active:scale-95 aria-expanded:bg-slate-100">
+        {working ? <Spinner className="h-5 w-5" /> : <Icon name="dots" className="h-5 w-5" />}
       </button>
       {pos && (
         <>
           <div className="fixed inset-0 z-40" onClick={close} />
           <div role="menu" style={{ top: pos.top, right: pos.right }} className="fixed z-50 w-56 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl">
             {items.map((it, i) => (
-              <button key={it.label} role="menuitem" onClick={() => { close(); it.onClick(); }}
+              <button key={it.label} role="menuitem" onClick={async () => { close(); const r: unknown = it.onClick(); if (r && typeof (r as Promise<unknown>).then === "function") { setWorking(true); try { await r; } finally { setWorking(false); } } }}
                 className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm font-medium transition-colors ${it.danger ? "text-red-700 hover:bg-red-50" : "text-slate-700 hover:bg-slate-100"} ${it.danger && i > 0 ? "mt-1 border-t border-slate-100 pt-3" : ""}`}>
                 <Icon name={it.icon} className="h-[18px] w-[18px]" />{it.label}
               </button>
