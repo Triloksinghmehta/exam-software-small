@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./lib/auth";
-import { AdminShell, StudentShell } from "./components/ui";
+import { AdminShell, Splash, StudentShell } from "./components/ui";
 import StudentLogin from "./pages/StudentLogin";
 import ChangePassword from "./pages/ChangePassword";
 import StudentHome from "./pages/StudentHome";
@@ -24,7 +24,7 @@ import Leaderboard from "./pages/Leaderboard";
 function StudentOnly({ children, bare }: { children: ReactNode; bare?: boolean }) {
   const { loading, session, role, student } = useAuth();
   const path = useLocation().pathname;
-  if (loading) return <p className="p-6">Loading…</p>;
+  if (loading) return <Splash />;
   if (!session || role !== "student" || !student) return <Navigate to={role === "admin" ? "/admin" : "/login"} replace />;
   if (student.must_change_password && path !== "/change-password") return <Navigate to="/change-password" replace />;
   return bare ? children : <StudentShell>{children}</StudentShell>; // bare = exam screen: no site header, nothing to click away to
@@ -32,7 +32,7 @@ function StudentOnly({ children, bare }: { children: ReactNode; bare?: boolean }
 
 function AdminOnly({ children }: { children: ReactNode }) {
   const { loading, session, role } = useAuth();
-  if (loading) return <p className="p-6">Loading…</p>;
+  if (loading) return <Splash />;
   if (!session || role !== "admin") return <Navigate to="/admin/login" replace />;
   return <AdminShell>{children}</AdminShell>;
 }

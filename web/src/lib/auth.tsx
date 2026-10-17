@@ -4,7 +4,7 @@ import { supabase } from "./supabase";
 
 export type Student = {
   id: string; student_code: string; full_name: string; father_name: string; dob: string;
-  level: number; status: "active" | "disabled"; must_change_password: boolean;
+  level: number; status: "active" | "disabled"; must_change_password: boolean; password_shared: boolean;
 };
 type Me = { session: Session | null; role: "admin" | "student" | null; student: Student | null };
 type Ctx = Me & { loading: boolean; refresh: () => Promise<void> };

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Papa from "papaparse";
 import { Link } from "react-router-dom";
 import { Button, Card, ErrorBox, Page, download, toCsv } from "../../components/ui";
 import { adminStudents, friendly, supabase } from "../../lib/supabase";
-import { CSV_HEADERS, checkRow, identityKey } from "../../../../supabase/functions/_shared/student-row";
+import { CSV_HEADERS, CUSTOM_HEADERS, checkRow, identityKey } from "../../../../supabase/functions/_shared/student-row";
 
 type Row = { row: number; raw: Record<string, string>; errors: string[] };
 type Created = { row: number; student_code: string; full_name: string; password: string };
@@ -12,6 +12,11 @@ const BATCH = 50; // must match MAX_BATCH in the Edge Function
 
 export default function ImportStudents() {
   const [rows, setRows] = useState<Row[] | null>(null);
+  const [cfg, setCfg] = useState<{ id_prefix: string; import_mode: string } | null>(null);
+  useEffect(() => { supabase.from("settings").select("id_prefix, import_mode").single().then(({ data }) => setCfg(data)); }, []);
+  const custom = cfg?.import_mode === "custom" ? { prefix: cfg.id_prefix } : undefined;
+  const headers = custom ? [...CSV_HEADERS, ...CUSTOM_HEADERS] : [...CSV_HEADERS];
+  const [drag, setDrag] = useState(false);
   const [error, setError] = useState("");
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null);
   const [result, setResult] = useState<{ created: Created[]; failed: Row[] } | null>(null);
@@ -21,28 +26,35 @@ export default function ImportStudents() {
 
   async function pick(file?: File) {
     setError(""); setRows(null); setResult(null);
-    if (!file) return;
+    if (!file || !cfg) return;
     if (file.size > MAX_FILE) return setError("File too big (max 2 MB). Split it into smaller files.");
     const parsed = Papa.parse<Record<string, string>>(await file.text(), {
       header: true, skipEmptyLines: "greedy", transformHeader: (h) => h.trim().toLowerCase().replace(/[\s']+/g, "_"),
     });
-    const missing = CSV_HEADERS.filter((h) => !parsed.meta.fields?.includes(h));
+    const missing = headers.filter((h) => !parsed.meta.fields?.includes(h));
     if (missing.length) return setError(`Wrong columns. Missing: ${missing.join(", ")}. Please use the template.`);
     if (!parsed.data.length) return setError("The file has no student rows.");
 
     // Existing students, to flag duplicates before sending anything
-    const { data: existing, error: e } = await supabase.from("students").select("full_name, father_name, dob");
+    const { data: existing, error: e } = await supabase.from("students").select("full_name, father_name, dob, student_code");
     if (e) return setError(friendly(e));
     const taken = new Set((existing ?? []).map(identityKey));
     const seen = new Set<string>();
+    const takenIds = new Set((existing ?? []).map((s) => s.student_code));
+    const seenIds = new Set<string>();
     setRows(parsed.data.map((raw, i) => {
-      const c = checkRow(raw);
+      const c = checkRow(raw, custom);
       const errors = c.ok ? [] : c.errors;
       if (c.ok) {
         const k = identityKey(c.value);
         if (taken.has(k)) errors.push("Already exists (same name, father's name, DOB)");
         else if (seen.has(k)) errors.push("Duplicate in file");
         seen.add(k);
+        const id = c.value.student_id;
+        if (id) {
+          if (takenIds.has(id) || seenIds.has(id)) errors.push("ID already taken");
+          seenIds.add(id);
+        }
       }
       return { row: i + 2, raw, errors }; // +2: header is line 1
     }));
@@ -69,7 +81,7 @@ export default function ImportStudents() {
     setProgress(null);
   }
 
-  const badCsv = (list: Row[]) => toCsv([[...CSV_HEADERS, "problem"], ...list.map((r) => [...CSV_HEADERS.map((h) => r.raw[h]), r.errors.join("; ")])]);
+  const badCsv = (list: Row[]) => toCsv([[...headers, "problem"], ...list.map((r) => [...headers.map((h) => r.raw[h]), r.errors.join("; ")])]);
 
   if (result) {
     return (
@@ -93,11 +105,15 @@ export default function ImportStudents() {
       <ErrorBox>{error}</ErrorBox>
       <Card className="mb-4">
         <p className="mb-3">1. <button className="text-indigo-700 underline" onClick={() => download("students-template.csv",
-          toCsv([[...CSV_HEADERS], ["Riya Sharma", "Rakesh Sharma", "04-05-2015", "3"]]))}>Download template</button>. Columns: name, father's name, date of birth (DD-MM-YYYY), level (0 to 8).</p>
-        <label className="block">
-          <span className="block mb-2">2. Choose your file</span>
-          <input type="file" accept=".csv,text/csv" onChange={(e) => pick(e.target.files?.[0])}
-            className="block w-full rounded-lg border-2 border-dashed border-slate-300 bg-slate-50 p-6" />
+          toCsv([headers, ["Riya Sharma", "Rakesh Sharma", "04-05-2015", "3", ...(custom ? ["riya2015", "mango123"] : [])]]))}>Download template</button>. Columns: name, father's name, date of birth (DD-MM-YYYY), level (0 to 8){custom && <>, student_id (4–20 letters or digits, blank = automatic), password (6 or more characters, blank = automatic)</>}.</p>
+        <p className="mb-3 text-sm text-slate-500">ID and password mode: <b>{custom ? "from your file" : "automatic"}</b>. Change it in Settings.</p>
+        <p className="mb-2">2. Add your file</p>
+        <label onDragOver={(e) => { e.preventDefault(); setDrag(true); }} onDragLeave={() => setDrag(false)}
+          onDrop={(e) => { e.preventDefault(); setDrag(false); pick(e.dataTransfer.files[0]); }}
+          className={`block cursor-pointer rounded-lg border-2 border-dashed p-8 text-center ${drag ? "border-indigo-600 bg-indigo-50" : "border-slate-300 bg-slate-50"}`}>
+          <span className="block text-lg font-medium">Drag and drop your CSV file here</span>
+          <span className="block text-sm text-slate-500">or click to choose a file from your computer</span>
+          <input type="file" accept=".csv,text/csv" className="sr-only" onChange={(e) => pick(e.target.files?.[0])} />
         </label>
       </Card>
 

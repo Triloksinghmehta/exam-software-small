@@ -75,6 +75,11 @@ export default function StudentHome() {
 
   return (
     <Page title={`Hi, ${first}`} wide actions={<LinkButton to="/results" variant="secondary">My results</LinkButton>}>
+      {student.password_shared && (
+        <p className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm">
+          Your password was set by your school, so other people may know it. Please <Link to="/change-password" className="font-semibold text-indigo-700 underline">change it now</Link> to keep your account safe.
+        </p>
+      )}
       {error && <><ErrorBox>{error}</ErrorBox><Button variant="secondary" className="mb-4" onClick={load}>Try again</Button></>}
       {exams === null && !error ? <p className="text-slate-500">Loading…</p> : <>
         {section("Exams", official, "No exams right now. Your teacher will add one.")}

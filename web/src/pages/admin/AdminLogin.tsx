@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button, Centered, ErrorBox, Field } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 import { useAuth } from "../../lib/auth";
@@ -39,6 +39,7 @@ export default function AdminLogin() {
           <Field label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
           <Button className="w-full" disabled={busy}>{busy ? "Logging in…" : "Login"}</Button>
         </form>
+        <p className="mt-5 border-t border-slate-200 pt-4 text-center text-sm text-slate-500">Are you a student? <Link to="/login" className="font-semibold text-indigo-600 hover:underline">Log in as student</Link></p>
     </Centered>
   );
 }

@@ -54,19 +54,29 @@ Deno.serve(async (req) => {
     const created: { row: number; student_code: string; full_name: string; password: string }[] = [];
     const failed: { row: number; errors: string[] }[] = [];
     const seen = new Set<string>();
+    const seenIds = new Set<string>();
+    // Read the mode here, never from the client
+    const { data: cfg } = await db.from("settings").select("id_prefix, import_mode").eq("id", 1).single();
+    const custom = cfg?.import_mode === "custom" ? { prefix: cfg.id_prefix as string } : undefined;
 
     for (let i = 0; i < rows.length; i++) {
       const rowNo = Number(rows[i].row ?? i + 1);
-      const c = checkRow(rows[i]);
+      const c = checkRow(rows[i], custom);
       if (!c.ok) { failed.push({ row: rowNo, errors: c.errors }); continue; }
-      const s = c.value;
+      const { student_id: wantId, password: wantPw, ...s } = c.value;
       const key = identityKey(s);
       if (seen.has(key)) { failed.push({ row: rowNo, errors: ["Duplicate in file"] }); continue; }
       seen.add(key);
 
-      const { data: code, error: codeErr } = await db.rpc("next_student_code");
+      if (wantId) {
+        const { data: taken } = await db.from("students").select("id").eq("student_code", wantId).maybeSingle();
+        if (taken || seenIds.has(wantId)) { failed.push({ row: rowNo, errors: ["ID already taken"] }); continue; }
+        seenIds.add(wantId);
+      }
+      const { data: gen, error: codeErr } = wantId ? { data: wantId, error: null } : await db.rpc("next_student_code");
       if (codeErr) { failed.push({ row: rowNo, errors: ["Server error: " + codeErr.message] }); continue; }
-      const password = tempPassword();
+      const code = gen;
+      const password = wantPw ?? tempPassword();
       const { data: au, error: authErr } = await db.auth.admin.createUser({
         email: `${String(code).toLowerCase()}@${EMAIL_DOMAIN}`, password, email_confirm: true,
       });
@@ -74,7 +84,7 @@ Deno.serve(async (req) => {
 
       const id = au.user.id;
       const p = await db.from("profiles").insert({ id, role: "student" });
-      const st = p.error ? p : await db.from("students").insert({ id, student_code: code, ...s });
+      const st = p.error ? p : await db.from("students").insert({ id, student_code: code, ...s, password_shared: !!wantPw, must_change_password: !wantPw });
       if (st.error) {
         await db.auth.admin.deleteUser(id); // undo: no half-created student (cascades the profile)
         failed.push({ row: rowNo, errors: [st.error.code === "23505" ? "Already exists (same name, father's name, DOB)" : "Server error: " + st.error.message] });

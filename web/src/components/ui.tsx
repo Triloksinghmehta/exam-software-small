@@ -88,6 +88,24 @@ export function Logo({ size = 36 }: { size?: number }) {
   return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 object-contain" />;
 }
 
+// full-screen splash shown while the session is restored on refresh
+export function Splash() {
+  return (
+    <main role="status" aria-label="Loading" className="grid min-h-screen place-items-center bg-slate-50">
+      <div className="flex flex-col items-center gap-5">
+        <div className="relative grid h-24 w-24 place-items-center">
+          <span className="absolute inset-0 animate-spin rounded-full border-4 border-indigo-100 border-t-indigo-600" />
+          <span className="animate-pulse"><Logo size={56} /></span>
+        </div>
+        <p className="text-lg font-semibold tracking-wide text-indigo-900">ERPLI</p>
+        <div className="flex gap-1.5">
+          {[0, 150, 300].map((d) => <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-brass-500" style={{ animationDelay: `${d}ms` }} />)}
+        </div>
+      </div>
+    </main>
+  );
+}
+
 // Login-style pages: framed hero image (lg+) beside the form
 export function Centered({ title, subtitle, children }: { title: string; subtitle?: string; children: ReactNode }) {
   return (
