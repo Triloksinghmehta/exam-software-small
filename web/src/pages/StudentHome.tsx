@@ -106,9 +106,15 @@ export default function StudentHome() {
 
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-8 sm:py-10">
-      <header className="mb-6 flex items-center gap-4">
-        <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-indigo-700 text-brass-400"><Icon name="abacus" className="h-9 w-9" /></span>
-        <div><h1 className="font-display text-4xl font-medium text-slate-900 sm:text-5xl">Hi, {first}</h1><p className="text-lg text-slate-600">Your tests</p></div>
+      <header className="relative mb-8 overflow-hidden rounded-3xl bg-indigo-700 px-6 pb-14 pt-7 text-white shadow-md sm:px-8">
+        <svg aria-hidden="true" viewBox="0 0 1200 120" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-14 w-full">
+          <path d="M0 60 C150 110 300 10 450 50 C600 90 750 110 900 60 C1050 10 1130 40 1200 70 L1200 120 L0 120 Z" fill="rgba(232,178,60,0.35)" />
+          <path d="M0 85 C200 40 350 120 600 85 C850 50 1000 110 1200 80 L1200 120 L0 120 Z" className="fill-slate-50" />
+        </svg>
+        <div className="relative flex items-center gap-4">
+          <span className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-white/15 text-brass-400"><Icon name="abacus" className="h-9 w-9" /></span>
+          <div><h1 className="font-display text-4xl font-medium sm:text-5xl">Hi, {first}</h1><p className="text-lg text-white/75">Your tests</p></div>
+        </div>
       </header>
 
       {student.password_shared && (
