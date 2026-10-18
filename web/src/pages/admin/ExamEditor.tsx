@@ -23,6 +23,7 @@ export default function ExamEditor() {
     duration_minutes: 8, attempts_allowed: 1,
   });
   const [rules, setRules] = useState<Rule[]>([]);
+  const [levelInfo, setLevelInfo] = useState(false);
   const [exam, setExam] = useState<Exam | null>(null);
   const [started, setStarted] = useState(0); // attempts so far -> rules locked
   const [error, setError] = useState("");
@@ -65,7 +66,6 @@ export default function ExamEditor() {
     if (!f.name.trim()) return "Please give the exam a name";
     const s = Date.parse(f.starts_at), en = Date.parse(f.ends_at);
     if (!(en > s)) return "Closing time must be after opening time";
-    if (en - s > 5 * DAY) return "The exam can be open for at most 5 days";
     if (!(f.duration_minutes >= 1 && f.duration_minutes <= 300)) return "Time must be 1 to 300 minutes";
     if (!(f.attempts_allowed >= 1 && f.attempts_allowed <= 100)) return "Tries allowed must be 1 to 100";
     return rulesError(rules);
@@ -115,7 +115,7 @@ export default function ExamEditor() {
             <select disabled={locked} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg" value={f.mode} onChange={set("mode")}>
               <option value="official">Official exam</option><option value="practice">Practice</option>
             </select></label>
-          <label className="block mb-4"><span className="block mb-1 font-medium">Level</span>
+          <label className="relative block mb-4"><span className="mb-1 flex items-center gap-1.5 font-medium">Level<button type="button" aria-label="About levels" aria-expanded={levelInfo} onClick={() => setLevelInfo(!levelInfo)} onBlur={() => setLevelInfo(false)} className="grid h-5 w-5 place-items-center rounded-full text-indigo-600 hover:bg-indigo-50"><Icon name="info" className="h-5 w-5" /></button></span>{levelInfo && <span role="note" className="absolute left-0 top-7 z-10 w-72 rounded-xl border border-indigo-200 bg-white p-3 text-sm font-normal text-slate-700 shadow-lg"><b className="text-indigo-700">One exam is for one level only.</b> Only students of this level will see it. To cover other levels, create a separate exam for each.</span>}
             <select disabled={locked} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg" value={f.level}
               onChange={async (e) => {
                 const lv = Number(e.target.value);
@@ -126,7 +126,7 @@ export default function ExamEditor() {
               {LEVELS.map((l) => <option key={l} value={l}>{levelName(l)}</option>)}
             </select></label>
           <Field label="Opens at" type="datetime-local" disabled={locked} value={f.starts_at} onChange={set("starts_at")} />
-          <Field label="Closes at (max 5 days after opening)" type="datetime-local" value={f.ends_at} onChange={set("ends_at")} />
+          <Field label="Closes at" type="datetime-local" value={f.ends_at} onChange={set("ends_at")} />
           <Field label="Time for the exam (minutes)" type="number" min={1} max={300} disabled={locked} value={f.duration_minutes} onChange={set("duration_minutes")} />
           <Field label="Tries allowed per student" type="number" min={1} max={100} disabled={locked} value={f.attempts_allowed} onChange={set("attempts_allowed")} />
         </div>
