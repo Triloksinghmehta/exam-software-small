@@ -36,7 +36,7 @@ export default function ResultPage() {
 
   return (
     <Page title={r.exam_name} wide eyebrow={r.mode === "practice" ? "Practice result" : "Exam result"}>
-      <section className="mb-6 flex flex-col items-center gap-6 rounded-2xl bg-indigo-700 p-6 text-white shadow-md sm:flex-row sm:p-8">
+      <section className="mb-6 flex flex-col items-center gap-6 rounded-2xl bg-gradient-to-b from-indigo-500 to-indigo-600 p-6 text-white shadow-md sm:flex-row sm:p-8">
         <div className="relative h-36 w-36 shrink-0">
           <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90" role="img" aria-label={`${pct} percent`}>
             <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="10" />
@@ -45,8 +45,8 @@ export default function ResultPage() {
           <div className="absolute inset-0 grid place-items-center"><b className="font-display text-4xl">{pct}%</b></div>
         </div>
         <div className="text-center sm:text-left">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-brass-400">{msg}</p>
-          <p className="font-display mt-1 text-5xl font-medium">{r.correct} <span className="text-white/60">/ {r.total}</span></p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/90">{msg}</p>
+          <p className="font-display mt-1 text-5xl font-medium">{r.correct} <span className="text-white/70">/ {r.total}</span></p>
           <p className="mt-2 text-white/75">correct answers</p>
         </div>
       </section>

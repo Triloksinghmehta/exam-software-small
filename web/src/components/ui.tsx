@@ -154,7 +154,7 @@ export function Page({ title, children, wide, actions, eyebrow }: { title: strin
     <main className={`mx-auto w-full px-4 py-8 sm:px-8 sm:py-10 ${wide ? "max-w-6xl" : "max-w-xl"}`}>
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-slate-200 pb-5">
         <div>
-          {eyebrow && <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-brass-600">{eyebrow}</p>}
+          {eyebrow && <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-indigo-600">{eyebrow}</p>}
           <h1 className="font-display text-3xl font-medium text-slate-900 sm:text-[2rem]">{title}</h1>
         </div>
         {actions}
@@ -170,15 +170,15 @@ export function Segmented<T extends string>({ options, value, onChange }: { opti
     <div role="tablist" className="flex gap-7 border-b border-slate-200">
       {options.map(([v, label]) => (
         <button key={v} role="tab" aria-selected={value === v} onClick={() => onChange(v)}
-          className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors ${value === v ? "border-brass-500 text-slate-900" : "border-transparent text-slate-500 hover:text-slate-800"}`}>{label}</button>
+          className={`-mb-px border-b-2 pb-3 text-sm font-medium transition-colors ${value === v ? "border-indigo-500 text-slate-900" : "border-transparent text-slate-500 hover:text-slate-800"}`}>{label}</button>
       ))}
     </div>
   );
 }
 
-// ---- brand mark (placeholder ERPLI logo; swap public/logo.png later) ----
+// ---- brand mark (placeholder logo; swap public/logo.png later) ----
 export function Logo({ size = 36 }: { size?: number }) {
-  return <img src="/logo.png" width={size} height={size} alt="ERPLI" className="shrink-0 object-contain" />;
+  return <img src="/logo.png" width={size} height={size} alt="SAI ecabacus" className="shrink-0 object-contain" />;
 }
 
 // full-screen splash shown while the session is restored on refresh
@@ -190,7 +190,7 @@ export function Splash() {
           <span className="absolute inset-0 animate-spin rounded-full border-4 border-indigo-100 border-t-indigo-600" />
           <span className="animate-pulse"><Logo size={56} /></span>
         </div>
-        <p className="text-lg font-semibold tracking-wide text-indigo-900">ERPLI</p>
+        <p className="text-lg font-semibold tracking-wide text-indigo-900">SAI ecabacus</p>
         <div className="flex gap-1.5">
           {[0, 150, 300].map((d) => <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-brass-500" style={{ animationDelay: `${d}ms` }} />)}
         </div>
@@ -220,14 +220,14 @@ export function Centered({ title, subtitle, children }: { title: string; subtitl
         {/* phones/tablets: hero image as backdrop */}
         <img src="/hero.webp" alt="" className="absolute inset-x-0 top-0 -z-10 h-[46vh] w-full max-lg:top-16 object-cover object-[50%_30%] lg:hidden" />
         <div className="absolute inset-x-0 top-16 -z-10 h-[46vh] bg-gradient-to-b from-slate-50 from-0% via-slate-50/0 via-15% to-slate-50 to-100% lg:hidden" />
-        <div className="flex items-center gap-2 max-lg:justify-center"><Logo size={34} /><b className="font-display text-[22px] font-semibold tracking-[0.06em] text-indigo-800">ERPLI</b></div>
+        <div className="flex items-center gap-2 max-lg:justify-center"><Logo size={34} /><b className="font-display text-[22px] font-semibold tracking-[0.06em] text-indigo-800">SAI ecabacus</b></div>
         <div className="mx-auto w-full max-w-sm pb-10 pt-[40vh] lg:my-auto lg:py-12">
           <h1 className="font-display text-4xl font-medium tracking-tight">{title}</h1>
           {subtitle && <p className="mt-2 text-slate-500">{subtitle}</p>}
           <div className="mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-brass-400 via-coral-500 to-indigo-500" />
           <Card className="mt-8 p-6 shadow-[0_20px_50px_-20px_rgb(45_40_33/0.18)]">{children}</Card>
         </div>
-        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} ERPLI Examination Portal</p>
+        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} SAI ecabacus Examination Portal</p>
       </div>
     </main>
   );
@@ -279,31 +279,31 @@ function Shell({ nav, name, sub, initials, logoutTo, tag, children }: {
   nav: NavItem[]; name: string; sub: string; initials: string; logoutTo?: string; tag: string; children: ReactNode;
 }) {
   const side = ({ isActive }: { isActive: boolean }) =>
-    `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors ${isActive ? "bg-white text-indigo-800 shadow-sm" : "text-white/75 hover:bg-white/10 hover:text-white"}`;
+    `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[15px] font-medium transition-colors ${isActive ? "bg-indigo-600 text-white shadow-sm" : "text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"}`;
   return (
     <div className="min-h-screen md:flex">
-      <aside className="hidden w-64 shrink-0 flex-col bg-indigo-700 px-3 md:sticky md:top-0 md:flex md:h-screen">
+      <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 border-t-4 border-t-indigo-500 bg-white px-3 md:sticky md:top-0 md:flex md:h-screen">
         <div className="flex items-center gap-3 px-2 pb-6 pt-6">
           <Logo size={44} />
-          <div className="leading-tight"><b className="font-display block text-xl font-medium text-white">ERPLI</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brass-400">{tag}</span></div>
+          <div className="leading-tight"><b className="font-display block text-xl font-medium text-slate-900">SAI ecabacus</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-600">{tag}</span></div>
         </div>
         <nav className="flex flex-col gap-1">
           {nav.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={side}><Icon name={n.icon} className="h-5 w-5" />{n.label}</NavLink>)}
         </nav>
-        <div className="mb-4 mt-auto rounded-xl bg-white/10 p-3">
+        <div className="mb-4 mt-auto rounded-xl bg-slate-100 p-3">
           <div className="flex items-center gap-3">
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brass-400 text-sm font-bold text-indigo-900">{initials}</span>
-            <div className="min-w-0 leading-tight"><b className="block truncate text-sm text-white">{name}</b><span className="block truncate text-xs text-white/60">{sub}</span></div>
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-indigo-600 text-sm font-bold text-white">{initials}</span>
+            <div className="min-w-0 leading-tight"><b className="block truncate text-sm text-slate-900">{name}</b><span className="block truncate text-xs text-slate-500">{sub}</span></div>
           </div>
-          <button onClick={() => logOut(logoutTo)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-white/10 py-2 text-sm font-medium text-white/85 transition hover:bg-white/20 hover:text-white"><Icon name="logout" className="h-4 w-4" />Log out</button>
+          <button onClick={() => logOut(logoutTo)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white py-2 text-sm font-medium text-slate-700 transition hover:bg-indigo-50 hover:text-indigo-700"><Icon name="logout" className="h-4 w-4" />Log out</button>
         </div>
       </aside>
       <div className="min-w-0 flex-1 pb-24 md:pb-0">
-        <header className="sticky top-0 z-10 flex items-center justify-between bg-indigo-700 px-4 py-2.5 shadow-md md:hidden">
-          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-white"><Logo size={34} />ERPLI</b>
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b-4 border-indigo-500 bg-white px-4 py-2.5 shadow-sm md:hidden">
+          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-slate-900"><Logo size={34} />SAI ecabacus</b>
           <div className="flex items-center gap-1">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-brass-400 text-xs font-bold text-indigo-900">{initials}</span>
-            <button aria-label="Log out" onClick={() => logOut(logoutTo)} className="p-2 text-white/80"><Icon name="logout" /></button>
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-indigo-600 text-xs font-bold text-white">{initials}</span>
+            <button aria-label="Log out" onClick={() => logOut(logoutTo)} className="p-2 text-slate-600"><Icon name="logout" /></button>
           </div>
         </header>
         {children}

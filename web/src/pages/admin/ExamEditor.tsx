@@ -101,7 +101,7 @@ export default function ExamEditor() {
       {state && <p className="-mt-3 mb-4"><Badge tone={state.tone}>{state.label}</Badge>
         {locked && <span className="ml-2 text-slate-600">{started} student{started > 1 ? "s have" : " has"} started. Rules are locked.</span>}</p>}
       {exam && <Link className="-mt-2 mb-4 inline-block text-indigo-700 underline" to={`/admin/exams/${exam.id}/results`}>View results and leaderboard</Link>}
-      <div className="sticky top-16 z-[5] -mx-1 mb-4 flex flex-wrap items-center gap-x-6 gap-y-1 rounded-xl bg-indigo-700 px-5 py-3 text-white shadow-md md:top-2">
+      <div className="sticky top-16 z-[5] -mx-1 mb-4 flex flex-wrap items-center gap-x-6 gap-y-1 rounded-xl bg-gradient-to-b from-indigo-500 to-indigo-600 px-5 py-3 text-white shadow-md md:top-2">
         <span className="font-display text-xl font-medium">{levelName(f.level)}</span>
         <span className="text-sm text-white/80">{f.mode === "practice" ? "Practice" : "Official exam"}</span>
         <span className="flex items-center gap-1.5 text-sm text-white/80"><Icon name="clock" className="h-4 w-4" />{f.duration_minutes} min</span>
