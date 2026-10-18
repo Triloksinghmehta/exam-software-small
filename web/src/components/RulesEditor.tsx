@@ -73,7 +73,7 @@ export function RulesEditor({ rules, onChange, locked }: { rules: Rule[]; onChan
                     {(r.operation === "addition" || r.operation === "add_sub") && (
                       <select aria-label="Formula" className="rounded-lg border border-slate-300 bg-white px-2 py-2" value={r.formula ?? ""}
                         onChange={(e) => set(i, { formula: (e.target.value || undefined) as Rule["formula"] })}>
-                        <option value="">Any</option><option value="direct">Direct only (Level 0)</option><option value="friends">Friends (Level 1)</option>
+                        <option value="">Any</option><option value="direct">Direct only (Junior Level)</option><option value="friends">Friends (Level 1)</option>
                       </select>)}
                   </td>
                   <td className="p-2"><button type="button" className="text-red-700 underline" onClick={() => onChange(rules.filter((_, j) => j !== i))}>Remove</button></td>

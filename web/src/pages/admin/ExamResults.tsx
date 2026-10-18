@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Button, Card, ErrorBox, Icon, Page, Segmented, download, toCsv, Toggle } from "../../components/ui";
+import { Button, Card, ErrorBox, Icon, Page, Segmented, download, toCsv, Toggle, levelName } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 import { when, type Exam } from "./Exams";
 
@@ -62,7 +62,7 @@ export default function ExamResults() {
   return (
     <Page title={exam?.name ?? "Results"} wide>
       <ErrorBox>{error}</ErrorBox>
-      {exam && <p className="-mt-3 mb-4 text-slate-600">Level {exam.level} · {when(exam.starts_at)} to {when(exam.ends_at)} · <Link aria-label="Edit exam" title="Edit exam" to={`/admin/exams/${exam.id}`} className="ml-1 inline-grid h-8 w-8 place-items-center rounded-lg border border-slate-300 bg-white align-middle text-indigo-700 transition hover:border-indigo-600 hover:bg-indigo-600/5"><Icon name="pencil" className="h-4 w-4" /></Link></p>}
+      {exam && <p className="-mt-3 mb-4 text-slate-600">{levelName(exam.level)} · {when(exam.starts_at)} to {when(exam.ends_at)} · <Link aria-label="Edit exam" title="Edit exam" to={`/admin/exams/${exam.id}`} className="ml-1 inline-grid h-8 w-8 place-items-center rounded-lg border border-slate-300 bg-white align-middle text-indigo-700 transition hover:border-indigo-600 hover:bg-indigo-600/5"><Icon name="pencil" className="h-4 w-4" /></Link></p>}
       <div className="mb-4 flex flex-wrap gap-2">
         <Segmented value={tab} onChange={setTab} options={exam?.mode === "official" ? [["results", "Results"], ["board", "Leaderboard"]] : [["results", "Results"]]} />
         <Button variant="secondary" className="ml-auto" disabled={!attempts.length} onClick={exportCsv}>Download CSV</Button>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Card, ErrorBox, Icon, Page, Segmented } from "../components/ui";
+import { Card, ErrorBox, Icon, Page, Segmented, levelName } from "../components/ui";
 import { friendly, supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 import { when, type Exam } from "./admin/Exams";
@@ -46,7 +46,7 @@ export default function MyResults() {
   const trend = [...all].slice(0, 10).reverse(); // oldest to newest, last 10
 
   return (
-    <Page title="Progress and results" wide eyebrow={student ? `${student.full_name} · Level ${student.level}` : undefined}>
+    <Page title="Progress and results" wide eyebrow={student ? `${student.full_name} · ${levelName(student.level)}` : undefined}>
       <ErrorBox>{error}</ErrorBox>
       {rows === null && !error ? <div className="h-40 animate-pulse rounded-2xl bg-slate-200/70" /> : (
         <>

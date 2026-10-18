@@ -3,10 +3,10 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Button, Card, ErrorBox, Icon } from "../components/ui";
 import { QuestionView } from "../components/QuestionView";
 import { friendly, logOut, supabase } from "../lib/supabase";
-import type { Prompt } from "../../../supabase/functions/_shared/generator";
+import { OPERATIONS, type Prompt } from "../../../supabase/functions/_shared/generator";
 import type { AntiCheat } from "./ExamInstructions";
 
-type Paper = { attempt_id: string; status: string; deadline_at: string; server_now: string; questions: { position: number; prompt: Prompt; answer: number | null }[] };
+type Paper = { attempt_id: string; status: string; deadline_at: string; server_now: string; questions: { position: number; kind: keyof typeof OPERATIONS; prompt: Prompt; answer: number | null }[] };
 type SaveState = "saved" | "saving" | "offline";
 
 // Typed text -> what we send. "12." -> 12, "" -> null, anything else odd -> null (not answered)
@@ -19,6 +19,8 @@ export default function ExamAttempt() {
   const storeKey = `answers:${id}`; // unsent answers survive refresh / going offline
   const [paper, setPaper] = useState<Paper | null>(null);
   const [practice, setPractice] = useState(false);
+  const [pickable, setPickable] = useState(false); // levels 5-8: student picks which question type to do first
+  const [sel, setSel] = useState("");
   const [ac, setAc] = useState<AntiCheat | null>(null);
   const [values, setValues] = useState<Record<number, string>>({});
   const [save, setSave] = useState<SaveState>("saved");
@@ -67,7 +69,7 @@ export default function ExamAttempt() {
       const [{ data, error }, s, a] = await Promise.all([
         supabase.rpc("get_paper", { p_attempt: id }),
         supabase.from("settings").select("*").single(),
-        supabase.from("attempts").select("exams(mode)").eq("id", id).single(),
+        supabase.from("attempts").select("exams(mode,level)").eq("id", id).single(),
       ]);
       if (error) return setError(friendly(await fail(error)));
       const p = data as Paper;
@@ -77,7 +79,11 @@ export default function ExamAttempt() {
       pending.current = local;
       setValues({ ...Object.fromEntries(p.questions.map((q) => [q.position, q.answer == null ? "" : String(q.answer)])), ...local });
       setAc(s.data);
-      setPractice((a.data?.exams as unknown as { mode: string })?.mode === "practice");
+      const ex = a.data?.exams as unknown as { mode: string; level: number } | undefined;
+      setPractice(ex?.mode === "practice");
+      const kinds = new Set(p.questions.map((q) => q.kind));
+      setPickable(!!ex && ex.level >= 5 && ex.level <= 8 && kinds.size > 1);
+      if (kinds.size > 1) setSel(p.questions[0].kind);
       setPaper(p);
     })();
   }, [id, storeKey, fail, finish]);
@@ -143,6 +149,8 @@ export default function ExamAttempt() {
     localStorage.setItem(storeKey, JSON.stringify(pending.current));
     setSave("saving");
   };
+  const kinds = [...new Set(paper.questions.map((q) => q.kind))];
+  const shown = pickable ? paper.questions.filter((q) => q.kind === sel) : paper.questions;
   const next = (i: number) => (document.getElementById(`ans-${i + 1}`) as HTMLInputElement | null)?.focus() ?? setConfirmSubmit(true);
 
   return (
@@ -159,6 +167,17 @@ export default function ExamAttempt() {
           </span>
           <Button onClick={() => setConfirmSubmit(true)}>Submit</Button>
         </div>
+        {pickable && (
+          <div className="mx-auto flex max-w-3xl flex-wrap gap-2 px-4 pb-2" role="tablist" aria-label="Question type">
+            {kinds.map((k) => {
+              const qs = paper.questions.filter((q) => q.kind === k);
+              const done = qs.filter((q) => toAnswer(values[q.position] ?? "") !== null).length;
+              return <button key={k} role="tab" aria-selected={sel === k} onClick={() => setSel(k)}
+                className={`rounded-xl border-2 px-3 py-2 text-sm font-semibold transition ${sel === k ? "border-indigo-600 bg-indigo-600 text-white" : "border-slate-300 bg-white text-slate-800 hover:border-indigo-600"}`}>
+                {OPERATIONS[k] ?? k} <span className="opacity-75">{done}/{qs.length}</span></button>;
+            })}
+          </div>
+        )}
         {warning && <p className="flex flex-wrap items-center justify-center gap-2 bg-red-50 px-4 py-2 text-center text-sm text-red-800" role="alert"><Icon name="alert" className="h-4 w-4" />{warning}
           {ac?.ac_fullscreen && !document.fullscreenElement && <button className="ml-2 underline" onClick={() => document.documentElement.requestFullscreen?.().catch(() => {})}>Go back to full screen</button>}
           <button className="ml-2 underline" onClick={() => setWarning("")}>OK</button></p>}
@@ -166,7 +185,7 @@ export default function ExamAttempt() {
 
       <main className="mx-auto grid max-w-3xl gap-3 px-4 py-4 sm:grid-cols-2">
         <div className="sm:col-span-2"><ErrorBox>{error}</ErrorBox></div>
-        {paper.questions.map((q, i) => (
+        {shown.map((q, i) => (
           <Card key={q.position} className={`flex flex-col transition-colors ${toAnswer(values[q.position] ?? "") !== null ? "border-emerald-300 bg-emerald-50/40" : ""}`}>
             <span className={`mb-2 inline-flex h-8 min-w-8 self-start items-center justify-center rounded-lg px-2 text-sm font-bold ${toAnswer(values[q.position] ?? "") !== null ? "bg-emerald-600 text-white" : "bg-indigo-600/10 text-indigo-700"}`}>Q{q.position}</span>
             <div className="mb-3 self-end text-right"><QuestionView prompt={q.prompt} /></div>

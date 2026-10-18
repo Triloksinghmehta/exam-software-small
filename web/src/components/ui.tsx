@@ -331,7 +331,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
 export function StudentShell({ children }: { children: ReactNode }) {
   const { student } = useAuth();
   const initials = (student?.full_name ?? "?").split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
-  return <Shell nav={STUDENT_NAV} name={student?.full_name ?? ""} sub={`${student?.student_code ?? ""} · Level ${student?.level ?? ""}`} initials={initials} tag="Student">{children}</Shell>;
+  return <Shell nav={STUDENT_NAV} name={student?.full_name ?? ""} sub={`${student?.student_code ?? ""} · ${student ? levelName(student.level) : ""}`} initials={initials} tag="Student">{children}</Shell>;
 }
 
 // Blocking popup shown when this login was replaced by a newer login on another device.
@@ -372,3 +372,5 @@ export const csvCell = (v: unknown) => {
   return `"${s.replace(/"/g, '""')}"`;
 };
 export const toCsv = (rows: unknown[][]) => rows.map((r) => r.map(csvCell).join(",")).join("\r\n");
+
+export const levelName = (n: number) => (n === 0 ? "Junior Level" : `Level ${n}`);

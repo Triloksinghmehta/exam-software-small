@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Badge, Card, ErrorBox, Icon, LinkButton, Page, RowMenu, Segmented, useConfirm } from "../../components/ui";
+import { Badge, Card, ErrorBox, Icon, LinkButton, Page, RowMenu, Segmented, useConfirm, levelName } from "../../components/ui";
 import { friendly, supabase } from "../../lib/supabase";
 
 export type Exam = {
@@ -54,7 +54,7 @@ export default function Exams() {
               <b className="text-lg leading-snug">{e.name}</b>
               <Badge tone={s.tone}>{s.label}</Badge>
             </div>
-            <p className="flex items-center gap-2 text-sm text-slate-600"><Icon name="levels" className="h-4 w-4" />Level {e.level} · {e.duration_minutes} min</p>
+            <p className="flex items-center gap-2 text-sm text-slate-600"><Icon name="levels" className="h-4 w-4" />{levelName(e.level)} · {e.duration_minutes} min</p>
             <p className="mt-1 flex items-center gap-2 text-sm text-slate-600"><Icon name="clock" className="h-4 w-4" />{when(e.starts_at)} to {when(e.ends_at)}</p>
           </Link>
           <div className="mr-3 shrink-0"><RowMenu label={`Actions for ${e.name}`} items={[

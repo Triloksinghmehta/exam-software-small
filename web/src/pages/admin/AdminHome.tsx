@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Card, LinkButton, Page, StatStrip } from "../../components/ui";
+import { Badge, Card, LinkButton, Page, StatStrip, levelName } from "../../components/ui";
 import { supabase } from "../../lib/supabase";
 import { when, type Exam } from "./Exams";
 
@@ -52,7 +52,7 @@ export default function AdminHome() {
                         <b className="font-medium leading-snug">{e.name}</b>
                         <Badge tone={e.mode === "practice" ? "amber" : "indigo"}>{e.mode === "practice" ? "Practice" : "Official"}</Badge>
                       </div>
-                      <p className="mt-1 text-[13px] text-slate-500">Level {e.level} · closes {when(e.ends_at)}</p>
+                      <p className="mt-1 text-[13px] text-slate-500">{levelName(e.level)} · closes {when(e.ends_at)}</p>
                     </Link>
                   </li>
                 ))}

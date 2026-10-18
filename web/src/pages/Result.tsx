@@ -1,30 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Card, ErrorBox, Icon, Page, Segmented } from "../components/ui";
-import { QuestionView } from "../components/QuestionView";
+import { Card, ErrorBox, Icon, Page } from "../components/ui";
 import { friendly, supabase } from "../lib/supabase";
-import type { Prompt } from "../../../supabase/functions/_shared/generator";
 
 type Result = {
   leaderboard_available: boolean;
   exam_name: string; mode: string; status: string; total: number; answered: number; correct: number; wrong: number; skipped: number;
   percent: number; started_at: string; submitted_at: string; time_taken_seconds: number;
-  questions: { position: number; prompt: Prompt; answer: number | null; correct_answer: number; result: "correct" | "wrong" | "skipped" }[];
 };
 const time = (s: number) => `${Math.floor(s / 60)} min ${s % 60} sec`;
 const clock = (iso: string) => new Date(iso).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
-const MARK = {
-  correct: ["check", "text-emerald-700", "bg-emerald-100"],
-  wrong: ["x", "text-red-700", "bg-red-100"],
-  skipped: ["minus", "text-slate-500", "bg-slate-100"],
-} as const;
 
 export default function ResultPage() {
   const { id } = useParams();
   const [r, setR] = useState<Result | null>(null);
   const [examId, setExamId] = useState("");
   const [error, setError] = useState("");
-  const [filter, setFilter] = useState<"all" | "wrong" | "skipped">("all");
   useEffect(() => {
     supabase.rpc("get_result", { p_attempt: id }).then(({ data, error }) => (error ? setError(friendly(error)) : setR(data)));
     supabase.from("attempts").select("exam_id").eq("id", id).maybeSingle().then(({ data }) => setExamId(data?.exam_id ?? ""));
@@ -36,7 +27,6 @@ export default function ResultPage() {
   const ring = pct >= 80 ? "#059669" : pct >= 50 ? "#e8b23c" : "#dc2626";
   const msg = pct >= 80 ? "Excellent work" : pct >= 50 ? "Good effort" : "Keep practising";
   const C = 2 * Math.PI * 52;
-  const shown = r.questions.filter((q) => filter === "all" || q.result === filter);
   const stat = (icon: string, n: number, label: string, cls: string, bg: string) => (
     <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
       <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${bg} ${cls}`}><Icon name={icon} className="h-6 w-6" /></span>
@@ -74,27 +64,6 @@ export default function ResultPage() {
         <span>Submitted {clock(r.submitted_at)}</span>
         <span>{r.status === "auto_submitted" ? "Submitted automatically" : "Submitted by you"}</span>
       </Card>
-
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-2xl font-medium">Your answers</h2>
-        <Segmented value={filter} onChange={setFilter} options={[["all", `All (${r.total})`], ["wrong", `Wrong (${r.wrong})`], ["skipped", `Skipped (${r.skipped})`]]} />
-      </div>
-      {!shown.length ? <Card><p className="text-slate-600">Nothing here.</p></Card> : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {shown.map((q) => {
-            const [icon, cls, bg] = MARK[q.result];
-            const edge = q.result === "correct" ? "border-l-emerald-600" : q.result === "wrong" ? "border-l-red-600" : "border-l-slate-300";
-            return (
-              <Card key={q.position} className={`border-l-4 ${edge}`}>
-                <div className="flex items-center justify-between"><span className="text-sm font-semibold text-slate-500">Question {q.position}</span><span className={`grid h-7 w-7 place-items-center rounded-full ${bg} ${cls}`} role="img" aria-label={q.result}><Icon name={icon} className="h-4 w-4" /></span></div>
-                <div className="my-3 text-right"><QuestionView prompt={q.prompt} /></div>
-                <p className="text-sm text-slate-600">Your answer: <b className={`text-base ${cls}`}>{q.answer ?? "-"}</b></p>
-                {q.result !== "correct" && <p className="text-sm text-slate-600">Correct answer: <b className="text-base text-emerald-700">{q.correct_answer}</b></p>}
-              </Card>
-            );
-          })}
-        </div>
-      )}
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2">
         {r.leaderboard_available && examId && <Link to={`/leaderboard/${examId}`} className="rounded-xl border-2 border-indigo-600 px-4 py-3.5 text-center text-lg font-semibold text-indigo-700 hover:bg-indigo-600/5">See leaderboard</Link>}

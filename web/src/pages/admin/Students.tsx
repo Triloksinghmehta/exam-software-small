@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
-import { Badge, Button, Card, ErrorBox, Field, LinkButton, Page, RowMenu, download, toCsv, useConfirm } from "../../components/ui";
+import { Badge, Button, Card, ErrorBox, Field, LinkButton, Page, RowMenu, download, toCsv, useConfirm, levelName } from "../../components/ui";
 import { adminStudents, friendly, supabase } from "../../lib/supabase";
 import type { Student } from "../../lib/auth";
 import { checkRow } from "../../../../supabase/functions/_shared/student-row";
@@ -68,7 +68,7 @@ export default function Students() {
         <input aria-label="Search" className="min-w-48 flex-1 rounded-md border border-slate-300 bg-white px-3.5 py-3" placeholder="Search name or ID" value={q} onChange={(e) => setQ(e.target.value)} />
         <select aria-label="Level" className="rounded-md border border-slate-300 bg-white px-3.5 py-3" value={level} onChange={(e) => setLevel(e.target.value)}>
           <option value="">All levels</option>
-          {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
+          {LEVELS.map((l) => <option key={l} value={l}>{levelName(l)}</option>)}
         </select>
       </div>
       {list === null ? <p>Loading…</p> : list.length === 0 ? (
@@ -147,7 +147,7 @@ function StudentForm({ student, onDone }: { student: Student | null; onDone: (cr
         <label className="block mb-4">
           <span className="block mb-1 font-medium">Level</span>
           <select className="w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-lg" value={f.level} onChange={set("level")}>
-            {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
+            {LEVELS.map((l) => <option key={l} value={l}>{levelName(l)}</option>)}
           </select>
         </label>
         <div className="flex gap-2 sm:col-span-2">

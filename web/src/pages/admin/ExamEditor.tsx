@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { Badge, Button, Card, ErrorBox, Field, Icon, Page, useConfirm } from "../../components/ui";
+import { Badge, Button, Card, ErrorBox, Field, Icon, Page, useConfirm, levelName } from "../../components/ui";
 import { RulesEditor, rulesError } from "../../components/RulesEditor";
 import { friendly, supabase } from "../../lib/supabase";
 import { GENERATOR_VERSION, type Rule } from "../../../../supabase/functions/_shared/generator";
@@ -102,7 +102,7 @@ export default function ExamEditor() {
         {locked && <span className="ml-2 text-slate-600">{started} student{started > 1 ? "s have" : " has"} started. Rules are locked.</span>}</p>}
       {exam && <Link className="-mt-2 mb-4 inline-block text-indigo-700 underline" to={`/admin/exams/${exam.id}/results`}>View results and leaderboard</Link>}
       <div className="sticky top-16 z-[5] -mx-1 mb-4 flex flex-wrap items-center gap-x-6 gap-y-1 rounded-xl bg-indigo-700 px-5 py-3 text-white shadow-md md:top-2">
-        <span className="font-display text-xl font-medium">Level {f.level}</span>
+        <span className="font-display text-xl font-medium">{levelName(f.level)}</span>
         <span className="text-sm text-white/80">{f.mode === "practice" ? "Practice" : "Official exam"}</span>
         <span className="flex items-center gap-1.5 text-sm text-white/80"><Icon name="clock" className="h-4 w-4" />{f.duration_minutes} min</span>
         <span className="flex items-center gap-1.5 text-sm text-white/80"><Icon name="exams" className="h-4 w-4" />{rules.reduce((n, r) => n + (r.quantity || 0), 0)} questions</span>
@@ -121,9 +121,9 @@ export default function ExamEditor() {
                 const lv = Number(e.target.value);
                 set("level")(e);
                 if (locked) return;
-                if (isNew || await ask({ title: `Switch to Level ${lv} rules?`, message: "The question rules and time limit will be replaced with this level's defaults. Your own changes to the rules will be lost.", yes: "Use level defaults", no: "Keep my rules" })) loadLevelRules(lv);
+                if (isNew || await ask({ title: `Switch to ${levelName(lv)} rules?`, message: "The question rules and time limit will be replaced with this level's defaults. Your own changes to the rules will be lost.", yes: "Use level defaults", no: "Keep my rules" })) loadLevelRules(lv);
               }}>
-              {LEVELS.map((l) => <option key={l} value={l}>Level {l}</option>)}
+              {LEVELS.map((l) => <option key={l} value={l}>{levelName(l)}</option>)}
             </select></label>
           <Field label="Opens at" type="datetime-local" disabled={locked} value={f.starts_at} onChange={set("starts_at")} />
           <Field label="Closes at (max 5 days after opening)" type="datetime-local" value={f.ends_at} onChange={set("ends_at")} />
