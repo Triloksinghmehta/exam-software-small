@@ -45,6 +45,7 @@ body {
   font-feature-settings: "tnum" 1, "cv11" 1; /* even-width digits: numbers line up in tables */
 }
 
+html, body { overflow-x: clip; } /* a wide child must never zoom the whole page out on phones */
 .font-display { font-family: var(--font-display); letter-spacing: -0.01em; }
 
 table { border-collapse: separate; border-spacing: 0; }

@@ -3,7 +3,9 @@ import { OPERATIONS, generatePaper, validateRule, type Operation, type Question,
 import { Button, ErrorBox } from "./ui";
 import { QuestionView } from "./QuestionView";
 
-const num = "w-16 rounded-lg border border-slate-300 bg-white px-2 py-2";
+const inp = "rounded-lg border border-slate-300 bg-white px-2 py-2";
+const num = `${inp} w-full min-w-0`;
+const lab = "mb-1 block text-xs font-medium text-slate-600";
 const blank = (): Rule => ({ operation: "add_sub", digits: [2, 2], rows: 3, quantity: 5 });
 
 // Fill in fields an operation needs, drop ones it doesn't
@@ -43,45 +45,42 @@ export function RulesEditor({ rules, onChange, locked }: { rules: Rule[]; onChan
 
   return (
     <div>
-      <fieldset disabled={locked} className="overflow-x-auto">
-        <table className="w-full text-left text-sm">
-          <thead><tr className="text-slate-600">{["Operation", "Digits (1st / rest)", "Decimals", "Rows", "How many", "Other", ""].map((h) => <th key={h} className="p-2 font-medium">{h}</th>)}</tr></thead>
-          <tbody>
-            {rules.map((r, i) => {
-              const isDec = r.operation.startsWith("decimal_"), isTable = r.operation === "table";
-              return (
-                <tr key={i} className="border-t border-slate-100 align-middle">
-                  <td className="p-2">
-                    <select aria-label={`Rule ${i + 1} operation`} className="rounded-lg border border-slate-300 bg-white px-2 py-2" value={r.operation}
-                      onChange={(e) => set(i, { operation: e.target.value as Operation })}>
-                      {Object.entries(OPERATIONS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+      <fieldset disabled={locked} className="min-w-0 space-y-3">
+        {rules.map((r, i) => {
+          const isDec = r.operation.startsWith("decimal_"), isTable = r.operation === "table";
+          return (
+            <div key={i} className="rounded-lg border border-slate-200 p-3 text-sm">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <b>Rule {i + 1}</b>
+                <button type="button" className="text-red-700 underline" onClick={() => onChange(rules.filter((_, j) => j !== i))}>Remove</button>
+              </div>
+              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                <label className="col-span-2 md:col-span-4"><span className={lab}>Operation</span>
+                  <select aria-label={`Rule ${i + 1} operation`} className={`${inp} w-full`} value={r.operation} onChange={(e) => set(i, { operation: e.target.value as Operation })}>
+                    {Object.entries(OPERATIONS).map(([k, v]) => <option key={k} value={k}>{v}</option>)}
+                  </select>
+                </label>
+                {!isTable && <div><span className={lab}>Digits (1st / rest)</span><div className="flex items-center gap-1">
+                  <input aria-label="Digits first row" type="number" min={1} max={6} className={num} value={r.digits[0]} onChange={(e) => pair(i, "digits", 0, e.target.value)} />/
+                  <input aria-label="Digits other rows" type="number" min={1} max={6} className={num} value={r.digits[1]} onChange={(e) => pair(i, "digits", 1, e.target.value)} /></div></div>}
+                {isDec && <div><span className={lab}>Decimals (1st / rest)</span><div className="flex items-center gap-1">
+                  <input aria-label="Decimals first row" type="number" min={1} max={3} className={num} value={r.decimals![0]} onChange={(e) => pair(i, "decimals", 0, e.target.value)} />/
+                  <input aria-label="Decimals other rows" type="number" min={1} max={3} className={num} value={r.decimals![1]} onChange={(e) => pair(i, "decimals", 1, e.target.value)} /></div></div>}
+                <label><span className={lab}>Rows</span><input aria-label="Rows" type="number" min={2} max={30} className={num} value={r.rows} onChange={(e) => set(i, { rows: Number(e.target.value) })} /></label>
+                <label><span className={lab}>How many</span><input aria-label="How many" type="number" min={1} max={100} className={num} value={r.quantity} onChange={(e) => set(i, { quantity: Number(e.target.value) })} /></label>
+                {isTable && <div className="col-span-2"><span className={lab}>Tables from / to</span><div className="flex items-center gap-1">
+                  <input aria-label="Table from" type="number" className={num} value={r.range![0]} onChange={(e) => pair(i, "range", 0, e.target.value)} />to
+                  <input aria-label="Table to" type="number" className={num} value={r.range![1]} onChange={(e) => pair(i, "range", 1, e.target.value)} /></div></div>}
+                {(r.operation === "addition" || r.operation === "add_sub") && (
+                  <label className="col-span-2"><span className={lab}>Formula</span>
+                    <select aria-label="Formula" className={`${inp} w-full`} value={r.formula ?? ""} onChange={(e) => set(i, { formula: (e.target.value || undefined) as Rule["formula"] })}>
+                      <option value="">Any</option><option value="direct">Direct only (Junior Level)</option><option value="friends">Friends (Level 1)</option>
                     </select>
-                  </td>
-                  <td className="p-2 whitespace-nowrap">{isTable ? "—" : <>
-                    <input aria-label="Digits first row" type="number" min={1} max={6} className={num} value={r.digits[0]} onChange={(e) => pair(i, "digits", 0, e.target.value)} /> /{" "}
-                    <input aria-label="Digits other rows" type="number" min={1} max={6} className={num} value={r.digits[1]} onChange={(e) => pair(i, "digits", 1, e.target.value)} /></>}
-                  </td>
-                  <td className="p-2 whitespace-nowrap">{isDec ? <>
-                    <input aria-label="Decimals first row" type="number" min={1} max={3} className={num} value={r.decimals![0]} onChange={(e) => pair(i, "decimals", 0, e.target.value)} /> /{" "}
-                    <input aria-label="Decimals other rows" type="number" min={1} max={3} className={num} value={r.decimals![1]} onChange={(e) => pair(i, "decimals", 1, e.target.value)} /></> : "—"}
-                  </td>
-                  <td className="p-2"><input aria-label="Rows" type="number" min={2} max={30} className={num} value={r.rows} onChange={(e) => set(i, { rows: Number(e.target.value) })} /></td>
-                  <td className="p-2"><input aria-label="How many" type="number" min={1} max={100} className={num} value={r.quantity} onChange={(e) => set(i, { quantity: Number(e.target.value) })} /></td>
-                  <td className="p-2 whitespace-nowrap">
-                    {isTable && <>Tables <input aria-label="Table from" type="number" className={num} value={r.range![0]} onChange={(e) => pair(i, "range", 0, e.target.value)} /> to{" "}
-                      <input aria-label="Table to" type="number" className={`${num} w-20`} value={r.range![1]} onChange={(e) => pair(i, "range", 1, e.target.value)} /></>}
-                    {(r.operation === "addition" || r.operation === "add_sub") && (
-                      <select aria-label="Formula" className="rounded-lg border border-slate-300 bg-white px-2 py-2" value={r.formula ?? ""}
-                        onChange={(e) => set(i, { formula: (e.target.value || undefined) as Rule["formula"] })}>
-                        <option value="">Any</option><option value="direct">Direct only (Junior Level)</option><option value="friends">Friends (Level 1)</option>
-                      </select>)}
-                  </td>
-                  <td className="p-2"><button type="button" className="text-red-700 underline" onClick={() => onChange(rules.filter((_, j) => j !== i))}>Remove</button></td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                  </label>)}
+              </div>
+            </div>
+          );
+        })}
       </fieldset>
       <div className="mt-3 flex flex-wrap items-center gap-3">
         {!locked && <Button type="button" variant="secondary" onClick={() => onChange([...rules, blank()])}>+ Add rule</Button>}
