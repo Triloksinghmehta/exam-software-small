@@ -178,7 +178,7 @@ export function Segmented<T extends string>({ options, value, onChange }: { opti
 
 // ---- brand mark (placeholder logo; swap public/logo.png later) ----
 export function Logo({ size = 36 }: { size?: number }) {
-  return <img src="/logo.png" width={size} height={size} alt="SAI ecabacus" className="shrink-0 object-contain" />;
+  return <img src="/logo.png" width={size} height={size} alt="VODMON Demo" className="shrink-0 object-contain" />;
 }
 
 // full-screen splash shown while the session is restored on refresh
@@ -190,7 +190,7 @@ export function Splash() {
           <span className="absolute inset-0 animate-spin rounded-full border-4 border-indigo-100 border-t-indigo-600" />
           <span className="animate-pulse"><Logo size={56} /></span>
         </div>
-        <p className="text-lg font-semibold tracking-wide text-indigo-900">SAI ecabacus</p>
+        <p className="text-lg font-semibold tracking-wide text-indigo-900">VODMON Demo</p>
         <div className="flex gap-1.5">
           {[0, 150, 300].map((d) => <span key={d} className="h-2 w-2 animate-bounce rounded-full bg-brass-500" style={{ animationDelay: `${d}ms` }} />)}
         </div>
@@ -220,14 +220,14 @@ export function Centered({ title, subtitle, children }: { title: string; subtitl
         {/* phones/tablets: hero image as backdrop */}
         <img src="/hero.webp" alt="" className="absolute inset-x-0 top-0 -z-10 h-[46vh] w-full max-lg:top-16 object-cover object-[50%_30%] lg:hidden" />
         <div className="absolute inset-x-0 top-16 -z-10 h-[46vh] bg-gradient-to-b from-slate-50 from-0% via-slate-50/0 via-15% to-slate-50 to-100% lg:hidden" />
-        <div className="flex items-center gap-2 max-lg:justify-center"><Logo size={34} /><b className="font-display text-[22px] font-semibold tracking-[0.06em] text-indigo-800">SAI ecabacus</b></div>
+        <div className="flex items-center gap-2 max-lg:justify-center"><Logo size={34} /><b className="font-display text-[22px] font-semibold tracking-[0.06em] text-indigo-800">VODMON Demo</b></div>
         <div className="mx-auto w-full max-w-sm pb-10 pt-[40vh] lg:my-auto lg:py-12">
           <h1 className="font-display text-4xl font-medium tracking-tight">{title}</h1>
           {subtitle && <p className="mt-2 text-slate-500">{subtitle}</p>}
           <div className="mt-6 h-1 w-12 rounded-full bg-gradient-to-r from-brass-400 via-coral-500 to-indigo-500" />
           <Card className="mt-8 p-6 shadow-[0_20px_50px_-20px_rgb(45_40_33/0.18)]">{children}</Card>
         </div>
-        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} SAI ecabacus Examination Portal</p>
+        <p className="text-center text-xs text-slate-400">© {new Date().getFullYear()} VODMON Demo Examination Portal</p>
       </div>
     </main>
   );
@@ -286,7 +286,7 @@ function Shell({ nav, name, sub, initials, logoutTo, tag, children }: {
       <aside className="hidden w-64 shrink-0 flex-col border-r border-slate-200 border-t-4 border-t-indigo-500 bg-white px-3 md:sticky md:top-0 md:flex md:h-screen">
         <div className="flex items-center gap-3 px-2 pb-6 pt-6">
           <Logo size={44} />
-          <div className="leading-tight"><b className="font-display block text-xl font-medium text-slate-900">SAI ecabacus</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-600">{tag}</span></div>
+          <div className="leading-tight"><b className="font-display block text-xl font-medium text-slate-900">VODMON Demo</b><span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-indigo-600">{tag}</span></div>
         </div>
         <nav className="flex flex-col gap-1">
           {nav.map((n) => <NavLink key={n.to} to={n.to} end={n.end} className={side}><Icon name={n.icon} className="h-5 w-5" />{n.label}</NavLink>)}
@@ -301,7 +301,7 @@ function Shell({ nav, name, sub, initials, logoutTo, tag, children }: {
       </aside>
       <div className="min-w-0 flex-1 pb-24 md:pb-0">
         <header className="sticky top-0 z-10 flex items-center justify-between border-b-4 border-indigo-500 bg-white px-4 py-2.5 shadow-sm md:hidden">
-          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-slate-900"><Logo size={34} />SAI ecabacus</b>
+          <b className="font-display flex items-center gap-2.5 text-lg font-medium text-slate-900"><Logo size={34} />VODMON Demo</b>
           <div className="flex items-center gap-1">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-indigo-600 text-xs font-bold text-white">{initials}</span>
             <button aria-label="Log out" onClick={() => logOut(logoutTo)} className="p-2 text-slate-600"><Icon name="logout" /></button>

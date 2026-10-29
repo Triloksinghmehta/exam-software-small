@@ -24,7 +24,7 @@ export default function ResultPage() {
   if (!r) return <Page title="Result"><ErrorBox>{error}</ErrorBox>{!error && <div className="h-40 animate-pulse rounded-2xl bg-slate-200/70" />}<Link className="text-indigo-700 underline" to="/">Back to home</Link></Page>;
 
   const pct = Math.round(r.percent);
-  const ring = pct >= 80 ? "#059669" : pct >= 50 ? "#e8b23c" : "#dc2626";
+  const ring = pct >= 80 ? "#059669" : pct >= 50 ? "#8f7f60" : "#dc2626";
   const msg = pct >= 80 ? "Excellent work" : pct >= 50 ? "Good effort" : "Keep practising";
   const C = 2 * Math.PI * 52;
   const stat = (icon: string, n: number, label: string, cls: string, bg: string) => (

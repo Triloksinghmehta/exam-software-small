@@ -7,32 +7,32 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
 
-  --color-indigo-50: #fff6e9;
-  --color-indigo-100: #ffe9cc;
-  --color-indigo-200: #ffd199;
-  --color-indigo-300: #ffb766;
-  --color-indigo-400: #ffa64d;
-  --color-indigo-500: #fa8c1e;
-  --color-indigo-600: #e06f00;
-  --color-indigo-700: #b35900;
-  --color-indigo-800: #4a2c12;
-  --color-indigo-900: #2c1a0d;
+  --color-indigo-50: #f7f5f0;
+  --color-indigo-100: #ece8de;
+  --color-indigo-200: #d9d1bf;
+  --color-indigo-300: #bfb294;
+  --color-indigo-400: #a29270;
+  --color-indigo-500: #857659;
+  --color-indigo-600: #2b2a27;
+  --color-indigo-700: #1c1c1c;
+  --color-indigo-800: #1c1c1c;
+  --color-indigo-900: #111111;
 
-  --color-slate-50: #faf5ec;
-  --color-slate-100: #f3ecdf;
-  --color-slate-200: #e8dfcd;
-  --color-slate-300: #d6cab2;
-  --color-slate-400: #ab9f88;
-  --color-slate-500: #7f7462;
-  --color-slate-600: #5f5647;
-  --color-slate-700: #463f34;
-  --color-slate-800: #2d2821;
-  --color-slate-900: #1c1914;
+  --color-slate-50: #faf9f5;
+  --color-slate-100: #f2f0ea;
+  --color-slate-200: #e5e2d9;
+  --color-slate-300: #d1ccbf;
+  --color-slate-400: #a8a293;
+  --color-slate-500: #7a7466;
+  --color-slate-600: #5b564b;
+  --color-slate-700: #433f37;
+  --color-slate-800: #2b2924;
+  --color-slate-900: #1c1c1c;
 
-  --color-brass-100: #fdf0c4;
-  --color-brass-400: #f6c945;
-  --color-brass-500: #e0a91a;
-  --color-brass-600: #8f6200;
+  --color-brass-100: #efe9dc;
+  --color-brass-400: #b8a682;
+  --color-brass-500: #8f7f60;
+  --color-brass-600: #6b5d44;
 
   --color-coral-100: #f8e0d6;
   --color-coral-500: #d4472f;

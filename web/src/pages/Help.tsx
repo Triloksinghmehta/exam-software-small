@@ -6,7 +6,7 @@ import { Card, Logo, Segmented } from "../components/ui";
 type Step = { title: string; img?: string; points: string[]; tip?: string };
 
 const ADMIN: Step[] = [
-  { title: "Log in", img: "student-login.jpg", points: [
+  { title: "Log in", img: "admin-login.jpg", points: [
     "Open the website. On the login page press \"Log in as admin\".",
     "Type your email and password, then press Login.",
   ] },
@@ -128,13 +128,13 @@ export default function Help() {
     <div className="min-h-screen bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 sm:px-8">
-          <span className="flex items-center gap-2"><Logo size={34} /><b className="font-display text-xl font-semibold text-indigo-800">SAI ecabacus</b></span>
+          <span className="flex items-center gap-2"><Logo size={34} /><b className="font-display text-xl font-semibold text-indigo-800">VODMON Demo</b></span>
           <Link to={tab === "admin" ? "/admin/login" : "/login"} className="text-sm font-semibold text-indigo-600 hover:underline">Back to login</Link>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-10">
         <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-indigo-600">Step-by-step guide</p>
-        <h1 className="font-display text-4xl font-medium text-slate-900">How to use SAI ecabacus</h1>
+        <h1 className="font-display text-4xl font-medium text-slate-900">How to use VODMON Demo</h1>
         <p className="mt-2 mb-6 text-slate-600">Simple steps with pictures. Pick who you are below.</p>
         <div className="mb-8"><Segmented options={[["admin", "For teachers / admin"], ["student", "For students"]]} value={tab} onChange={pick} /></div>
         <Steps steps={tab === "admin" ? ADMIN : STUDENT} />
